@@ -18,6 +18,8 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
     public shared query func getFollowing() : async [Principal] { return TrieSet.toArray(following); };
 
+    public shared query func getFollowers() : async [Principal] { return TrieSet.toArray(followers); };
+
     public shared(msg) func setProfile(newProfile : ProfileUpdate.ProfileUpdate) : async Result.Result<(), PortalError.PortalError>
     {
         if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
