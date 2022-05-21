@@ -1,11 +1,11 @@
+import Array "mo:base/Array";
 import Cycles "mo:base/ExperimentalCycles";
+import GatewayError "../types/GatewayError";
 import HashMap "mo:base/HashMap";
+import Iter "mo:base/Iter";
+import Portal "Portal";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
-
-import Portal "Portal";
-
-import GatewayError "../types/GatewayError";
 
 actor Gateway
 {
@@ -19,7 +19,7 @@ actor Gateway
             case null
             {
                 Cycles.add(200000000000);
-                let newPortal : Portal.Portal = await Portal.Portal(msg.caller);
+                let newPortal : Portal.Portal = await Portal.Portal(msg.caller, isPortalPrincipalValid);
 
                 userToPortal.put(msg.caller, newPortal);
 
@@ -44,6 +44,27 @@ actor Gateway
             case (?value)
             {
                 return #ok(Principal.fromActor(value));
+            };
+        };
+    };
+
+    public shared query func isPortalPrincipalValid(portalPricipal : Principal) : async Bool
+    {
+        let rawPortals : [Portal.Portal] = Iter.toArray(userToPortal.vals());
+        func gen(i : Nat) : Principal = Principal.fromActor(rawPortals[i]);
+        let portalPrincipals : [Principal] = Array.tabulate(rawPortals.size(), gen);
+
+        func f(p : Principal) : Bool = Principal.equal(p, portalPricipal);
+        let value : ?Principal = Array.find(portalPrincipals, f);
+        switch (value)
+        {
+            case null
+            {
+                return false;
+            };
+            case (?value)
+            {
+                return true;
             };
         };
     };

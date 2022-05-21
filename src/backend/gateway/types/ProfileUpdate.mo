@@ -15,6 +15,7 @@ module
     public func validateUsername(username : Text) : Bool
     {
         if (Text.contains(username, #char(' '))) { return false; };
+        if (username.size() > USERNAME_MAX_LENGTH) { return false; };
 
         return true;
     };
