@@ -48,13 +48,13 @@ actor Gateway
         };
     };
 
-    public shared query func isPortalPrincipalValid(portalPricipal : Principal) : async Bool
+    public shared query func isPortalPrincipalValid(portalPrincipal : Principal) : async Bool
     {
         let rawPortals : [Portal.Portal] = Iter.toArray(userToPortal.vals());
         func gen(i : Nat) : Principal = Principal.fromActor(rawPortals[i]);
         let portalPrincipals : [Principal] = Array.tabulate(rawPortals.size(), gen);
 
-        func f(p : Principal) : Bool = Principal.equal(p, portalPricipal);
+        func f(p : Principal) : Bool = Principal.equal(p, portalPrincipal);
         let value : ?Principal = Array.find(portalPrincipals, f);
         switch (value)
         {
