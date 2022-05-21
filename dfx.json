@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "dfx": "0.10.0",
+  "canisters": {
+    "blotch": {
+      "type": "motoko",
+      "main": "src/blotch/main.mo"
+    },
+    "blotch_assets": {
+      "type": "assets",
+      "source": [
+        "src/blotch_assets/assets"
+      ],
+      "dependencies": [
+        "blotch"
+      ]
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "",
+      "args": ""
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  }
+}
