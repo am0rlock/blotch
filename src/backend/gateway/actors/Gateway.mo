@@ -9,22 +9,21 @@ import GatewayError "../types/GatewayError";
 
 actor Gateway
 {
-    var userToPortal : HashMap.HashMap<Principal, Principal> = HashMap.HashMap<Principal, Principal>(0, Principal.equal, Principal.hash);
+    var userToPortal : HashMap.HashMap<Principal, Portal.Portal> = HashMap.HashMap(0, Principal.equal, Principal.hash);
 
     public shared(msg) func createPortal() : async Result.Result<Principal, GatewayError.GatewayError>
     {
-        let value : ?Principal = userToPortal.get(msg.caller);
+        let value : ?Portal.Portal = userToPortal.get(msg.caller);
         switch (value)
         {
             case null
             {
                 Cycles.add(200000000000);
                 let newPortal : Portal.Portal = await Portal.Portal(msg.caller);
-                let portalPrincipal : Principal = Principal.fromActor(newPortal);
 
-                userToPortal.put(msg.caller, portalPrincipal);
+                userToPortal.put(msg.caller, newPortal);
 
-                return #ok(portalPrincipal);
+                return #ok(Principal.fromActor(newPortal));
             };
             case (?value)
             {
@@ -35,7 +34,7 @@ actor Gateway
 
     public shared(msg) func getPortal() : async Result.Result<Principal, GatewayError.GatewayError>
     {
-        let value : ?Principal = userToPortal.get(msg.caller);
+        let value : ?Portal.Portal = userToPortal.get(msg.caller);
         switch (value)
         {
             case null
@@ -44,7 +43,7 @@ actor Gateway
             };
             case (?value)
             {
-                return #ok(value);
+                return #ok(Principal.fromActor(value));
             };
         };
     };

@@ -9,11 +9,11 @@ import ProfileUpdate "../types/ProfileUpdate";
 shared actor class Portal(userPrincipal : Principal) = this
 {
     var profile : Profile.Profile = Profile.getDefault(userPrincipal);
-    var following : TrieSet.Set<Principal> = TrieSet.empty<Principal>();
+    var following : TrieSet.Set<Principal> = TrieSet.empty();
 
     public shared query func getProfile() : async Profile.Profile { return profile; };
 
-    public shared query func getFollowing() : async [Principal] { return TrieSet.toArray<Principal>(following); };
+    public shared query func getFollowing() : async [Principal] { return TrieSet.toArray(following); };
 
     public shared(msg) func setProfile(newProfile : ProfileUpdate.ProfileUpdate) : async Result.Result<(), PortalError.PortalError>
     {
@@ -29,9 +29,9 @@ shared actor class Portal(userPrincipal : Principal) = this
     {
         if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
         if (newPortalPrincipal == getMyPrincipal()) { return #err(#InvalidPortal); };
-        if (TrieSet.mem<Principal>(following, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal)) { return #err(#InvalidPortal); };
+        if (TrieSet.mem(following, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal)) { return #err(#InvalidPortal); };
 
-        following := TrieSet.put<Principal>(following, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal);
+        following := TrieSet.put(following, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal);
 
         return #ok(());
     };
