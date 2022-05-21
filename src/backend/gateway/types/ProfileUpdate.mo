@@ -1,3 +1,5 @@
+import Text "mo:base/Text";
+
 module
 {
     public type ProfileUpdate = 
@@ -10,10 +12,24 @@ module
 
     private let BIO_MAX_LENGTH : Nat = 64;
 
+    public func validateUsername(username : Text) : Bool
+    {
+        if (Text.contains(username, #char(' '))) { return false; };
+
+        return true;
+    };
+
+    public func validateBio(bio : Text) : Bool
+    {
+        if (bio.size() > BIO_MAX_LENGTH) { return false; };
+
+        return true;
+    };
+
     public func validate(profileUpdate : ProfileUpdate) : Bool
     {
-        if (profileUpdate.username.size() > USERNAME_MAX_LENGTH) { return false; };
-        if (profileUpdate.bio.size() > BIO_MAX_LENGTH) { return false; };
+        if (not validateUsername(profileUpdate.username)) { return false; };
+        if (not validateBio(profileUpdate.bio)) { return false; };
 
         return true;
     };

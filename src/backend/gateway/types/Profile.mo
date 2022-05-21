@@ -11,7 +11,7 @@ module
         bio : Text;
     };
 
-    private let DEFAULT_USERNAME : Text = "Test";
+    private let DEFAULT_USERNAME : Text = "new_user";
 
     private let DEFAULT_BIO : Text = "Nothing here yet!";
 
