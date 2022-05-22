@@ -5,6 +5,10 @@
 		"gateway": {
 			"type": "motoko",
 			"main": "src/backend/gateway/actors/Gateway.mo"
+		},
+		"portal_database": {
+			"type": "motoko",
+			"main": "src/backend/portal_database/actors/PortalDatabase.mo"
 		}
 	},
 	"defaults": {

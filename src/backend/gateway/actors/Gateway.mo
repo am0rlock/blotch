@@ -1,15 +1,19 @@
 import Array "mo:base/Array";
 import Cycles "mo:base/ExperimentalCycles";
-import GatewayError "../types/GatewayError";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
-import Portal "Portal";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
+
+import Portal "Portal";
+
+import GatewayError "../types/GatewayError";
+import Subscriber "../types/Subscriber";
 
 actor Gateway
 {
     var userToPortal : HashMap.HashMap<Principal, Portal.Portal> = HashMap.HashMap(0, Principal.equal, Principal.hash);
+    var subscribers : [Subscriber.Subscriber] = [];
 
     public shared(msg) func createPortal() : async Result.Result<Principal, GatewayError.GatewayError>
     {
@@ -20,10 +24,16 @@ actor Gateway
             {
                 Cycles.add(200000000000);
                 let newPortal : Portal.Portal = await Portal.Portal(msg.caller, isPortalPrincipalValid);
+                let newPortalPrincipal : Principal = Principal.fromActor(newPortal);
 
                 userToPortal.put(msg.caller, newPortal);
 
-                return #ok(Principal.fromActor(newPortal));
+                for (subscriber in subscribers.vals())
+                {
+                    ignore subscriber.addPortalPrincipal(newPortalPrincipal);
+                };
+
+                return #ok(newPortalPrincipal);
             };
             case (?value)
             {
@@ -67,5 +77,11 @@ actor Gateway
                 return true;
             };
         };
+    };
+
+    public shared(msg) func subscribe() : async ()
+    {
+        let subscriber : Subscriber.Subscriber = actor(Principal.toText(msg.caller));
+        subscribers := Array.append<Subscriber.Subscriber>(subscribers, [subscriber]);
     };
 };

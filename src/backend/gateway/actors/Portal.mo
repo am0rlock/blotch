@@ -1,3 +1,7 @@
+import Random "mo:base/Random";
+import Result "mo:base/Result";
+import TrieSet "mo:base/TrieSet";
+
 import PortalError "../types/PortalError";
 import PostContent "../types/PostContent";
 import PostData "../types/PostData";
@@ -6,9 +10,6 @@ import PostStore "../types/PostStore";
 import Principal "mo:base/Principal";
 import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
-import Random "mo:base/Random";
-import Result "mo:base/Result";
-import TrieSet "mo:base/TrieSet";
 
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
 {
