@@ -1,8 +1,9 @@
-    import Principal "mo:base/Principal";
+import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import TrieSet "mo:base/TrieSet";
 
 import PortalError "../types/PortalError";
+import PostData "../types/PostData";
 import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
 
