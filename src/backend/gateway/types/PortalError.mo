@@ -7,5 +7,6 @@ module
         #InvalidPortal;
         #CannotCreatePost;
         #PostNotFound;
+        #CannotLike;
     };
 };

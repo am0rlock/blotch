@@ -1,5 +1,7 @@
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
+import Principal "mo:base/Principal";
+import TrieSet "mo:base/TrieSet";
 
 import PortalError "PortalError";
 import PostData "PostData";
@@ -50,5 +52,28 @@ module PostStore
         };
 
         public func getPostIDs() : [PostID.PostID] { return Iter.toArray(idToData.keys()); };
+
+        public func likePost(postID : PostID.PostID, otherPortalPrincipal : Principal) : Result.Result<(), PortalError.PortalError>
+        {
+            let value : ?PostData.PostData = idToData.get(postID);
+            switch (value)
+            {
+                case null
+                {
+                    return #err(#PostNotFound);
+                };
+                case (?value)
+                {
+                    if (TrieSet.mem(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal)) { return #err(#CannotLike); };
+
+                    let newLikers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
+                    let newPostData : PostData.PostData = PostData.constructWithLikers(value.content, newLikers);
+
+                    ignore idToData.replace(postID, newPostData);
+
+                    return #ok(());
+                };
+            };
+        };
     };
 }

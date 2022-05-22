@@ -19,6 +19,10 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     var followers : TrieSet.Set<Principal> = TrieSet.empty();
     var postStore : PostStore.PostStore = PostStore.PostStore();
 
+
+    /*
+     *  Anybody to Portal functions
+     */
     public shared query func getProfile() : async Profile.Profile { return profile; };
 
     public shared query func getFollowing() : async [Principal] { return TrieSet.toArray(following); };
@@ -29,6 +33,10 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
     public shared query func getPostData(postID : PostID.PostID) : async Result.Result<PostData.PostData, PortalError.PortalError> { return postStore.getPostData(postID); };
 
+
+    /*
+     *  User to Portal functions
+     */
     public shared(msg) func setProfile(newProfile : ProfileUpdate.ProfileUpdate) : async Result.Result<(), PortalError.PortalError>
     {
         if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
@@ -83,6 +91,31 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return postStore.deletePostData(postID);
     };
 
+    public shared(msg) func likePost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
+
+        let otherPortal : Portal = actor(Principal.toText(postID.portalPrincipal));
+        let response : Result.Result<(), PortalError.PortalError> = await otherPortal.likeMyPost(postID);
+
+        switch (response)
+        {
+            case (#ok())
+            {
+                return #ok(());
+            };
+            case (#err(x))
+            {
+                return response;
+            };
+        };
+
+        return #ok()
+    };
+
+    /*
+     *  Portal to Portal functions
+     */
     public shared(msg) func addFollower() : async Result.Result<(), PortalError.PortalError>
     {
         if (msg.caller == getMyPrincipal()) { return #err(#InvalidPortal); };
@@ -94,6 +127,16 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return #ok(());
     };
 
+    public shared(msg) func likeMyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not (await isPortalPrincipalValid(postID.portalPrincipal))) { return #err(#InvalidPortal); };
+
+        return postStore.likePost(postID, msg.caller);
+    };
+
+    /*
+     *  Private helper functions
+     */
     private func isAuthorized(callerPrincipal : Principal) : Bool { return callerPrincipal == profile.userPrincipal; };
 
     private func getMyPrincipal() : Principal { return Principal.fromActor(this); };
