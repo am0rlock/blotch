@@ -1,3 +1,5 @@
+import Hash "mo:base/Hash";
+import Nat64 "mo:base/Nat64";
 import Random "mo:base/Random";
 
 module
@@ -12,7 +14,11 @@ module
     {
         return {
             portalPrincipal = portalPrincipal0;
-            id = Random.rangeFrom(64, seed);
+            id = Nat64.fromNat(Random.rangeFrom(64, seed));
         };
     };
+
+    public func equal(x : PostID, y : PostID) : Bool { return x.id == y.id; };
+
+    public func hash(x : PostID) : Hash.Hash { return Hash.hash(Nat64.toNat(x.id)); };
 };

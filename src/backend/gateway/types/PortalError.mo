@@ -6,5 +6,6 @@ module
         #ProfileInvalid;
         #InvalidPortal;
         #CannotCreatePost;
+        #PostNotFound;
     };
 };

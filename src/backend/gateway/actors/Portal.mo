@@ -1,11 +1,14 @@
-import Principal "mo:base/Principal";
-import Result "mo:base/Result";
-import TrieSet "mo:base/TrieSet";
-
 import PortalError "../types/PortalError";
+import PostContent "../types/PostContent";
 import PostData "../types/PostData";
+import PostID "../types/PostID";
+import PostStore "../types/PostStore";
+import Principal "mo:base/Principal";
 import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
+import Random "mo:base/Random";
+import Result "mo:base/Result";
+import TrieSet "mo:base/TrieSet";
 
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
 {
@@ -14,12 +17,17 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     var profile : Profile.Profile = Profile.getDefault(userPrincipal);
     var following : TrieSet.Set<Principal> = TrieSet.empty();
     var followers : TrieSet.Set<Principal> = TrieSet.empty();
+    var postStore : PostStore.PostStore = PostStore.PostStore();
 
     public shared query func getProfile() : async Profile.Profile { return profile; };
 
     public shared query func getFollowing() : async [Principal] { return TrieSet.toArray(following); };
 
     public shared query func getFollowers() : async [Principal] { return TrieSet.toArray(followers); };
+
+    public shared query func getPostIDs() : async [PostID.PostID] { return postStore.getPostIDs(); };
+
+    public shared query func getPostData(postID : PostID.PostID) : async Result.Result<PostData.PostData, PortalError.PortalError> { return postStore.getPostData(postID); };
 
     public shared(msg) func setProfile(newProfile : ProfileUpdate.ProfileUpdate) : async Result.Result<(), PortalError.PortalError>
     {
@@ -52,6 +60,27 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
                 return response;
             };
         };
+    };
+
+    public shared(msg) func createPost(postContent : PostContent.PostContent) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
+        if (PostContent.validate(postContent)) { return #err(#CannotCreatePost); };
+
+        let seed : Blob = await Random.blob();
+        let postID : PostID.PostID = PostID.construct(getMyPrincipal(), seed);
+        let postData : PostData.PostData = PostData.construct(postContent);
+
+        postStore.addPostData(postID, postData);
+
+        return #ok(());
+    };
+
+    public shared(msg) func destroyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
+
+        return postStore.deletePostData(postID);
     };
 
     public shared(msg) func addFollower() : async Result.Result<(), PortalError.PortalError>
