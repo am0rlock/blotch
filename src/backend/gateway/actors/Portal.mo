@@ -70,6 +70,28 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         };
     };
 
+    public shared(msg) func removeFollowing(otherPortalPrincipal : Principal) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
+        if (not TrieSet.mem(following, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal)) { return #err(#InvalidPortal); };
+
+        let otherPortal : Portal = actor(Principal.toText(otherPortalPrincipal));
+        let response : Result.Result<(), PortalError.PortalError> = await otherPortal.removeFollower();
+        switch (response)
+        {
+            case (#ok())
+            {
+                following := TrieSet.delete(following, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
+                return #ok(());
+            };
+            case (#err(x))
+            {
+                return response;
+            };
+        };
+
+    };
+
     public shared(msg) func createPost(postContent : PostContent.PostContent) : async Result.Result<(), PortalError.PortalError>
     {
         if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
@@ -145,6 +167,16 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         if (not (await isPortalPrincipalValid(msg.caller))) { return #err(#InvalidPortal); };
 
         followers := TrieSet.put(followers, msg.caller, Principal.hash(msg.caller), Principal.equal);
+
+        return #ok(());
+    };
+
+    public shared(msg) func removeFollower() : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not TrieSet.mem(followers, msg.caller, Principal.hash(msg.caller), Principal.equal)) { return #err(#InvalidPortal); };
+        if (not (await isPortalPrincipalValid(msg.caller))) { return #err(#InvalidPortal); };
+
+        followers := TrieSet.delete(followers, msg.caller, Principal.hash(msg.caller), Principal.equal);
 
         return #ok(());
     };
