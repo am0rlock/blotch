@@ -113,6 +113,28 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return #ok()
     };
 
+    public shared(msg) func unlikePost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
+
+        let otherPortal : Portal = actor(Principal.toText(postID.portalPrincipal));
+        let response : Result.Result<(), PortalError.PortalError> = await otherPortal.unlikeMyPost(postID);
+
+        switch (response)
+        {
+            case (#ok())
+            {
+                return #ok(());
+            };
+            case (#err(x))
+            {
+                return response;
+            };
+        };
+
+        return #ok()
+    };
+
     /*
      *  Portal to Portal functions
      */
@@ -132,6 +154,13 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         if (not (await isPortalPrincipalValid(postID.portalPrincipal))) { return #err(#InvalidPortal); };
 
         return postStore.likePost(postID, msg.caller);
+    };
+
+    public shared(msg) func unlikeMyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not (await isPortalPrincipalValid(postID.portalPrincipal))) { return #err(#InvalidPortal); };
+
+        return postStore.unlikePost(postID, msg.caller);
     };
 
     /*

@@ -75,5 +75,28 @@ module PostStore
                 };
             };
         };
+
+        public func unlikePost(postID : PostID.PostID, otherPortalPrincipal : Principal) : Result.Result<(), PortalError.PortalError>
+        {
+            let value : ?PostData.PostData = idToData.get(postID);
+            switch (value)
+            {
+                case null
+                {
+                    return #err(#PostNotFound);
+                };
+                case (?value)
+                {
+                    if (not TrieSet.mem(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal)) { return #err(#CannotUnlike); };
+
+                    let newLikers : TrieSet.Set<Principal> = TrieSet.delete(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
+                    let newPostData : PostData.PostData = PostData.constructWithLikers(value.content, newLikers);
+
+                    ignore idToData.replace(postID, newPostData);
+
+                    return #ok(());
+                };
+            };
+        };
     };
 }

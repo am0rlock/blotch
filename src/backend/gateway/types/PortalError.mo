@@ -8,5 +8,6 @@ module
         #CannotCreatePost;
         #PostNotFound;
         #CannotLike;
+        #CannotUnlike;
     };
 };
