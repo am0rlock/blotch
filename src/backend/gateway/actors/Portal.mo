@@ -19,7 +19,6 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     var followers : TrieSet.Set<Principal> = TrieSet.empty();
     var postStore : PostStore.PostStore = PostStore.PostStore();
 
-
     /*
      *  Anybody to Portal functions
      */
@@ -106,7 +105,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return #ok(());
     };
 
-    public shared(msg) func destroyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    public shared(msg) func deletePost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
     {
         if (not isAuthorized(msg.caller)) { return #err(#NotAuthorized); };
 
