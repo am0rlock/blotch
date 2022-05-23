@@ -68,7 +68,6 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return postIDs;
     };
 
-
     /*
      *  User to Portal functions
      */

@@ -19,7 +19,13 @@ module
         };
     };
 
-    public func equal(x : PostID, y : PostID) : Bool { return x.id == y.id; };
+    public func equal(x : PostID, y : PostID) : Bool
+    {
+        return x.id == y.id;
+    };
 
-    public func hash(x : PostID) : Hash.Hash { return Nat32.fromNat(Nat64.toNat(x.id)); };
+    public func hash(x : PostID) : Hash.Hash
+    {
+        return Nat32.fromNat(Nat64.toNat(x.id));
+    };
 };

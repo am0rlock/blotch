@@ -34,7 +34,13 @@ module
         };
     };
 
-    public func equal(x : Profile, y : Profile) : Bool { return x.userPrincipal == y.userPrincipal; };
+    public func equal(x : Profile, y : Profile) : Bool
+    {
+        return x.userPrincipal == y.userPrincipal;
+    };
 
-    public func hash(x : Profile) : Hash.Hash { return Principal.hash(x.userPrincipal); };
+    public func hash(x : Profile) : Hash.Hash
+    {
+        return Principal.hash(x.userPrincipal);
+    };
 };
