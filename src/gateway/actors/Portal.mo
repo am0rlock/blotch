@@ -54,6 +54,20 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return postStore.getPostData(postID);
     };
 
+    public shared func getFollowingPostIDs() : async [PostID.PostID]
+    {
+        var postIDs : [PostID.PostID] = [];
+        for (followingPrincipal in (await getFollowing()).vals())
+        {
+            let otherPortal : Portal = actor(Principal.toText(followingPrincipal));
+            let otherPostIDs : [PostID.PostID] = await otherPortal.getPostIDs();
+
+            postIDs := Array.append(postIDs, otherPostIDs);
+        };
+
+        return postIDs;
+    };
+
 
     /*
      *  User to Portal functions
@@ -69,7 +83,13 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
             return #err(#ProfileInvalid);
         };
 
-        profile := Profile.construct(profile, newProfile);
+        let oldProfile : Profile.Profile = profile;
+        profile := Profile.construct(oldProfile, newProfile);
+
+        for (subscriber in portalProfileSubscribers.vals())
+        {
+            ignore subscriber.notifyProfileUpdate(oldProfile, profile);
+        };
 
         return #ok(());
     };
@@ -151,6 +171,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         let seed : Blob = await Random.blob();
         let postID : PostID.PostID = PostID.construct(getMyPrincipal(), seed);
         let postData : PostData.PostData = PostData.construct(postContent);
+
+        for (subscriber in portalPostSubscribers.vals())
+        {
+            ignore subscriber.notifyPostUpdate(postID);
+        };
 
         postStore.addPostData(postID, postData);
 

@@ -25,7 +25,7 @@ actor PostDatabase
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        if (TrieSet.mem(postIDs, postID, PostID.hash(postID), postID.equal))
+        if (TrieSet.mem(postIDs, postID, PostID.hash(postID), PostID.equal))
         {
             postIDs := TrieSet.delete(postIDs, postID, PostID.hash(postID), PostID.equal);
         }
