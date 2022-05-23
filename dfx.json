@@ -4,16 +4,25 @@
 	"canisters": {
 		"gateway": {
 			"type": "motoko",
-			"main": "src/backend/gateway/actors/Gateway.mo"
+			"main": "backend/gateway/actors/Gateway.mo"
 		},
 		"portal_database": {
 			"type": "motoko",
-			"main": "src/backend/portal_database/actors/PortalDatabase.mo"
+			"main": "backend/portal_database/actors/PortalDatabase.mo"
 		},
 		"post_database": {
 			"type": "motoko",
-			"main": "src/backend/post_database/actors/PostDatabase.mo"
-		}
+			"main": "backend/post_database/actors/PostDatabase.mo"
+		},
+        "blotch_frontend": {
+            "frontend": {
+              "entrypoint": "public/index.html"
+            },
+            "source": [
+              "build"
+            ],
+            "type": "assets"
+        }
 	},
 	"defaults": {
 		"build": {
