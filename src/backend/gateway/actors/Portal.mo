@@ -1,8 +1,7 @@
-import Random "mo:base/Random";
-import Result "mo:base/Result";
-import TrieSet "mo:base/TrieSet";
-
+import Array "mo:base/Array";
 import PortalError "../types/PortalError";
+import PortalPortalSubscriber "../types/PortalPortalSubscriber";
+import PortalPostSubscriber "../types/PortalPostSubscriber";
 import PostContent "../types/PostContent";
 import PostData "../types/PostData";
 import PostID "../types/PostID";
@@ -10,10 +9,15 @@ import PostStore "../types/PostStore";
 import Principal "mo:base/Principal";
 import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
+import Random "mo:base/Random";
+import Result "mo:base/Result";
+import TrieSet "mo:base/TrieSet";
 
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
 {
     let isPortalPrincipalValid : shared query (Principal) -> async Bool = isPortalPrincipalValid0;
+    var portalPortalSubscribers : [PortalPortalSubscriber.PortalPortalSubscriber] = [];
+    var portalPostSubscribers : [PortalPostSubscriber.PortalPostSubscriber] = [];
 
     var profile : Profile.Profile = Profile.getDefault(userPrincipal);
     var following : TrieSet.Set<Principal> = TrieSet.empty();
@@ -193,6 +197,21 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         if (not (await isPortalPrincipalValid(postID.portalPrincipal))) { return #err(#InvalidPortal); };
 
         return postStore.unlikePost(postID, msg.caller);
+    };
+
+    /*
+     *  Subscriber to Portal functions
+     */
+    public shared(msg) func subscribePortalDatabase() : async ()
+    {
+        let subscriber : PortalPortalSubscriber.PortalPortalSubscriber = actor(Principal.toText(msg.caller));
+        portalPortalSubscribers := Array.append(portalPortalSubscribers, [subscriber]);
+    };
+
+    public shared(msg) func subscribePostDatabase() : async ()
+    {
+        let subscriber : PortalPostSubscriber.PortalPostSubscriber = actor(Principal.toText(msg.caller));
+        portalPostSubscribers := Array.append(portalPostSubscribers, [subscriber]);
     };
 
     /*

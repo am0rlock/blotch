@@ -1,4 +1,5 @@
 import Hash "mo:base/Hash";
+import Principal "mo:base/Principal";
 
 import ProfileUpdate "ProfileUpdate";
 
@@ -32,4 +33,8 @@ module
             bio = new.bio;
         };
     };
+
+    public func equal(x : Profile, y : Profile) : Bool { return x.userPrincipal == y.userPrincipal; };
+
+    public func hash(x : Profile) : Hash.Hash { return Principal.hash(x.userPrincipal); };
 };

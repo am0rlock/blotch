@@ -8,12 +8,12 @@ import Result "mo:base/Result";
 import Portal "Portal";
 
 import GatewayError "../types/GatewayError";
-import Subscriber "../types/Subscriber";
+import GatewaySubscriber "../types/GatewaySubscriber";
 
 actor Gateway
 {
     var userToPortal : HashMap.HashMap<Principal, Portal.Portal> = HashMap.HashMap(0, Principal.equal, Principal.hash);
-    var subscribers : [Subscriber.Subscriber] = [];
+    var subscribers : [GatewaySubscriber.GatewaySubscriber] = [];
 
     public shared(msg) func createPortal() : async Result.Result<Principal, GatewayError.GatewayError>
     {
@@ -30,7 +30,7 @@ actor Gateway
 
                 for (subscriber in subscribers.vals())
                 {
-                    ignore subscriber.addPortalPrincipal(newPortalPrincipal);
+                    ignore subscriber.notifyNewPortal(newPortalPrincipal);
                 };
 
                 return #ok(newPortalPrincipal);
@@ -81,7 +81,7 @@ actor Gateway
 
     public shared(msg) func subscribe() : async ()
     {
-        let subscriber : Subscriber.Subscriber = actor(Principal.toText(msg.caller));
-        subscribers := Array.append<Subscriber.Subscriber>(subscribers, [subscriber]);
+        let subscriber : GatewaySubscriber.GatewaySubscriber = actor(Principal.toText(msg.caller));
+        subscribers := Array.append(subscribers, [subscriber]);
     };
 };

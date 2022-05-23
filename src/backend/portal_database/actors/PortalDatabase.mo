@@ -10,14 +10,24 @@ import Profile "../../gateway/types/Profile";
 actor PortalDatabase
 {
     var hasSubscribed : Bool = false;
-    var portalPrincipals : TrieSet.Set<Principal> = TrieSet.empty();
-    var portalPrincipalToProfile : HashMap.HashMap<Principal, Profile.Profile> = HashMap.HashMap(0, Principal.equal, Principal.hash);
+    var profileToPortalPrincipal : HashMap.HashMap<Profile.Profile, Principal> = HashMap.HashMap<Profile.Profile, Principal>(0, Profile.equal, Profile.hash);
 
-    public shared(msg) func addPortalPrincipal(newPortalPrincipal : Principal) : async ()
+    public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
     {
-        if (TrieSet.mem(portalPrincipals, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal)) { return; };
+        if (msg.caller != Principal.fromActor(Gateway)) { return; };
 
-        portalPrincipals := TrieSet.put(portalPrincipals, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal);
+        let newPortal : Portal.Portal = actor(Principal.toText(newPortalPrincipal));
+        await newPortal.subscribePortalDatabase();
+
+        let profile : Profile.Profile = await newPortal.getProfile();
+        profileToPortalPrincipal.put(profile, newPortalPrincipal);
+    };
+
+    public shared(msg) func notifyProfileUpdate(newProfile : Profile.Profile) : async ()
+    {
+        if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
+
+        //TODO
     };
 
     system func heartbeat() : async ()

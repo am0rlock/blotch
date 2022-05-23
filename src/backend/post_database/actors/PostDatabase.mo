@@ -1,3 +1,4 @@
+import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 import TrieSet "mo:base/TrieSet";
 
@@ -5,18 +6,25 @@ import Gateway "canister:gateway";
 import Portal "../../gateway/actors/Portal";
 
 import PostID "../../gateway/types/PostID";
+import Profile "../../gateway/types/Profile";
 
 actor PostDatabase
 {
     var hasSubscribed : Bool = false;
-    var portalPrincipals : TrieSet.Set<Principal> = TrieSet.empty();
-    var postIDs : TrieSet.Set<PostID.PostID> = TrieSet.empty();
 
-    public shared(msg) func addPortalPrincipal(newPortalPrincipal : Principal) : async ()
+    public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
     {
-        if (TrieSet.mem(portalPrincipals, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal)) { return; };
+        if (msg.caller != Principal.fromActor(Gateway)) { return; };
 
-        portalPrincipals := TrieSet.put(portalPrincipals, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal);
+        let newPortal : Portal.Portal = actor(Principal.toText(newPortalPrincipal));
+        await newPortal.subscribePostDatabase();
+    };
+
+    public shared(msg) func notifyPostUpdate(postID : PostID.PostID) : async ()
+    {
+        if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
+
+        //TODO
     };
 
     system func heartbeat() : async ()
