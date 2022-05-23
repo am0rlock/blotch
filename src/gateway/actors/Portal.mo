@@ -1,6 +1,6 @@
 import Array "mo:base/Array";
 import PortalError "../types/PortalError";
-import PortalPortalSubscriber "../types/PortalPortalSubscriber";
+import PortalProfileSubscriber "../types/PortalProfileSubscriber";
 import PortalPostSubscriber "../types/PortalPostSubscriber";
 import PostContent "../types/PostContent";
 import PostData "../types/PostData";
@@ -16,7 +16,7 @@ import TrieSet "mo:base/TrieSet";
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
 {
     let isPortalPrincipalValid : shared query (Principal) -> async Bool = isPortalPrincipalValid0;
-    var portalPortalSubscribers : [PortalPortalSubscriber.PortalPortalSubscriber] = [];
+    var portalProfileSubscribers : [PortalProfileSubscriber.PortalProfileSubscriber] = [];
     var portalPostSubscribers : [PortalPostSubscriber.PortalPostSubscriber] = [];
 
     var profile : Profile.Profile = Profile.getDefault(userPrincipal);
@@ -202,10 +202,10 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     /*
      *  Subscriber to Portal functions
      */
-    public shared(msg) func subscribePortalDatabase() : async ()
+    public shared(msg) func subscribeProfileDatabase() : async ()
     {
-        let subscriber : PortalPortalSubscriber.PortalPortalSubscriber = actor(Principal.toText(msg.caller));
-        portalPortalSubscribers := Array.append(portalPortalSubscribers, [subscriber]);
+        let subscriber : PortalProfileSubscriber.PortalProfileSubscriber = actor(Principal.toText(msg.caller));
+        portalProfileSubscribers := Array.append(portalProfileSubscribers, [subscriber]);
     };
 
     public shared(msg) func subscribePostDatabase() : async ()

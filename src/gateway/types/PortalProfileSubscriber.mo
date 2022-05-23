@@ -2,7 +2,7 @@ import Profile "Profile";
 
 module
 {
-    public type PortalPortalSubscriber = actor
+    public type PortalProfileSubscriber = actor
     {
         notifyProfileUpdate : (newProfile : Profile.Profile) -> async ()
     };

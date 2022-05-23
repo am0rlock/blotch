@@ -7,7 +7,7 @@ import Gateway "canister:gateway";
 import Portal "../../gateway/actors/Portal";
 import Profile "../../gateway/types/Profile";
 
-actor PortalDatabase
+actor ProfileDatabase
 {
     var hasSubscribed : Bool = false;
     var profileToPortalPrincipal : HashMap.HashMap<Profile.Profile, Principal> = HashMap.HashMap<Profile.Profile, Principal>(0, Profile.equal, Profile.hash);
@@ -17,17 +17,19 @@ actor PortalDatabase
         if (msg.caller != Principal.fromActor(Gateway)) { return; };
 
         let newPortal : Portal.Portal = actor(Principal.toText(newPortalPrincipal));
-        await newPortal.subscribePortalDatabase();
+        await newPortal.subscribeProfileDatabase();
 
         let profile : Profile.Profile = await newPortal.getProfile();
         profileToPortalPrincipal.put(profile, newPortalPrincipal);
     };
 
-    public shared(msg) func notifyProfileUpdate(newProfile : Profile.Profile) : async ()
+    public shared(msg) func notifyProfileUpdate(oldProfile : Profile.Profile, newProfile : Profile.Profile) : async ()
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        //TODO
+        profileToPortalPrincipal.delete(oldProfile);
+
+        profileToPortalPrincipal.put(newProfile, msg.caller);
     };
 
     system func heartbeat() : async ()

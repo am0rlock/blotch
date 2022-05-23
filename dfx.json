@@ -6,9 +6,9 @@
 			"type": "motoko",
 			"main": "src/gateway/actors/Gateway.mo"
 		},
-		"portal_database": {
+		"profile_database": {
 			"type": "motoko",
-			"main": "src/portal_database/actors/PortalDatabase.mo"
+			"main": "src/profile_database/actors/ProfileDatabase.mo"
 		},
 		"post_database": {
 			"type": "motoko",
@@ -17,7 +17,7 @@
         "blotch_frontend": {
             "dependencies": [
                 "gateway",
-                "portal_database",
+                "profile_database",
                 "post_database"
             ],
             "frontend": {
