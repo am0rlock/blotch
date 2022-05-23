@@ -1,0 +1,111 @@
+type Trie = 
+ variant {
+   branch: Branch;
+   "empty";
+   leaf: Leaf;
+ };
+type Timestamp = nat64;
+type Set = 
+ variant {
+   branch: Branch;
+   "empty";
+   leaf: Leaf;
+ };
+type Result_1 = 
+ variant {
+   err: PortalError;
+   ok: PostData;
+ };
+type Result = 
+ variant {
+   err: PortalError;
+   ok;
+ };
+type ProfileUpdate = 
+ record {
+   bio: text;
+   username: text;
+ };
+type Profile = 
+ record {
+   bio: text;
+   userPrincipal: principal;
+   username: text;
+ };
+type PostID = 
+ record {
+   id: nat64;
+   portalPrincipal: principal;
+ };
+type PostData = 
+ record {
+   content: PostContent;
+   likers: Set;
+   postTime: Timestamp;
+ };
+type PostContent = record {words: text;};
+type PortalError = 
+ variant {
+   CannotCreatePost;
+   CannotLike;
+   CannotUnlike;
+   InvalidPortal;
+   NotAuthorized;
+   PostNotFound;
+   ProfileInvalid;
+ };
+type Portal = 
+ service {
+   addFollower: () -> (Result);
+   addFollowing: (principal) -> (Result);
+   createPost: (PostContent) -> (Result);
+   deletePost: (PostID) -> (Result);
+   getFollowers: () -> (vec principal) query;
+   getFollowing: () -> (vec principal) query;
+   getPostData: (PostID) -> (Result_1) query;
+   getPostIDs: () -> (vec PostID) query;
+   getProfile: () -> (Profile) query;
+   likeMyPost: (PostID) -> (Result);
+   likePost: (PostID) -> (Result);
+   removeFollower: () -> (Result);
+   removeFollowing: (principal) -> (Result);
+   setProfile: (ProfileUpdate) -> (Result);
+   subscribePortalDatabase: () -> ();
+   subscribePostDatabase: () -> ();
+   unlikeMyPost: (PostID) -> (Result);
+   unlikePost: (PostID) -> (Result);
+ };
+type List = 
+ opt record {
+       record {
+         Key;
+         null;
+       };
+       List;
+     };
+type Leaf = 
+ record {
+   keyvals: AssocList;
+   size: nat;
+ };
+type Key = 
+ record {
+   hash: Hash;
+   key: principal;
+ };
+type Hash = nat32;
+type Branch = 
+ record {
+   left: Trie;
+   right: Trie;
+   size: nat;
+ };
+type AssocList = 
+ opt record {
+       record {
+         Key;
+         null;
+       };
+       List;
+     };
+service : (principal, func (principal) -> (bool) query) -> Portal

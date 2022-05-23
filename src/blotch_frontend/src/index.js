@@ -1,16 +1,21 @@
-//import { blotch_frontend } from "../../declarations/blotch_frontend";
+import { gateway } from "../../declarations/gateway";
+import { createActor } from "../../declarations/portal";
 
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const button = e.target.querySelector("button");
 
-  //const name = document.getElementById("name").value.toString();
-  const name = "Test";
+  const name = document.getElementById("name").value.toString();
 
   button.setAttribute("disabled", true);
 
+  let a = await gateway.getPortal();
+  console.log(a);
+  const g = createActor(a['ok'])
+  console.log(await g.getFollowers())
   // Interact with foo actor, calling the greet method
   //const greeting = await blotch_frontend.greet(name);
+  const greeting = "Test";
 
   button.removeAttribute("disabled");
 
