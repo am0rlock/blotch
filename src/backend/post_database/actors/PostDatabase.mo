@@ -1,17 +1,16 @@
-import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 import TrieSet "mo:base/TrieSet";
 
 import Gateway "canister:gateway";
-
 import Portal "../../gateway/actors/Portal";
-import Profile "../../gateway/types/Profile";
 
-actor PortalDatabase
+import PostID "../../gateway/types/PostID";
+
+actor PostDatabase
 {
     var hasSubscribed : Bool = false;
     var portalPrincipals : TrieSet.Set<Principal> = TrieSet.empty();
-    var portalPrincipalToProfile : HashMap.HashMap<Principal, Profile.Profile> = HashMap.HashMap(0, Principal.equal, Principal.hash);
+    var postIDs : TrieSet.Set<PostID.PostID> = TrieSet.empty();
 
     public shared(msg) func addPortalPrincipal(newPortalPrincipal : Principal) : async ()
     {
@@ -28,12 +27,20 @@ actor PortalDatabase
             hasSubscribed := true;
         };
 
-        for (portalPrincipal in portalPrincipalToProfile.keys())
+        var newPostsIDs : TrieSet.Set<PostID.PostID> = TrieSet.empty();
+
+        let portalPrincipalArray : [Principal] = TrieSet.toArray(portalPrincipals);
+        for (portalPrincipal in portalPrincipalArray.vals())
         {
             let portal : Portal.Portal = actor(Principal.toText(portalPrincipal));
-            let newProfile : Profile.Profile = await portal.getProfile();
-            
-            ignore portalPrincipalToProfile.replace(portalPrincipal, newProfile);
+            let portalPostIDs : [PostID.PostID] = await portal.getPostIDs();
+
+            for (postID in portalPostIDs.vals())
+            {
+                newPostsIDs := TrieSet.put(newPostsIDs, postID, PostID.hash(postID), PostID.equal)
+            };
         };
+
+        postIDs := newPostsIDs;
     };
 };

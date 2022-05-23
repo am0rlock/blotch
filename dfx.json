@@ -9,6 +9,10 @@
 		"portal_database": {
 			"type": "motoko",
 			"main": "src/backend/portal_database/actors/PortalDatabase.mo"
+		},
+		"post_database": {
+			"type": "motoko",
+			"main": "src/backend/post_database/actors/PostDatabase.mo"
 		}
 	},
 	"defaults": {
