@@ -10,7 +10,7 @@ import Profile "../../gateway/types/Profile";
 actor ProfileDatabase
 {
     var hasSubscribed : Bool = false;
-    var profileToPortalPrincipal : HashMap.HashMap<Profile.Profile, Principal> = HashMap.HashMap<Profile.Profile, Principal>(0, Profile.equal, Profile.hash);
+    var profileToPortalPrincipal : HashMap.HashMap<Profile.Profile, Principal> = HashMap.HashMap(0, Profile.equal, Profile.hash);
 
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
     {

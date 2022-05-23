@@ -11,6 +11,7 @@ import Profile "../../gateway/types/Profile";
 actor PostDatabase
 {
     var hasSubscribed : Bool = false;
+    var postIDs : TrieSet.Set<PostID.PostID> = TrieSet.empty();
 
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
     {
@@ -24,7 +25,14 @@ actor PostDatabase
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        //TODO
+        if (TrieSet.mem(postIDs, postID, PostID.hash(postID), postID.equal))
+        {
+            postIDs := TrieSet.delete(postIDs, postID, PostID.hash(postID), PostID.equal);
+        }
+        else
+        {
+            postIDs := TrieSet.put(postIDs, postID, PostID.hash(postID), PostID.equal);
+        };
     };
 
     system func heartbeat() : async ()
