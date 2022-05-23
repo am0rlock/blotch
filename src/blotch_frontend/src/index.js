@@ -1,7 +1,9 @@
 import { gateway } from "../../declarations/gateway";
 import { createActor } from "../../declarations/portal";
+import { AuthClient, handleAuthenticated } from "@dfinity/auth-client";
 
 document.querySelector("form").addEventListener("submit", async (e) => {
+
   e.preventDefault();
   const button = e.target.querySelector("button");
 
@@ -9,7 +11,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
 
   button.setAttribute("disabled", true);
 
-  let a = await gateway.getPortal();
+  let a = await gateway.createPortal();
   console.log(a);
   const g = createActor(a['ok'])
   console.log(await g.getFollowers())
