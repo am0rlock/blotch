@@ -15,6 +15,7 @@
 			"main": "backend/post_database/actors/PostDatabase.mo"
 		},
         "blotch_frontend": {
+            "dependencies": ["gateway", "portal_database", "post_database"],
             "frontend": {
               "entrypoint": "public/index.html"
             },
