@@ -27,13 +27,5 @@ actor PortalDatabase
             await Gateway.subscribe();
             hasSubscribed := true;
         };
-
-        for (portalPrincipal in portalPrincipalToProfile.keys())
-        {
-            let portal : Portal.Portal = actor(Principal.toText(portalPrincipal));
-            let newProfile : Profile.Profile = await portal.getProfile();
-            
-            ignore portalPrincipalToProfile.replace(portalPrincipal, newProfile);
-        };
     };
 };

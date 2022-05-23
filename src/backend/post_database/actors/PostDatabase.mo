@@ -26,21 +26,5 @@ actor PostDatabase
             await Gateway.subscribe();
             hasSubscribed := true;
         };
-
-        var newPostsIDs : TrieSet.Set<PostID.PostID> = TrieSet.empty();
-
-        let portalPrincipalArray : [Principal] = TrieSet.toArray(portalPrincipals);
-        for (portalPrincipal in portalPrincipalArray.vals())
-        {
-            let portal : Portal.Portal = actor(Principal.toText(portalPrincipal));
-            let portalPostIDs : [PostID.PostID] = await portal.getPostIDs();
-
-            for (postID in portalPostIDs.vals())
-            {
-                newPostsIDs := TrieSet.put(newPostsIDs, postID, PostID.hash(postID), PostID.equal)
-            };
-        };
-
-        postIDs := newPostsIDs;
     };
 };
