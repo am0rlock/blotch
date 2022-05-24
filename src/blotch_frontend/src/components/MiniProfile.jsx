@@ -15,7 +15,7 @@ const MiniProfile = ({ portalPrincipal }) => {
 
     useEffect(() => {
         grabProfile();
-    });
+    }, []);
 
     return (
         <>

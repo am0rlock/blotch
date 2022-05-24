@@ -20,7 +20,7 @@ const FullProfile = ({ portalPrincipal }) => {
 
     useEffect(() => {
         grabProfileParts();
-    });
+    }, []);
 
     return (
         <>

@@ -1,9 +1,0 @@
-type PostID = 
- record {
-   id: nat64;
-   portalPrincipal: principal;
- };
-service : {
-  notifyNewPortal: (principal) -> ();
-  notifyPostUpdate: (PostID) -> ();
-}
