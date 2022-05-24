@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MiniProfile from './components/MiniProfile'
+import FullProfile from './components/FullProfile';
 import { gateway } from '../../declarations/gateway/'
 
 const App = () => {
@@ -15,7 +16,7 @@ const App = () => {
 
     return (
         <div>
-            <MiniProfile portalPrincipal={portalPrincipal}></MiniProfile>
+            {portalPrincipal == '' ? <p>Loading...</p> : <FullProfile portalPrincipal={portalPrincipal} />}
         </div>
     )
 }

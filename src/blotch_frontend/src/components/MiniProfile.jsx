@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Profiler } from 'react';
+import { Avatar } from '../../../../node_modules/@mui/material/index';
+import { Card, CardContent } from '../../../../node_modules/@mui/material/index';
+import { Typography } from '../../../../node_modules/@mui/material/index';
 import { createActor } from "../../../declarations/portal";
 
 const MiniProfile = ({ portalPrincipal }) => {
-    const [profile, setProfile] = React.useState('');
+    const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...'});
 
     async function grabProfile() {
         let portal = createActor(portalPrincipal);
@@ -14,10 +18,18 @@ const MiniProfile = ({ portalPrincipal }) => {
     });
 
     return (
-        <div>
-            <h1>{profile['username']}</h1>
-            <h3>{profile['bio']}</h3>
-        </div>
+        <>
+            <Card sx={{ maxWidth: 345 }}>
+                <CardContent>
+                    <Typography gutterBottom variant="h5" component="div">
+                    {profile['username']}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                    {profile['bio']}
+                    </Typography>
+                </CardContent>
+            </Card>
+        </>
     )
 }
 

@@ -1,3 +1,4 @@
+import Blob "mo:base/Blob";
 import Hash "mo:base/Hash";
 import Principal "mo:base/Principal";
 
