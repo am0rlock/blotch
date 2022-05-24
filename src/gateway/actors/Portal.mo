@@ -2,6 +2,7 @@ import Array "mo:base/Array";
 import Principal "mo:base/Principal";
 import Random "mo:base/Random";
 import Result "mo:base/Result";
+import Time "mo:base/Time";
 import TrieSet "mo:base/TrieSet";
 
 import PortalError "../types/PortalError";
@@ -13,14 +14,22 @@ import PostID "../types/PostID";
 import PostStore "../types/PostStore";
 import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
+import Timestamp "../types/Timestamp";
 
 
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
 {
+    let INITIAL_BLOTCHES_ALLOWANCE : Nat64 = 100;
+    let RECHARGE_PERIOD : Nat64 = 86400000; //1 day
+    let RECHARGE_BLOTCHES : Nat64 = 30;
+    let POST_BLOTCHES_COST : Nat64 = 10;
+
     let isPortalPrincipalValid : shared query (Principal) -> async Bool = isPortalPrincipalValid0;
     var portalProfileSubscribers : [PortalProfileSubscriber.PortalProfileSubscriber] = [];
     var portalPostSubscribers : [PortalPostSubscriber.PortalPostSubscriber] = [];
 
+    var lastRecharge : Timestamp.Timestamp = Timestamp.construct();
+    var numBlotches : Nat64 = 100;
     var profile : Profile.Profile = Profile.getDefault(userPrincipal);
     var following : TrieSet.Set<Principal> = TrieSet.empty();
     var followers : TrieSet.Set<Principal> = TrieSet.empty();
@@ -29,6 +38,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     /*
      *  Anybody to Portal functions
      */
+    public shared query func getNumBlotches() : async Nat64
+    {
+        return numBlotches;
+    };
+
     public shared query func getProfile() : async Profile.Profile
     {
         return profile;
@@ -162,10 +176,16 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         {
             return #err(#NotAuthorized);
         };
-        if (PostContent.validate(postContent))
+        if (numBlotches < POST_BLOTCHES_COST)
+        {
+            return #err(#NotEnoughBlotches);
+        };
+        if (not PostContent.validate(postContent))
         {
             return #err(#CannotCreatePost);
         };
+
+        numBlotches := numBlotches - POST_BLOTCHES_COST;
 
         let seed : Blob = await Random.blob();
         let postID : PostID.PostID = PostID.construct(getMyPrincipal(), seed);
@@ -316,8 +336,31 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     };
 
     /*
+     *  System functions
+     */
+    system func heartbeat() : async ()
+    {
+        await rechargeBlotches();
+    };
+
+    /*
      *  Private helper functions
      */
+
+    public shared(msg) func rechargeBlotches() : async ()
+    {
+        if (msg.caller != Principal.fromActor(this))
+        {
+            return;
+        };
+        let now : Timestamp.Timestamp = Timestamp.construct();
+        let elapsed : Nat64 = now - lastRecharge;
+        if (elapsed > RECHARGE_PERIOD)
+        {
+            numBlotches := numBlotches + RECHARGE_BLOTCHES;
+        };
+    };
+    
     private func isAuthorized(callerPrincipal : Principal) : Bool
     {
         return callerPrincipal == profile.userPrincipal;

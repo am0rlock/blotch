@@ -5,6 +5,7 @@ module
         #NotAuthorized;
         #ProfileInvalid;
         #InvalidPortal;
+        #NotEnoughBlotches;
         #CannotCreatePost;
         #PostNotFound;
         #CannotLike;
