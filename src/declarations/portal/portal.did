@@ -62,6 +62,7 @@ type Portal =
    deletePost: (PostID) -> (Result);
    getFollowers: () -> (vec principal) query;
    getFollowing: () -> (vec principal) query;
+   getFollowingPostIDs: () -> (vec PostID);
    getPostData: (PostID) -> (Result_1) query;
    getPostIDs: () -> (vec PostID) query;
    getProfile: () -> (Profile) query;
@@ -70,8 +71,8 @@ type Portal =
    removeFollower: () -> (Result);
    removeFollowing: (principal) -> (Result);
    setProfile: (ProfileUpdate) -> (Result);
-   subscribePortalDatabase: () -> ();
    subscribePostDatabase: () -> ();
+   subscribeProfileDatabase: () -> ();
    unlikeMyPost: (PostID) -> (Result);
    unlikePost: (PostID) -> (Result);
  };

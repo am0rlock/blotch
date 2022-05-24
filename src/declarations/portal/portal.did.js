@@ -52,6 +52,7 @@ export const idlFactory = ({ IDL }) => {
     'deletePost' : IDL.Func([PostID], [Result], []),
     'getFollowers' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getFollowing' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'getFollowingPostIDs' : IDL.Func([], [IDL.Vec(PostID)], []),
     'getPostData' : IDL.Func([PostID], [Result_1], ['query']),
     'getPostIDs' : IDL.Func([], [IDL.Vec(PostID)], ['query']),
     'getProfile' : IDL.Func([], [Profile], ['query']),
@@ -60,8 +61,8 @@ export const idlFactory = ({ IDL }) => {
     'removeFollower' : IDL.Func([], [Result], []),
     'removeFollowing' : IDL.Func([IDL.Principal], [Result], []),
     'setProfile' : IDL.Func([ProfileUpdate], [Result], []),
-    'subscribePortalDatabase' : IDL.Func([], [], []),
     'subscribePostDatabase' : IDL.Func([], [], []),
+    'subscribeProfileDatabase' : IDL.Func([], [], []),
     'unlikeMyPost' : IDL.Func([PostID], [Result], []),
     'unlikePost' : IDL.Func([PostID], [Result], []),
   });

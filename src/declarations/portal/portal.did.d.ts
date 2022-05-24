@@ -14,6 +14,7 @@ export interface Portal {
   'deletePost' : ActorMethod<[PostID], Result>,
   'getFollowers' : ActorMethod<[], Array<Principal>>,
   'getFollowing' : ActorMethod<[], Array<Principal>>,
+  'getFollowingPostIDs' : ActorMethod<[], Array<PostID>>,
   'getPostData' : ActorMethod<[PostID], Result_1>,
   'getPostIDs' : ActorMethod<[], Array<PostID>>,
   'getProfile' : ActorMethod<[], Profile>,
@@ -22,8 +23,8 @@ export interface Portal {
   'removeFollower' : ActorMethod<[], Result>,
   'removeFollowing' : ActorMethod<[Principal], Result>,
   'setProfile' : ActorMethod<[ProfileUpdate], Result>,
-  'subscribePortalDatabase' : ActorMethod<[], undefined>,
   'subscribePostDatabase' : ActorMethod<[], undefined>,
+  'subscribeProfileDatabase' : ActorMethod<[], undefined>,
   'unlikeMyPost' : ActorMethod<[PostID], Result>,
   'unlikePost' : ActorMethod<[PostID], Result>,
 }

@@ -9,8 +9,7 @@ type GatewayError =
    PortalNotFound;
  };
 service : {
-  createPortal: () -> (Result);
-  getPortal: () -> (Result);
+  grabPortal: () -> (Result);
   isPortalPrincipalValid: (principal) -> (bool) query;
   subscribe: () -> ();
 }
