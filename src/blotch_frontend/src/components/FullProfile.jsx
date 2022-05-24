@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '../../../../node_modules/@mui/material/index';
 import { Typography } from '../../../../node_modules/@mui/material/index';
+import { Grid } from '../../../../node_modules/@mui/material/index';
 import MiniProfile from './MiniProfile';
 import { createActor } from "../../../declarations/portal";
 
@@ -23,10 +24,16 @@ const FullProfile = ({ portalPrincipal }) => {
 
     return (
         <>
-            <Card sx={{ maxWidth: 345 }}>
+            <Card sx={{ maxWidth: 400 }}>
                 <MiniProfile portalPrincipal={portalPrincipal}/>
-                <Typography gutterBottom variant="h5" component="div">Following: {following.length}</Typography>
-                <Typography gutterBottom variant="h5" component="div">Followers: {followers.length}</Typography>
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                    <Typography gutterBottom variant="h5" component="div">Following: {following.length}</Typography>
+                    </Grid >
+                    <Grid item xs={6}>
+                    <Typography gutterBottom variant="h5" component="div">Followers: {followers.length}</Typography>
+                    </Grid>
+                </Grid>
             </Card>
         </>
     )
