@@ -124,3 +124,14 @@ func likePost(postID : PostID) : async Result<(), PortalError>
  */
 func unlikePost(postID : PostID) : async Result<(), PortalError>
 ```
+
+<h3>PostDatabase Canister</h3>
+
+```
+/*
+ * Returns the top posts from the specified 
+ * range. If range is invalid, it returns 
+ * an error.
+ */
+func getTopPosts(start : Nat64, end : Int64) : async Result<[PostID], PostDatabaseError>
+```
