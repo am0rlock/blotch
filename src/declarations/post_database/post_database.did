@@ -1,3 +1,8 @@
+type PostUpdateType = 
+ variant {
+   Create;
+   Delete;
+ };
 type PostID = 
  record {
    id: nat64;
@@ -5,5 +10,5 @@ type PostID =
  };
 service : {
   notifyNewPortal: (principal) -> ();
-  notifyPostUpdate: (PostID) -> ();
+  notifyPostUpdate: (PostID, PostUpdateType) -> ();
 }

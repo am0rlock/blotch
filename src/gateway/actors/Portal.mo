@@ -14,10 +14,13 @@ import Post "../types/Post";
 import PostContent "../types/PostContent";
 import PostData "../types/PostData";
 import PostID "../types/PostID";
+import PostStats "../types/PostStats";
 import PostStore "../types/PostStore";
 import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
 import Timestamp "../types/Timestamp";
+
+import PostUpdateType "../../post_database/types/PostUpdateType";
 
 
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
@@ -196,7 +199,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
         for (subscriber in portalPostSubscribers.vals())
         {
-            ignore subscriber.notifyPostUpdate(postID);
+            ignore subscriber.notifyPostUpdate(postID, #Create);
         };
 
         postStore.addPostData(postID, postData);
@@ -209,6 +212,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         if (not isAuthorized(msg.caller))
         {
             return #err(#NotAuthorized);
+        };
+
+        for (subscriber in portalPostSubscribers.vals())
+        {
+            ignore subscriber.notifyPostUpdate(postID, #Delete);
         };
 
         return postStore.deletePostData(postID);
@@ -336,6 +344,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     {
         let subscriber : PortalPostSubscriber.PortalPostSubscriber = actor(Principal.toText(msg.caller));
         portalPostSubscribers := Array.append(portalPostSubscribers, [subscriber]);
+    };
+
+    public shared query func getPostStats(postID : PostID.PostID) : async Result.Result<PostStats.PostStats, PortalError.PortalError>
+    {
+        return postStore.getPostStats(postID);
     };
 
     /*

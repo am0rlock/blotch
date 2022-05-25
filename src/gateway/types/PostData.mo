@@ -3,6 +3,7 @@ import TrieSet "mo:base/TrieSet";
 
 import Post "Post";
 import PostContent "PostContent";
+import PostStats "PostStats";
 import Timestamp "Timestamp";
 
 module
@@ -38,6 +39,14 @@ module
             postTime = postData.postTime;
             numLikers = Nat64.fromNat(TrieSet.size(postData.likers));
             content = postData.content;
+        };
+    };
+
+    public func toPostStats(postData : PostData) : PostStats.PostStats
+    {
+        return {
+            postTime = postData.postTime;
+            numLikers = Nat64.fromNat(TrieSet.size(postData.likers));
         };
     };
 };

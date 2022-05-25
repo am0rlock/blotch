@@ -5,6 +5,8 @@ import TrieSet "mo:base/TrieSet";
 import Gateway "canister:gateway";
 import Portal "../../gateway/actors/Portal";
 
+import PostUpdateType "../types/PostUpdateType";
+
 import PostID "../../gateway/types/PostID";
 import Profile "../../gateway/types/Profile";
 
@@ -21,17 +23,20 @@ actor PostDatabase
         await newPortal.subscribePostDatabase();
     };
 
-    public shared(msg) func notifyPostUpdate(postID : PostID.PostID) : async ()
+    public shared(msg) func notifyPostUpdate(postID : PostID.PostID, updateType : PostUpdateType.PostUpdateType) : async ()
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        if (TrieSet.mem(postIDs, postID, PostID.hash(postID), PostID.equal))
+        switch (updateType)
         {
-            postIDs := TrieSet.delete(postIDs, postID, PostID.hash(postID), PostID.equal);
-        }
-        else
-        {
-            postIDs := TrieSet.put(postIDs, postID, PostID.hash(postID), PostID.equal);
+            case (#Create)
+            {
+                postIDs := TrieSet.put(postIDs, postID, PostID.hash(postID), PostID.equal);
+            };
+            case (#Delete)
+            {
+                postIDs := TrieSet.delete(postIDs, postID, PostID.hash(postID), PostID.equal);
+            };
         };
     };
 

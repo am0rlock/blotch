@@ -41,6 +41,10 @@ func getPost(postID : PostID) : async Result<Post, PortalError>
 ```
 
 ```
+func getFollowingPostIDs() : async [PostID]
+```
+
+```
 func setProfile(newProfile : ProfileUpdate) : async Result<(), PortalError>
 ```
 
