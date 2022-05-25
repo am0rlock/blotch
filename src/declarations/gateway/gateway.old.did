@@ -1,0 +1,15 @@
+type Result = 
+ variant {
+   err: GatewayError;
+   ok: principal;
+ };
+type GatewayError = 
+ variant {
+   PortalAlreadyExists;
+   PortalNotFound;
+ };
+service : {
+  grabPortal: () -> (Result);
+  isPortalPrincipalValid: (principal) -> (bool) query;
+  subscribe: () -> ();
+}

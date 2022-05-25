@@ -1,0 +1,11 @@
+type Profile = 
+ record {
+   bio: text;
+   userPrincipal: principal;
+   username: text;
+ };
+service : {
+  initialize: () -> ();
+  notifyNewPortal: (principal) -> ();
+  notifyProfileUpdate: (Profile, Profile) -> ();
+}

@@ -1,12 +1,16 @@
 import Array "mo:base/Array";
 import HashMap "mo:base/HashMap";
+import Int64 "mo:base/Int64";
 import Iter "mo:base/Iter";
+import Nat64 "mo:base/Nat64";
 import Principal "mo:base/Principal";
+import Result "mo:base/Result";
 import TrieSet "mo:base/TrieSet";
 
 import Gateway "canister:gateway";
 import Portal "../../gateway/actors/Portal";
 
+import PostDatabaseError "../types/PostDatabaseError";
 import PostIDScore "../types/PostIDScore";
 import PostUpdateType "../types/PostUpdateType";
 
@@ -26,6 +30,31 @@ actor PostDatabase
             await Gateway.subscribe();
             hasSubscribed := true;
         };
+    };
+
+    public shared query func getTopPosts(start : Nat64, end : Int64) : async Result.Result<[PostID.PostID], PostDatabaseError.PostDatabaseError>
+    {
+        let startConverted : Nat = Nat64.toNat(start);
+        let endConverted : Int = Int64.toInt(end);
+        if (startConverted > postIDScores.size())
+        {
+            return #err(#InvalidRange);
+        };
+        if (startConverted > endConverted)
+        {
+            return #err(#InvalidRange);
+        };
+
+        var topNPosts : [PostID.PostID] = [];
+        for (i in Iter.range(startConverted, endConverted))
+        {
+            if (i > postIDScores.size())
+            {
+                return #ok(topNPosts);
+            };
+            topNPosts := Array.append(topNPosts, [postIDScores[i].postID]);
+        };
+        return #ok(topNPosts);
     };
 
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
