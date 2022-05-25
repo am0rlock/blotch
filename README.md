@@ -15,12 +15,19 @@ Interfacing to the backend via a frontend involves completing a handoff procedur
 <h3>Gateway Canister</h3>
 
 ```
+/*
+ * Returns the Principal of the callers Portal or 
+ * creates a new Portal and returns its Principal.
+ */
 func grabPortal() : async Result<Principal, GatewayError>
 ```
 
 <h3>Portal Canister</h3>
 
 ```
+/*
+ * Returns the Profile of this Portal
+ */
 func getProfile() : async Profile
 ```
 
