@@ -32,49 +32,95 @@ func getProfile() : async Profile
 ```
 
 ```
+/*
+ * Returns an array of Principals corresponding 
+ * to the other Portals this Portal is following
+ */
 func getFollowing() : async [Principal]
 ```
 
 ```
+/*
+ * Returns an array of Principals corresponding 
+ * to the other Portals this Portal is followed by
+ */
 func getFollowers() : async [Principal]
 ```
 
 ```
+/*
+ * Returns an array of PostIDs of the posts created 
+ * by this user
+ */
 func getPostIDs() : async [PostID]
 ```
 
 ```
+/*
+ * Gets the post corresponding to the postID 
+ * (make sure the PostID.portalPrincipal 
+ * corresponds to this Portal)
+ */
 func getPost(postID : PostID) : async Result<Post, PortalError>
 ```
 
 ```
+/*
+ * Get's all the PostIDs of the other Portals
+ * this Portal is following
+ */
 func getFollowingPostIDs() : async [PostID]
 ```
 
 ```
+/*
+ * Sets the Portal's profile to newProfile
+ */
 func setProfile(newProfile : ProfileUpdate) : async Result<(), PortalError>
 ```
 
 ```
+/*
+ * Starts following the Portal corresponding 
+ * to newPortalPrincipal
+ */
 func addFollowing(newPortalPrincipal : Principal) : async Result<(), PortalError>
 ```
 
 ```
+/*
+ * Stops following the Portal corresponding 
+ * to otherPortalPrincipal
+ */
 func removeFollowing(otherPortalPrincipal : Principal) : async Result<(), PortalError>
 ```
 
 ```
+/*
+ * Creates a post for this user with postContent
+ */
 func createPost(postContent : PostContent) : async Result<(), PortalError>
 ```
 
 ```
+/*
+ * Deletes the post corresponding to the postID 
+ * (make sure the PostID.portalPrincipal 
+ * corresponds to this Portal)
+ */
 func deletePost(postID : PostID) : async Result<(), PortalError>
 ```
 
 ```
+/*
+ * Like the post corresponding to postID
+ */
 func likePost(postID : PostID) : async Result<(), PortalError>
 ```
 
 ```
+/*
+ * Unlikes the post corresponding to postID
+ */
 func unlikePost(postID : PostID) : async Result<(), PortalError>
 ```
