@@ -9,6 +9,7 @@ type PostID =
    portalPrincipal: principal;
  };
 service : {
+  initialize: () -> ();
   notifyNewPortal: (principal) -> ();
   notifyPostUpdate: (PostID, PostUpdateType) -> ();
 }

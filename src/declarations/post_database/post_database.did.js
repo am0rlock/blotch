@@ -8,6 +8,7 @@ export const idlFactory = ({ IDL }) => {
     'Create' : IDL.Null,
   });
   return IDL.Service({
+    'initialize' : IDL.Func([], [], []),
     'notifyNewPortal' : IDL.Func([IDL.Principal], [], []),
     'notifyPostUpdate' : IDL.Func([PostID, PostUpdateType], [], []),
   });

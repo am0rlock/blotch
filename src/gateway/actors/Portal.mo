@@ -362,7 +362,6 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     /*
      *  Private helper functions
      */
-
     public shared(msg) func rechargeBlotches() : async ()
     {
         if (msg.caller != Principal.fromActor(this))

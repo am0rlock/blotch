@@ -15,6 +15,15 @@ actor PostDatabase
     var hasSubscribed : Bool = false;
     var postIDs : TrieSet.Set<PostID.PostID> = TrieSet.empty();
 
+    public shared func initialize() : async ()
+    {
+        if (not hasSubscribed)
+        {
+            await Gateway.subscribe();
+            hasSubscribed := true;
+        };
+    };
+
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
     {
         if (msg.caller != Principal.fromActor(Gateway)) { return; };
@@ -37,15 +46,6 @@ actor PostDatabase
             {
                 postIDs := TrieSet.delete(postIDs, postID, PostID.hash(postID), PostID.equal);
             };
-        };
-    };
-
-    system func heartbeat() : async ()
-    {
-        if (not hasSubscribed)
-        {
-            await Gateway.subscribe();
-            hasSubscribed := true;
         };
     };
 };
