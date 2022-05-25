@@ -4,6 +4,7 @@ import Principal "mo:base/Principal";
 import TrieSet "mo:base/TrieSet";
 
 import PortalError "PortalError";
+import Post "Post";
 import PostData "PostData";
 import PostID "PostID";
 import Result "mo:base/Result";
@@ -35,7 +36,7 @@ module PostStore
             };
         };
 
-        public func getPostData(key : PostID.PostID) : Result.Result<PostData.PostData, PortalError.PortalError>
+        public func getPost(key : PostID.PostID) : Result.Result<Post.Post, PortalError.PortalError>
         {
             let value : ?PostData.PostData = idToData.get(key);
             switch (value)
@@ -46,7 +47,7 @@ module PostStore
                 };
                 case (?value)
                 {
-                    return #ok(value);
+                    return #ok(PostData.toPost(value));
                 };
             };
         };

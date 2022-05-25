@@ -26,6 +26,6 @@ module
 
     public func hash(x : PostID) : Hash.Hash
     {
-        return Nat32.fromNat(Nat64.toNat(x.id));
+        return Hash.hash(Nat64.toNat(x.id));
     };
 };

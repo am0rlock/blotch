@@ -15,10 +15,7 @@ Interfacing to the backend via a frontend involves completing a handoff procedur
 <h3>Gateway Canister</h3>
 
 ```
-func createPortal() : async Result<Principal, GatewayError>
-```
-```
-func getPortal() : async Result<Principal, GatewayError>
+func grabPortal() : async Result<Principal, GatewayError>
 ```
 
 <h3>Portal Canister</h3>
@@ -40,7 +37,7 @@ func getPostIDs() : async [PostID]
 ```
 
 ```
-func getPostData(postID : PostID) : async Result<PostData, PortalError>
+func getPost(postID : PostID) : async Result<Post, PortalError>
 ```
 
 ```
