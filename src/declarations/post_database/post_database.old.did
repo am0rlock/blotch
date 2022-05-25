@@ -1,3 +1,8 @@
+type Result = 
+ variant {
+   err: PostDatabaseError;
+   ok: vec PostID;
+ };
 type PostUpdateType = 
  variant {
    Create;
@@ -8,8 +13,9 @@ type PostID =
    id: nat64;
    portalPrincipal: principal;
  };
+type PostDatabaseError = variant {InvalidRange;};
 service : {
-  getTopPosts: (nat64, int64) -> (vec PostID) query;
+  getTopPosts: (nat64, int64) -> (Result) query;
   initialize: () -> ();
   notifyNewPortal: (principal) -> ();
   notifyPostUpdate: (PostID, PostUpdateType) -> ();

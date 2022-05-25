@@ -98,8 +98,30 @@ actor PostDatabase
 
     system func heartbeat() : async ()
     {
-        let postIDScoresVar : [var PostIDScore.PostIDScore] = Array.thaw(postIDScores);
-        Array.sortInPlace(postIDScoresVar, PostIDScore.cmp);
-        postIDScores := Array.freeze(postIDScoresVar);
+        if (postIDScores.size() > 0)
+        {
+            let postIDScoresVar : [var PostIDScore.PostIDScore] = Array.init(postIDScores.size(), postIDScores[0]);
+            for (i in Iter.range(0, postIDScores.size()))
+            {
+                let postIDScore : PostIDScore.PostIDScore = postIDScores[i];
+                let portal : Portal.Portal = actor(Principal.toText(postIDScore.postID.portalPrincipal));
+                let response = await portal.getPostStats(postIDScore.postID);
+                switch (response)
+                {
+                    case (#ok(x))
+                    {
+                        let postStats : PostStats.PostStats = x;
+                        let newPostIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postIDScore.postID, postStats);
+                        postIDScoresVar[i] := newPostIDScore;
+                    };
+                    case (#err(x))
+                    {
+                        return;
+                    };
+                }
+            };
+            Array.sortInPlace(postIDScoresVar, PostIDScore.cmp);
+            postIDScores := Array.freeze(postIDScoresVar);
+        };
     };
 };
