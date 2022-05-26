@@ -1,0 +1,80 @@
+type Timestamp = nat64;
+type Result_2 = 
+ variant {
+   err: PortalError;
+   ok: Post;
+ };
+type Result_1 = 
+ variant {
+   err: PortalError;
+   ok: PostStats;
+ };
+type Result = 
+ variant {
+   err: PortalError;
+   ok;
+ };
+type ProfileUpdate = 
+ record {
+   bio: text;
+   username: text;
+ };
+type Profile = 
+ record {
+   bio: text;
+   userPrincipal: principal;
+   username: text;
+ };
+type PostStats = 
+ record {
+   numLikers: nat64;
+   postTime: Timestamp;
+ };
+type PostID = 
+ record {
+   id: nat64;
+   portalPrincipal: principal;
+ };
+type PostContent = record {words: text;};
+type Post = 
+ record {
+   content: PostContent;
+   numLikers: nat64;
+   postTime: Timestamp;
+ };
+type PortalError = 
+ variant {
+   CannotCreatePost;
+   CannotLike;
+   CannotUnlike;
+   InvalidPortal;
+   NotAuthorized;
+   NotEnoughBlotches;
+   PostNotFound;
+   ProfileInvalid;
+ };
+type Portal = 
+ service {
+   addFollower: () -> (Result);
+   addFollowing: (principal) -> (Result);
+   createPost: (PostContent) -> (Result);
+   getFollowers: () -> (vec principal) query;
+   getFollowing: () -> (vec principal) query;
+   getFollowingPostIDs: () -> (vec PostID);
+   getNumBlotches: () -> (nat64) query;
+   getPost: (PostID) -> (Result_2) query;
+   getPostIDs: () -> (vec PostID) query;
+   getPostStats: (PostID) -> (Result_1) query;
+   getProfile: () -> (Profile) query;
+   likeMyPost: (PostID) -> (Result);
+   likePost: (PostID) -> (Result);
+   rechargeBlotches: () -> ();
+   removeFollower: () -> (Result);
+   removeFollowing: (principal) -> (Result);
+   setProfile: (ProfileUpdate) -> (Result);
+   subscribePostDatabase: () -> ();
+   subscribeProfileDatabase: () -> ();
+   unlikeMyPost: (PostID) -> (Result);
+   unlikePost: (PostID) -> (Result);
+ };
+service : (principal, func (principal) -> (bool) query) -> Portal

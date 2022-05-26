@@ -37,20 +37,20 @@ module PostStore
             };
         };
 
-        public func getPostStats(key : PostID.PostID) : Result.Result<PostStats.PostStats, PortalError.PortalError>
+        public func getPostStats(key : PostID.PostID) : ?PostStats.PostStats
         {
             let value : ?PostData.PostData = idToData.get(key);
             switch (value)
             {
                 case null
                 {
-                    return #err(#PostNotFound);
+                    return null;
                 };
                 case (?value)
                 {
-                    return #ok(PostData.toPostStats(value));
-                };
-            };
+                    return ?(PostData.toPostStats((value)));
+                }
+            }
         };
 
         public func getPostIDs() : [PostID.PostID] { return Iter.toArray(idToData.keys()); };

@@ -328,7 +328,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         portalPostSubscribers := Array.append(portalPostSubscribers, [subscriber]);
     };
 
-    public shared query func getPostStats(postID : PostID.PostID) : async Result.Result<PostStats.PostStats, PortalError.PortalError>
+    public shared query func getPostStats(postID : PostID.PostID) : async ?PostStats.PostStats
     {
         return postStore.getPostStats(postID);
     };

@@ -63,19 +63,18 @@ actor PostDatabase
         };
 
         let portal : Portal.Portal = actor(Principal.toText(postID.portalPrincipal));
-        let response = await portal.getPostStats(postID);
-        switch (response)
+        let postStats : ?PostStats.PostStats = await portal.getPostStats(postID);
+        switch (postStats)
         {
-            case (#ok(x))
-            {
-                let postStats : PostStats.PostStats = x;
-                let postIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postID, postStats);
-                postIDScores := Array.append(postIDScores, [postIDScore]);
-            };
-            case (#err(x))
+            case null
             {
                 return;
             };
+            case (?postStats)
+            {
+                let postIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postID, postStats);
+                postIDScores := Array.append(postIDScores, [postIDScore]);
+            }
         }
     };
 
@@ -88,18 +87,17 @@ actor PostDatabase
             {
                 let postIDScore : PostIDScore.PostIDScore = postIDScores[i];
                 let portal : Portal.Portal = actor(Principal.toText(postIDScore.postID.portalPrincipal));
-                let response = await portal.getPostStats(postIDScore.postID);
-                switch (response)
+                let postStats : ?PostStats.PostStats = await portal.getPostStats(postIDScore.postID);
+                switch (postStats)
                 {
-                    case (#ok(x))
-                    {
-                        let postStats : PostStats.PostStats = x;
-                        let newPostIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postIDScore.postID, postStats);
-                        postIDScoresVar[i] := newPostIDScore;
-                    };
-                    case (#err(x))
+                    case null
                     {
                         return;
+                    };
+                    case (?postStats)
+                    {
+                        let newPostIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postIDScore.postID, postStats);
+                        postIDScoresVar[i] := newPostIDScore;
                     };
                 }
             };
