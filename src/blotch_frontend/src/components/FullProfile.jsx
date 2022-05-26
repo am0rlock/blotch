@@ -20,7 +20,7 @@ const FullProfile = ({ portalPrincipal }) => {
 
     useEffect(() => {
         grabProfileParts();
-    }, []);
+    });
 
 
     // name, description, num follwoing maybe with actual list of mini profile of them, num followers, bio, num blotches, images

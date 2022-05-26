@@ -1,4 +1,6 @@
 import Array "mo:base/Array";
+import Debug "mo:base/Debug";
+import Nat64 "mo:base/Nat64";
 import Principal "mo:base/Principal";
 import Random "mo:base/Random";
 import Result "mo:base/Result";
@@ -8,13 +10,17 @@ import TrieSet "mo:base/TrieSet";
 import PortalError "../types/PortalError";
 import PortalProfileSubscriber "../types/PortalProfileSubscriber";
 import PortalPostSubscriber "../types/PortalPostSubscriber";
+import Post "../types/Post";
 import PostContent "../types/PostContent";
 import PostData "../types/PostData";
 import PostID "../types/PostID";
+import PostStats "../types/PostStats";
 import PostStore "../types/PostStore";
 import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
 import Timestamp "../types/Timestamp";
+
+import PostUpdateType "../../post_database/types/PostUpdateType";
 
 
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
@@ -63,9 +69,9 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return postStore.getPostIDs();
     };
 
-    public shared query func getPostData(postID : PostID.PostID) : async Result.Result<PostData.PostData, PortalError.PortalError>
+    public shared query func getPost(postID : PostID.PostID) : async Result.Result<Post.Post, PortalError.PortalError>
     {
-        return postStore.getPostData(postID);
+        return postStore.getPost(postID);
     };
 
     public shared func getFollowingPostIDs() : async [PostID.PostID]
@@ -193,7 +199,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
         for (subscriber in portalPostSubscribers.vals())
         {
-            ignore subscriber.notifyPostUpdate(postID);
+            ignore subscriber.notifyPostUpdate(postID, #Create);
         };
 
         postStore.addPostData(postID, postData);
@@ -206,6 +212,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         if (not isAuthorized(msg.caller))
         {
             return #err(#NotAuthorized);
+        };
+
+        for (subscriber in portalPostSubscribers.vals())
+        {
+            ignore subscriber.notifyPostUpdate(postID, #Delete);
         };
 
         return postStore.deletePostData(postID);
@@ -302,7 +313,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
     public shared(msg) func likeMyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
     {
-        if (not (await isPortalPrincipalValid(postID.portalPrincipal)))
+        if (not (await isPortalPrincipalValid(msg.caller)))
         {
             return #err(#InvalidPortal);
         };
@@ -335,6 +346,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         portalPostSubscribers := Array.append(portalPostSubscribers, [subscriber]);
     };
 
+    public shared query func getPostStats(postID : PostID.PostID) : async Result.Result<PostStats.PostStats, PortalError.PortalError>
+    {
+        return postStore.getPostStats(postID);
+    };
+
     /*
      *  System functions
      */
@@ -346,7 +362,6 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     /*
      *  Private helper functions
      */
-
     public shared(msg) func rechargeBlotches() : async ()
     {
         if (msg.caller != Principal.fromActor(this))
@@ -358,6 +373,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         if (elapsed > RECHARGE_PERIOD)
         {
             numBlotches := numBlotches + RECHARGE_BLOTCHES;
+            lastRecharge := now;
         };
     };
     

@@ -12,6 +12,15 @@ actor ProfileDatabase
     var hasSubscribed : Bool = false;
     var profileToPortalPrincipal : HashMap.HashMap<Profile.Profile, Principal> = HashMap.HashMap(0, Profile.equal, Profile.hash);
 
+    public shared func initialize() : async ()
+    {
+        if (not hasSubscribed)
+        {
+            await Gateway.subscribe();
+            hasSubscribed := true;
+        };
+    };
+
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
     {
         if (msg.caller != Principal.fromActor(Gateway)) { return; };
@@ -30,14 +39,5 @@ actor ProfileDatabase
         profileToPortalPrincipal.delete(oldProfile);
 
         profileToPortalPrincipal.put(newProfile, msg.caller);
-    };
-
-    system func heartbeat() : async ()
-    {
-        if (not hasSubscribed)
-        {
-            await Gateway.subscribe();
-            hasSubscribed := true;
-        };
     };
 };

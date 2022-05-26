@@ -6,13 +6,13 @@
 			"type": "motoko",
 			"main": "src/gateway/actors/Gateway.mo"
 		},
+        "post_database": {
+			"type": "motoko",
+			"main": "src/post_database/actors/PostDatabase.mo"
+		},
 		"profile_database": {
 			"type": "motoko",
 			"main": "src/profile_database/actors/ProfileDatabase.mo"
-		},
-		"post_database": {
-			"type": "motoko",
-			"main": "src/post_database/actors/PostDatabase.mo"
 		},
         "blotch_frontend": {
             "dependencies": [

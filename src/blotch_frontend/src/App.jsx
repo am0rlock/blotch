@@ -13,10 +13,14 @@ const App = () => {
     useEffect(() => {
         grabPortalPrincipal();
     });
-
+//<FullProfile portalPrincipal={portalPrincipal} />
     return (
         <div>
-            {portalPrincipal == '' ? <p>Loading...</p> : <FullProfile portalPrincipal={portalPrincipal} />}
+            <FullProfile portalPrincipal={portalPrincipal} />
+            <FullProfile portalPrincipal={portalPrincipal} />
+            <FullProfile portalPrincipal={portalPrincipal} />
+            <FullProfile portalPrincipal={portalPrincipal} />
+            <FullProfile portalPrincipal={portalPrincipal} />
         </div>
     )
 }
