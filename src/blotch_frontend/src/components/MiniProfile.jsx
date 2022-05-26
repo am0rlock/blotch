@@ -5,6 +5,8 @@ import { Card, CardContent } from '../../../../node_modules/@mui/material/index'
 import { Typography } from '../../../../node_modules/@mui/material/index';
 import { createActor } from "../../../declarations/portal";
 
+import unknownProfile from './UnknownProfile.png';
+
 const MiniProfile = ({ portalPrincipal }) => {
     const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...'});
 
@@ -17,11 +19,12 @@ const MiniProfile = ({ portalPrincipal }) => {
         grabProfile();
     });
 
-    // name, description, number of blotches
+    // name, profile image, number of blotches, maybe principal
 
     return (
         <>
             <Card sx={{ maxWidth: 400 }}>
+                <img src={unknownProfile}></img>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
                     {profile['username']}

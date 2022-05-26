@@ -7,7 +7,6 @@ export interface Profile {
   'userPrincipal' : Principal,
 }
 export interface _SERVICE {
-  'initialize' : ActorMethod<[], undefined>,
   'notifyNewPortal' : ActorMethod<[Principal], undefined>,
   'notifyProfileUpdate' : ActorMethod<[Profile, Profile], undefined>,
 }

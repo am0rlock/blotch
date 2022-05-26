@@ -5,7 +5,6 @@ export const idlFactory = ({ IDL }) => {
     'userPrincipal' : IDL.Principal,
   });
   return IDL.Service({
-    'initialize' : IDL.Func([], [], []),
     'notifyNewPortal' : IDL.Func([IDL.Principal], [], []),
     'notifyProfileUpdate' : IDL.Func([Profile, Profile], [], []),
   });

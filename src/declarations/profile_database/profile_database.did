@@ -5,7 +5,6 @@ type Profile =
    username: text;
  };
 service : {
-  initialize: () -> ();
   notifyNewPortal: (principal) -> ();
   notifyProfileUpdate: (Profile, Profile) -> ();
 }

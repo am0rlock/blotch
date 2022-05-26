@@ -16,11 +16,7 @@ const App = () => {
 //<FullProfile portalPrincipal={portalPrincipal} />
     return (
         <div>
-            <FullProfile portalPrincipal={portalPrincipal} />
-            <FullProfile portalPrincipal={portalPrincipal} />
-            <FullProfile portalPrincipal={portalPrincipal} />
-            <FullProfile portalPrincipal={portalPrincipal} />
-            <FullProfile portalPrincipal={portalPrincipal} />
+            <MiniProfile portalPrincipal={portalPrincipal} />
         </div>
     )
 }
