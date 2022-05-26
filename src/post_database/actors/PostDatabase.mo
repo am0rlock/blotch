@@ -12,7 +12,6 @@ import Portal "../../gateway/actors/Portal";
 
 import PostDatabaseError "../types/PostDatabaseError";
 import PostIDScore "../types/PostIDScore";
-import PostUpdateType "../types/PostUpdateType";
 
 import PostID "../../gateway/types/PostID";
 import PostStats "../../gateway/types/PostStats";
@@ -65,35 +64,28 @@ actor PostDatabase
         await newPortal.subscribePostDatabase();
     };
 
-    public shared(msg) func notifyPostUpdate(postID : PostID.PostID, updateType : PostUpdateType.PostUpdateType) : async ()
+    public shared(msg) func notifyPostUpdate(postID : PostID.PostID) : async ()
     {
-        if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
-
-        switch (updateType)
+        if (not (await Gateway.isPortalPrincipalValid(msg.caller)))
         {
-            case (#Create)
-            {
-                let portal : Portal.Portal = actor(Principal.toText(postID.portalPrincipal));
-                let response = await portal.getPostStats(postID);
-                switch (response)
-                {
-                    case (#ok(x))
-                    {
-                        let postStats : PostStats.PostStats = x;
-                        let postIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postID, postStats);
-                        postIDScores := Array.append(postIDScores, [postIDScore]);
-                    };
-                    case (#err(x))
-                    {
-                        return;
-                    };
-                }
-            };
-            case (#Delete)
-            {
-                //TODO
-            };
+            return;
         };
+
+        let portal : Portal.Portal = actor(Principal.toText(postID.portalPrincipal));
+        let response = await portal.getPostStats(postID);
+        switch (response)
+        {
+            case (#ok(x))
+            {
+                let postStats : PostStats.PostStats = x;
+                let postIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postID, postStats);
+                postIDScores := Array.append(postIDScores, [postIDScore]);
+            };
+            case (#err(x))
+            {
+                return;
+            };
+        }
     };
 
     system func heartbeat() : async ()

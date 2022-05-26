@@ -7,7 +7,7 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'initialize' : IDL.Func([], [], []),
     'notifyNewPortal' : IDL.Func([IDL.Principal], [], []),
-    'notifyProfileUpdate' : IDL.Func([Profile, Profile], [], []),
+    'notifyProfileUpdate' : IDL.Func([Profile], [], []),
   });
 };
 export const init = ({ IDL }) => { return []; };

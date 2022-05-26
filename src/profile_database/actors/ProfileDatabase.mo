@@ -32,11 +32,11 @@ actor ProfileDatabase
         profileToPortalPrincipal.put(profile, newPortalPrincipal);
     };
 
-    public shared(msg) func notifyProfileUpdate(oldProfile : Profile.Profile, newProfile : Profile.Profile) : async ()
+    public shared(msg) func notifyProfileUpdate(newProfile : Profile.Profile) : async ()
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        profileToPortalPrincipal.delete(oldProfile);
+        profileToPortalPrincipal.delete(newProfile);
 
         profileToPortalPrincipal.put(newProfile, msg.caller);
     };

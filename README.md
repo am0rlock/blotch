@@ -104,15 +104,6 @@ func createPost(postContent : PostContent) : async Result<(), PortalError>
 
 ```
 /*
- * Deletes the post corresponding to the postID 
- * (make sure the PostID.portalPrincipal 
- * corresponds to this Portal)
- */
-func deletePost(postID : PostID) : async Result<(), PortalError>
-```
-
-```
-/*
  * Like the post corresponding to postID
  */
 func likePost(postID : PostID) : async Result<(), PortalError>

@@ -20,9 +20,6 @@ import Profile "../types/Profile";
 import ProfileUpdate "../types/ProfileUpdate";
 import Timestamp "../types/Timestamp";
 
-import PostUpdateType "../../post_database/types/PostUpdateType";
-
-
 shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : shared query (Principal) -> async Bool) = this
 {
     let INITIAL_BLOTCHES_ALLOWANCE : Nat64 = 100;
@@ -107,7 +104,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
         for (subscriber in portalProfileSubscribers.vals())
         {
-            ignore subscriber.notifyProfileUpdate(oldProfile, profile);
+            ignore subscriber.notifyProfileUpdate(profile);
         };
 
         return #ok(());
@@ -199,27 +196,12 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
         for (subscriber in portalPostSubscribers.vals())
         {
-            ignore subscriber.notifyPostUpdate(postID, #Create);
+            ignore subscriber.notifyPostUpdate(postID);
         };
 
         postStore.addPostData(postID, postData);
 
         return #ok(());
-    };
-
-    public shared(msg) func deletePost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
-    {
-        if (not isAuthorized(msg.caller))
-        {
-            return #err(#NotAuthorized);
-        };
-
-        for (subscriber in portalPostSubscribers.vals())
-        {
-            ignore subscriber.notifyPostUpdate(postID, #Delete);
-        };
-
-        return postStore.deletePostData(postID);
     };
 
     public shared(msg) func likePost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>

@@ -9,5 +9,5 @@ export interface Profile {
 export interface _SERVICE {
   'initialize' : ActorMethod<[], undefined>,
   'notifyNewPortal' : ActorMethod<[Principal], undefined>,
-  'notifyProfileUpdate' : ActorMethod<[Profile, Profile], undefined>,
+  'notifyProfileUpdate' : ActorMethod<[Profile], undefined>,
 }

@@ -7,5 +7,5 @@ type Profile =
 service : {
   initialize: () -> ();
   notifyNewPortal: (principal) -> ();
-  notifyProfileUpdate: (Profile, Profile) -> ();
+  notifyProfileUpdate: (Profile) -> ();
 }

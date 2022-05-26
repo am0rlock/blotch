@@ -3,11 +3,6 @@ type Result =
    err: PostDatabaseError;
    ok: vec PostID;
  };
-type PostUpdateType = 
- variant {
-   Create;
-   Delete;
- };
 type PostID = 
  record {
    id: nat64;
@@ -18,5 +13,5 @@ service : {
   getTopPosts: (nat64, int64) -> (Result) query;
   initialize: () -> ();
   notifyNewPortal: (principal) -> ();
-  notifyPostUpdate: (PostID, PostUpdateType) -> ();
+  notifyPostUpdate: (PostID) -> ();
 }
