@@ -17,6 +17,8 @@ const MiniProfile = ({ portalPrincipal }) => {
         grabProfile();
     }, []);
 
+    // name, description, number of blotches
+
     return (
         <>
             <Card sx={{ maxWidth: 400 }}>
