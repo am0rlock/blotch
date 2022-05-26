@@ -21,22 +21,6 @@ module PostStore
             idToData.put(key, value);
         };
 
-        public func deletePostData(key : PostID.PostID) : Result.Result<(), PortalError.PortalError>
-        {
-            let value : ?PostData.PostData = idToData.remove(key);
-            switch (value)
-            {
-                case null
-                {
-                    return #err(#PostNotFound);
-                };
-                case (?value)
-                {
-                    return #ok(());
-                };
-            };
-        };
-
         public func getPost(key : PostID.PostID) : Result.Result<Post.Post, PortalError.PortalError>
         {
             let value : ?PostData.PostData = idToData.get(key);
