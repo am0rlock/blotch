@@ -124,5 +124,5 @@ func unlikePost(postID : PostID) : async Result<(), PortalError>
  * posts from the specified range. If the range 
  * is invalid, it returns an error
  */
-func getTopPosts(start : Nat64, end : Int64) : async Result<[PostID], PostDatabaseError>
+func getTopPosts(start : Nat64, end : Int64) : async [PostID]
 ```

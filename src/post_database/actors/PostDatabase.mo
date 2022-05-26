@@ -10,7 +10,6 @@ import TrieSet "mo:base/TrieSet";
 import Gateway "canister:gateway";
 import Portal "../../gateway/actors/Portal";
 
-import PostDatabaseError "../types/PostDatabaseError";
 import PostIDScore "../types/PostIDScore";
 
 import PostID "../../gateway/types/PostID";
@@ -31,29 +30,21 @@ actor PostDatabase
         };
     };
 
-    public shared query func getTopPosts(start : Nat64, end : Int64) : async Result.Result<[PostID.PostID], PostDatabaseError.PostDatabaseError>
+    public shared query func getTopPosts(start : Nat64, end : Int64) : async [PostID.PostID]
     {
         let startConverted : Nat = Nat64.toNat(start);
         let endConverted : Int = Int64.toInt(end);
-        if (startConverted > postIDScores.size())
-        {
-            return #err(#InvalidRange);
-        };
-        if (startConverted > endConverted)
-        {
-            return #err(#InvalidRange);
-        };
 
         var topNPosts : [PostID.PostID] = [];
         for (i in Iter.range(startConverted, endConverted))
         {
-            if (i > postIDScores.size())
+            if (i < 0 or i >= postIDScores.size())
             {
-                return #ok(topNPosts);
+                return topNPosts;
             };
             topNPosts := Array.append(topNPosts, [postIDScores[i].postID]);
         };
-        return #ok(topNPosts);
+        return topNPosts;
     };
 
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
