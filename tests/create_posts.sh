@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#$REGEX="\(variant \{ ok = principal "[^"]*" \}\)/
-
 dfx identity use default
 
 cd ..
@@ -10,7 +8,12 @@ for i in {1..15}
 do
     dfx identity new --disable-encryption test_$i
     dfx identity use test_$i
-    dfx canister call gateway grabPortal
+    RESPONSE=$(dfx canister call gateway grabPortal)
+    PRINCIPAL=$(echo $RESPONSE | cut -c28-54)
+    for j in {1..10}
+    do
+        dfx canister call $PRINCIPAL createPost '(record {words="random"})'
+    done
 done
 
 dfx identity use default

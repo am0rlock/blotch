@@ -1,4 +1,5 @@
 import Array "mo:base/Array";
+import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
 import Int64 "mo:base/Int64";
 import Iter "mo:base/Iter";
@@ -25,6 +26,7 @@ actor PostDatabase
     {
         if (not hasSubscribed)
         {
+            Debug.print("subscribed");
             await Gateway.subscribe();
             hasSubscribed := true;
         };
@@ -50,7 +52,7 @@ actor PostDatabase
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
     {
         if (msg.caller != Principal.fromActor(Gateway)) { return; };
-
+        Debug.print("new portal");
         let newPortal : Portal.Portal = actor(Principal.toText(newPortalPrincipal));
         await newPortal.subscribePostDatabase();
     };
@@ -61,7 +63,7 @@ actor PostDatabase
         {
             return;
         };
-
+        Debug.print("new post");
         let portal : Portal.Portal = actor(Principal.toText(postID.portalPrincipal));
         let postStats : ?PostStats.PostStats = await portal.getPostStats(postID);
         switch (postStats)

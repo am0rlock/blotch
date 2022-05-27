@@ -6,6 +6,10 @@
 			"type": "motoko",
 			"main": "src/gateway/actors/Gateway.mo"
 		},
+		"initializer": {
+			"type": "motoko",
+			"main": "src/initializer/actors/Initializer.mo"
+		},
         "post_database": {
 			"type": "motoko",
 			"main": "src/post_database/actors/PostDatabase.mo"

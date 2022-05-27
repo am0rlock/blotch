@@ -1,3 +1,4 @@
+import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
 import TrieSet "mo:base/TrieSet";
