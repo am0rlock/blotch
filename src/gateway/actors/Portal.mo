@@ -7,6 +7,7 @@ import Result "mo:base/Result";
 import Time "mo:base/Time";
 import TrieSet "mo:base/TrieSet";
 
+import Comment "../types/Comment";
 import PortalError "../types/PortalError";
 import PortalProfileSubscriber "../types/PortalProfileSubscriber";
 import PortalPostSubscriber "../types/PortalPostSubscriber";
@@ -254,6 +255,21 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return #ok()
     };
 
+    public shared(msg) func createComment(postID : PostID.PostID, content : Text) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller))
+        {
+            return #err(#NotAuthorized);
+        };
+
+        let comment : Comment.Comment = Comment.construct(getMyPrincipal(), content);
+
+        let otherPortal : Portal = actor(Principal.toText(postID.portalPrincipal));
+        let response : Result.Result<(), PortalError.PortalError> = await otherPortal.createMyComment(postID, comment);
+
+        return #ok(());
+    };
+
     /*
      *  Portal to Portal functions
      */
@@ -311,6 +327,16 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         };
 
         return postStore.unlikePost(postID, msg.caller);
+    };
+
+    public shared(msg) func createMyComment(postID : PostID.PostID, comment : Comment.Comment) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not (await isPortalPrincipalValid(postID.portalPrincipal)))
+        {
+            return #err(#InvalidPortal);
+        };
+
+        return postStore.addComment(postID, comment, msg.caller);
     };
 
     /*

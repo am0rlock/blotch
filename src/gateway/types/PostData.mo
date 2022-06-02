@@ -1,6 +1,7 @@
 import Nat64 "mo:base/Nat64";
 import TrieSet "mo:base/TrieSet";
 
+import Comment "Comment";
 import Post "Post";
 import PostContent "PostContent";
 import PostStats "PostStats";
@@ -13,6 +14,7 @@ module
         postTime : Timestamp.Timestamp;
         likers : TrieSet.Set<Principal>;
         content : PostContent.PostContent;
+        comments : [Comment.Comment];
     };
 
     public func construct(content0 : PostContent.PostContent) : PostData
@@ -21,15 +23,17 @@ module
             postTime = Timestamp.construct();
             likers = TrieSet.empty();
             content = content0;
+            comments = [];
         };
     };
 
-    public func constructWithLikers(content0 : PostContent.PostContent, likers0 : TrieSet.Set<Principal>) : PostData
+    public func constructWithChange(content0 : PostContent.PostContent, likers0 : TrieSet.Set<Principal>, comments0 : [Comment.Comment]) : PostData
     {
         return {
             postTime = Timestamp.construct();
             likers = likers0;
             content = content0;
+            comments = comments0;
         };
     };
 

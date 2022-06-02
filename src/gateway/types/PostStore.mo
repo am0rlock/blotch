@@ -1,8 +1,10 @@
+import Array "mo:base/Array";
 import HashMap "mo:base/HashMap";
 import Iter "mo:base/Iter";
 import Principal "mo:base/Principal";
 import TrieSet "mo:base/TrieSet";
 
+import Comment "Comment";
 import PortalError "PortalError";
 import Post "Post";
 import PostData "PostData";
@@ -69,7 +71,8 @@ module PostStore
                     if (TrieSet.mem(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal)) { return #err(#CannotLike); };
 
                     let newLikers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
-                    let newPostData : PostData.PostData = PostData.constructWithLikers(value.content, newLikers);
+                    let comments : [Comment.Comment] = value.comments;
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments);
 
                     ignore idToData.replace(postID, newPostData);
 
@@ -92,7 +95,30 @@ module PostStore
                     if (not TrieSet.mem(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal)) { return #err(#CannotUnlike); };
 
                     let newLikers : TrieSet.Set<Principal> = TrieSet.delete(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
-                    let newPostData : PostData.PostData = PostData.constructWithLikers(value.content, newLikers);
+                    let comments : [Comment.Comment] = value.comments;
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments);
+
+                    ignore idToData.replace(postID, newPostData);
+
+                    return #ok(());
+                };
+            };
+        };
+
+        public func addComment(postID : PostID.PostID, comment : Comment.Comment, otherPortalPrincipal : Principal) : Result.Result<(), PortalError.PortalError>
+        {
+            let value : ?PostData.PostData = idToData.get(postID);
+            switch (value)
+            {
+                case null
+                {
+                    return #err(#PostNotFound);
+                };
+                case (?value)
+                {
+                    let likers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
+                    let newComments : [Comment.Comment] = Array.append(value.comments, [comment]);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, likers, newComments);
 
                     ignore idToData.replace(postID, newPostData);
 
