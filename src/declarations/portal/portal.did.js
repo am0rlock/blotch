@@ -10,40 +10,50 @@ export const idlFactory = ({ IDL }) => {
     'PostNotFound' : IDL.Null,
   });
   const Result = IDL.Variant({ 'ok' : IDL.Null, 'err' : PortalError });
-  const PostContent = IDL.Record({ 'words' : IDL.Text });
   const PostID = IDL.Record({
     'id' : IDL.Nat64,
     'portalPrincipal' : IDL.Principal,
   });
+  const Comment = IDL.Record({
+    'content' : IDL.Text,
+    'posterPortalPrincipal' : IDL.Principal,
+  });
+  const PostContent = IDL.Record({ 'words' : IDL.Text });
   const Timestamp = IDL.Nat64;
   const Post = IDL.Record({
     'postTime' : Timestamp,
     'content' : PostContent,
     'numLikers' : IDL.Nat64,
   });
-  const Result_2 = IDL.Variant({ 'ok' : Post, 'err' : PortalError });
+  const Result_1 = IDL.Variant({ 'ok' : Post, 'err' : PortalError });
   const PostStats = IDL.Record({
     'postTime' : Timestamp,
     'numLikers' : IDL.Nat64,
   });
-  const Result_1 = IDL.Variant({ 'ok' : PostStats, 'err' : PortalError });
   const Profile = IDL.Record({
     'bio' : IDL.Text,
     'username' : IDL.Text,
     'userPrincipal' : IDL.Principal,
+    'avatar' : IDL.Vec(IDL.Nat8),
   });
-  const ProfileUpdate = IDL.Record({ 'bio' : IDL.Text, 'username' : IDL.Text });
+  const ProfileUpdate = IDL.Record({
+    'bio' : IDL.Text,
+    'username' : IDL.Text,
+    'avatar' : IDL.Vec(IDL.Nat8),
+  });
   const Portal = IDL.Service({
     'addFollower' : IDL.Func([], [Result], []),
     'addFollowing' : IDL.Func([IDL.Principal], [Result], []),
+    'createComment' : IDL.Func([PostID, IDL.Text], [Result], []),
+    'createMyComment' : IDL.Func([PostID, Comment], [Result], []),
     'createPost' : IDL.Func([PostContent], [Result], []),
     'getFollowers' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getFollowing' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getFollowingPostIDs' : IDL.Func([], [IDL.Vec(PostID)], []),
     'getNumBlotches' : IDL.Func([], [IDL.Nat64], ['query']),
-    'getPost' : IDL.Func([PostID], [Result_2], ['query']),
+    'getPost' : IDL.Func([PostID], [Result_1], ['query']),
     'getPostIDs' : IDL.Func([], [IDL.Vec(PostID)], ['query']),
-    'getPostStats' : IDL.Func([PostID], [Result_1], ['query']),
+    'getPostStats' : IDL.Func([PostID], [IDL.Opt(PostStats)], ['query']),
     'getProfile' : IDL.Func([], [Profile], ['query']),
     'likeMyPost' : IDL.Func([PostID], [Result], []),
     'likePost' : IDL.Func([PostID], [Result], []),

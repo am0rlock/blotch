@@ -1,17 +1,23 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
+export interface Comment {
+  'content' : string,
+  'posterPortalPrincipal' : Principal,
+}
 export interface Portal {
   'addFollower' : ActorMethod<[], Result>,
   'addFollowing' : ActorMethod<[Principal], Result>,
+  'createComment' : ActorMethod<[PostID, string], Result>,
+  'createMyComment' : ActorMethod<[PostID, Comment], Result>,
   'createPost' : ActorMethod<[PostContent], Result>,
   'getFollowers' : ActorMethod<[], Array<Principal>>,
   'getFollowing' : ActorMethod<[], Array<Principal>>,
   'getFollowingPostIDs' : ActorMethod<[], Array<PostID>>,
   'getNumBlotches' : ActorMethod<[], bigint>,
-  'getPost' : ActorMethod<[PostID], Result_2>,
+  'getPost' : ActorMethod<[PostID], Result_1>,
   'getPostIDs' : ActorMethod<[], Array<PostID>>,
-  'getPostStats' : ActorMethod<[PostID], Result_1>,
+  'getPostStats' : ActorMethod<[PostID], [] | [PostStats]>,
   'getProfile' : ActorMethod<[], Profile>,
   'likeMyPost' : ActorMethod<[PostID], Result>,
   'likePost' : ActorMethod<[PostID], Result>,
@@ -44,13 +50,16 @@ export interface Profile {
   'bio' : string,
   'username' : string,
   'userPrincipal' : Principal,
+  'avatar' : Array<number>,
 }
-export interface ProfileUpdate { 'bio' : string, 'username' : string }
+export interface ProfileUpdate {
+  'bio' : string,
+  'username' : string,
+  'avatar' : Array<number>,
+}
 export type Result = { 'ok' : null } |
   { 'err' : PortalError };
-export type Result_1 = { 'ok' : PostStats } |
-  { 'err' : PortalError };
-export type Result_2 = { 'ok' : Post } |
+export type Result_1 = { 'ok' : Post } |
   { 'err' : PortalError };
 export type Timestamp = bigint;
 export interface _SERVICE extends Portal {}

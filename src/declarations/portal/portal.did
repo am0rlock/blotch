@@ -1,13 +1,8 @@
 type Timestamp = nat64;
-type Result_2 = 
- variant {
-   err: PortalError;
-   ok: Post;
- };
 type Result_1 = 
  variant {
    err: PortalError;
-   ok: PostStats;
+   ok: Post;
  };
 type Result = 
  variant {
@@ -16,11 +11,13 @@ type Result =
  };
 type ProfileUpdate = 
  record {
+   avatar: blob;
    bio: text;
    username: text;
  };
 type Profile = 
  record {
+   avatar: blob;
    bio: text;
    userPrincipal: principal;
    username: text;
@@ -57,14 +54,16 @@ type Portal =
  service {
    addFollower: () -> (Result);
    addFollowing: (principal) -> (Result);
+   createComment: (PostID, text) -> (Result);
+   createMyComment: (PostID, Comment) -> (Result);
    createPost: (PostContent) -> (Result);
    getFollowers: () -> (vec principal) query;
    getFollowing: () -> (vec principal) query;
    getFollowingPostIDs: () -> (vec PostID);
    getNumBlotches: () -> (nat64) query;
-   getPost: (PostID) -> (Result_2) query;
+   getPost: (PostID) -> (Result_1) query;
    getPostIDs: () -> (vec PostID) query;
-   getPostStats: (PostID) -> (Result_1) query;
+   getPostStats: (PostID) -> (opt PostStats) query;
    getProfile: () -> (Profile) query;
    likeMyPost: (PostID) -> (Result);
    likePost: (PostID) -> (Result);
@@ -76,5 +75,10 @@ type Portal =
    subscribeProfileDatabase: () -> ();
    unlikeMyPost: (PostID) -> (Result);
    unlikePost: (PostID) -> (Result);
+ };
+type Comment = 
+ record {
+   content: text;
+   posterPortalPrincipal: principal;
  };
 service : (principal, func (principal) -> (bool) query) -> Portal

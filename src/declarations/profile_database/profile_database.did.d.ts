@@ -5,6 +5,7 @@ export interface Profile {
   'bio' : string,
   'username' : string,
   'userPrincipal' : Principal,
+  'avatar' : Array<number>,
 }
 export interface _SERVICE {
   'initialize' : ActorMethod<[], undefined>,

@@ -3,6 +3,7 @@ export const idlFactory = ({ IDL }) => {
     'bio' : IDL.Text,
     'username' : IDL.Text,
     'userPrincipal' : IDL.Principal,
+    'avatar' : IDL.Vec(IDL.Nat8),
   });
   return IDL.Service({
     'initialize' : IDL.Func([], [], []),

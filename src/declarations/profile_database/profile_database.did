@@ -1,5 +1,6 @@
 type Profile = 
  record {
+   avatar: blob;
    bio: text;
    userPrincipal: principal;
    username: text;
