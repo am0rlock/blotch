@@ -16,10 +16,15 @@
     "copy:types": "rsync -avr .dfx/$(echo ${DFX_NETWORK:-'**'})/canisters/** --exclude='assets/' --exclude='idl/' --exclude='*.wasm' --exclude='*.most' --delete src/declarations"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.18.2",
+    "@babel/preset-react": "^7.17.12",
     "@dfinity/agent": "0.11.2",
     "@dfinity/candid": "0.11.2",
     "@dfinity/principal": "0.11.2",
     "assert": "2.0.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "buffer": "6.0.3",
     "copy-webpack-plugin": "^9.0.1",
     "events": "3.3.0",
@@ -49,10 +54,15 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.1",
+    "babel": "^6.23.0",
+    "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.0.3",
     "style-loader": "^3.3.1",
+    "styled-components": "^5.3.5",
     "url-loader": "^4.1.1"
   }
 }
