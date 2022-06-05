@@ -116,6 +116,13 @@ func likePost(postID : PostID) : async Result<(), PortalError>
 func unlikePost(postID : PostID) : async Result<(), PortalError>
 ```
 
+```
+/*
+ * Creates comment with the specified content
+ */
+func createComment(postID : PostID, content : Text) : async Result<(), PortalError>
+```
+
 <h3>PostDatabase Canister</h3>
 
 ```

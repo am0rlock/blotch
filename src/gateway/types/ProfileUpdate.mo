@@ -8,9 +8,9 @@ module
         bio : Text;
     };
 
-    private let USERNAME_MAX_LENGTH : Nat = 64;
+    private let USERNAME_MAX_LENGTH : Nat = 16;
 
-    private let BIO_MAX_LENGTH : Nat = 64;
+    private let BIO_MAX_LENGTH : Nat = 128;
 
     public func validateUsername(username : Text) : Bool
     {
