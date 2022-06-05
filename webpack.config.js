@@ -77,8 +77,9 @@ module.exports = {
   // tutorial, uncomment the following lines:
   module: {
    rules: [
+     { test: /\.(ts|tsx|jsx)$/, loader: 'babel-loader', options: {presets: ['@babel/preset-react']} },
      { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
-     { test: /\.css$/, use: ['style-loader','css-loader'] },
+     { test: /\.css$/, use: ['style-loader','css-loader, styled-components'] },
      {
       test: /\.(png|jpe?g|gif)$/i,
       exclude: /node_modules/,
