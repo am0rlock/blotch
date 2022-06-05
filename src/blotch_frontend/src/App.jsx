@@ -16,15 +16,17 @@ const App = () => {
     useEffect(() => {
         grabPortalPrincipal();
     });
+    console.log("Rerendering ----------------")
 
     //<FullProfile portalPrincipal={portalPrincipal} />
-    console.log("beg load")
     return (
         <>
         <GlobalStyle theme={lightTheme}></GlobalStyle>
         <div>Hello</div>
         <Search></Search>
-        <ProfilePreview user={{username: 'hello', fullname: 'hello htere'}}></ProfilePreview>
+        <div style={{border: '1px solid red', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+            <ProfilePreview portalPrincipal={portalPrincipal}></ProfilePreview>
+        </div>
         <div>
             <MiniProfile portalPrincipal={portalPrincipal} />
         </div>

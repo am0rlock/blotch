@@ -7,7 +7,7 @@ module
 
     public func construct() : Timestamp 
     {
-        let timeMilliseconds : Int = Time.now() / 1000;
+        let timeMilliseconds : Int = Time.now() / 1000000;
         
         return Nat64.fromIntWrap(timeMilliseconds);
     };
