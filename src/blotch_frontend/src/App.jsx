@@ -3,8 +3,10 @@ import MiniProfile from './components/MiniProfile'
 import { gateway } from '../../declarations/gateway/'
 import Search from './components/Search';
 import ProfilePreview from './components/ProfilePreview';
+import ProfileHeader from './components/ProfileHeader';
 import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
+import unknownProfile from '../assets/UnknownProfile.png'
 
 const App = () => {
     const [portalPrincipal, setPortalPrincipal] = React.useState('');
@@ -16,7 +18,6 @@ const App = () => {
     useEffect(() => {
         grabPortalPrincipal();
     });
-    console.log("Rerendering ----------------")
 
     //<FullProfile portalPrincipal={portalPrincipal} />
     return (
@@ -24,11 +25,12 @@ const App = () => {
         <GlobalStyle theme={lightTheme}></GlobalStyle>
         <div>Hello</div>
         <Search></Search>
-        <div style={{border: '1px solid red', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-            <ProfilePreview portalPrincipal={portalPrincipal}></ProfilePreview>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+            <ProfileHeader portalPrincipal={portalPrincipal}></ProfileHeader>
         </div>
         <div>
             <MiniProfile portalPrincipal={portalPrincipal} />
+            <ProfilePreview portalPrincipal={portalPrincipal}></ProfilePreview>
         </div>
         </>
     )

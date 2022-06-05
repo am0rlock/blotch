@@ -81,7 +81,7 @@ module.exports = {
      { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
      { test: /\.css$/, use: ['style-loader','css-loader, styled-components'] },
      {
-      test: /\.(png|jpe?g|gif)$/i,
+      test: /\.(png|jpe?g|gif|blob)$/i,
       exclude: /node_modules/,
       use: {
           loader: "file-loader",
