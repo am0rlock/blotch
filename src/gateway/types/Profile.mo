@@ -10,6 +10,7 @@ module
     public type Profile = 
     {
         userPrincipal : Principal;
+        avatar : Blob;
         username : Text;
         bio : Text;
     };
@@ -22,6 +23,7 @@ module
     {
         return {
             userPrincipal = userPrincipal0;
+            avatar = DefaultAvatar.getDefault();
             username = DEFAULT_USERNAME;
             bio = DEFAULT_BIO;
         };
@@ -31,6 +33,7 @@ module
     {
         return {
             userPrincipal = old.userPrincipal;
+            avatar = new.avatar;
             username = new.username;
             bio = new.bio;
         };
