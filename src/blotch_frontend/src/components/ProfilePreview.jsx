@@ -59,51 +59,87 @@ const BlotchWrapper = styled.div`
   justify-content: center;
 `;
 
-var hasRendered = false;
-const ProfilePreview = ({ portalPrincipal }) => {
-  const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...', 'avatar': ''});
-  const [blotches, setBlotches] = React.useState(0);
-  const [avatar, setAvatar] = React.useState('');
-
-  async function getBlotches() {
-    if(!hasRendered) {
-      let portal = createActor(portalPrincipal);
-      var blotchesTemp = (await portal.getNumBlotches()) + "";
-      blotchesTemp = blotchesTemp.substring(blotches.length - 1);
-      setBlotches(((await portal.getNumBlotches()) + "").substring(blotches.length - 1));
-      console.log('Bltoches:', blotches)
-    }
-   hasRendered = true;
-  }
-
-  async function grabProfile() {
-    let portal = createActor(portalPrincipal);
-    setProfile(await portal.getProfile());
-    let avatarArray = profile['avatar'];
-    let avatarString = String.fromCharCode.apply(null, avatarArray);
-    var imgSrc = "data:image/png;base64," + avatarString.toString('base64');
-    setAvatar(imgSrc);
-  }
-
-  useEffect(() => {
-    grabProfile();
-    getBlotches();
-  });
-
-
-  return (
-    <Wrapper key={'asdf'}>
-      <img className='avatar' src={avatar} alt="avatar" />
-      <NameWrapper>
-        <h4>{profile['username']}</h4>
-        <BlotchWrapper>
-          <img className='blotchCoin' src={blotchCoin} alt='blotch coin' />
-          <span className="blotches">{blotches}</span>
-        </BlotchWrapper>
-      </NameWrapper>
-      <Button className='profilePreviewButton'>Follow</Button>
-    </Wrapper>
-  );
+var hasRendered = {
+  'blotches': false,
+  'profile': false,
+  'portal': false,
+  'avatar': false
 };
+
+function doOnce(renderName, getFunc) {
+  if(!hasRendered[renderName]) {
+    getFunc()
+    hasRendered[renderName] = true;
+  }
+}
+
+var portal;
+
+class ProfilePreview extends React.Component {
+  // const portalPrincipal = this.props.portalPrincipal;
+  // const [profile, setProfile] = React.useState();
+  // const [blotches, setBlotches] = React.useState(0);
+  // const [avatar, setAvatar] = React.useState('');
+  constructor(props) {
+    super(props);
+    this.state = {
+      profile: {'username':'Loading...', 'bio':'Loading...', 'avatar': ''},
+      blotches: 0,
+      avatar: ''
+    };
+  }
+
+  getBlotches() {
+    portal.getNumBlotches().then(blotchesTemp => {
+      blotchesTemp = blotchesTemp + ""
+      blotchesTemp = blotchesTemp.substring(blotchesTemp.length - 1);
+      this.setState({'blotches': blotchesTemp});
+    })
+  }
+
+  getAvatar() {
+    let avatarArray = this.state.profile['avatar'];
+    let avatarString = String.fromCharCode.apply(null, avatarArray);
+    const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
+    this.setState({'avatar': imgSrc});
+  }
+
+  getProfile = () => {
+    portal.getProfile().then(p => {
+      this.setState({'profile': p}, () => {this.getAvatar(); this.getBlotches();});
+    });
+  }
+
+  getPortal = () => {
+    if(this.props.portalPrincipal != '') {
+      portal = createActor(this.props.portalPrincipal);
+      this.getProfile();
+    }
+  }
+  
+  componentDidMount = () => {
+    this.getPortal();
+  }
+
+  componentDidUpdate() {
+    this.getPortal();
+  }
+
+  render = () => {
+    return (
+      <Wrapper key={'asdf'}>
+        <img className='avatar' src={this.state.avatar} alt="avatar" />
+        <NameWrapper>
+          <h4>{this.state.profile['username']}</h4>
+          <BlotchWrapper>
+            <img className='blotchCoin' src={blotchCoin} alt='blotch coin' />
+            <span className="blotches">{this.state.blotches}</span>
+          </BlotchWrapper>
+        </NameWrapper>
+        <Button className='profilePreviewButton'>Follow</Button>
+      </Wrapper>
+    );
+  }
+}
 
 export default ProfilePreview;

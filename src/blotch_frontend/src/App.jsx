@@ -8,32 +8,40 @@ import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
 import unknownProfile from '../assets/UnknownProfile.png'
 
-const App = () => {
-    const [portalPrincipal, setPortalPrincipal] = React.useState('');
-
-    async function grabPortalPrincipal() {
-        setPortalPrincipal((await gateway.grabPortal())['ok']);
+class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            'portalPrincipal': ''
+        };
     }
 
-    useEffect(() => {
-        grabPortalPrincipal();
-    });
+    grabPortalPrincipal() {
+        gateway.grabPortal().then((portal) => {
+            this.setState({'portalPrincipal': portal['ok']});
+        });
+    }
 
-    //<FullProfile portalPrincipal={portalPrincipal} />
-    return (
-        <>
-        <GlobalStyle theme={lightTheme}></GlobalStyle>
-        <div>Hello</div>
-        <Search></Search>
-        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
-            <ProfileHeader portalPrincipal={portalPrincipal}></ProfileHeader>
-        </div>
-        <div>
-            <MiniProfile portalPrincipal={portalPrincipal} />
-            <ProfilePreview portalPrincipal={portalPrincipal}></ProfilePreview>
-        </div>
-        </>
-    )
+    componentDidMount() {
+        this.grabPortalPrincipal();
+    }
+
+    render() {
+        return (
+            <>
+            <GlobalStyle theme={lightTheme}></GlobalStyle>
+            <div>Hello</div>
+            <Search></Search>
+            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column'}}>
+                <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
+            </div>
+            <div>
+                <MiniProfile portalPrincipal={this.state.portalPrincipal} />
+                <ProfilePreview portalPrincipal={this.state.portalPrincipal}></ProfilePreview>
+            </div>
+            </>
+        )
+    }
 }
 
 export default App

@@ -116,7 +116,20 @@ const Wrapper = styled.div`
   }
 `;
 
-var hasRendered = false;
+var hasRendered = {
+  'blotches': false,
+  'followers': false,
+  'following': false,
+  'profile': false
+};
+
+async function doOnce(renderName, getFunc) {
+  if(!hasRendered[renderName]) {
+    getFunc()
+    hasRendered[renderName] = true;
+  }
+}
+
 const ProfileHeader = ({ portalPrincipal }) => {
   const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...'});
   const [blotches, setBlotches] = React.useState(0);
@@ -124,14 +137,12 @@ const ProfileHeader = ({ portalPrincipal }) => {
   const [following, setFollowing] = React.useState([]);
 
   async function getBlotches() {
-    if(!hasRendered) {
-      let portal = createActor(portalPrincipal);
-      var blotchesTemp = (await portal.getNumBlotches()) + "";
-      blotchesTemp = blotchesTemp.substring(blotches.length - 1);
-      setBlotches(((await portal.getNumBlotches()) + "").substring(blotches.length - 1));
-      console.log('Bltoches:', blotches)
-    }
-   hasRendered = true;
+    let portal = createActor(portalPrincipal);
+    let blotchesTemp = (await portal.getNumBlotches()) + "";
+    blotchesTemp = blotchesTemp.substring(blotches.length - 1);
+    setBlotches(((await portal.getNumBlotches()) + "").substring(blotches.length - 1));
+    console.log('Blotches:', blotches);
+    hasRendered['blotches'] = true;
   }
 
   async function getFollowers() {
@@ -146,16 +157,16 @@ const ProfileHeader = ({ portalPrincipal }) => {
     console.log(following)
   }
 
-  async function grabProfile() {
+  async function getProfile() {
     let portal = createActor(portalPrincipal);
     setProfile(await portal.getProfile());
   }
 
   useEffect(() => {
-    grabProfile();
-    getBlotches();
-    getFollowers();
-    getFollowing();
+    doOnce('profile', getProfile);
+    doOnce('blotches', getBlotches);
+    doOnce('followers', getFollowers);
+    doOnce('following', getFollowing);
   });
 
   function getNumFollowers() {
