@@ -61,8 +61,9 @@ const BlotchWrapper = styled.div`
 
 var hasRendered = false;
 const ProfilePreview = ({ portalPrincipal }) => {
-  const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...'});
+  const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...', 'avatar': ''});
   const [blotches, setBlotches] = React.useState(0);
+  const [avatar, setAvatar] = React.useState('');
 
   async function getBlotches() {
     if(!hasRendered) {
@@ -78,6 +79,10 @@ const ProfilePreview = ({ portalPrincipal }) => {
   async function grabProfile() {
     let portal = createActor(portalPrincipal);
     setProfile(await portal.getProfile());
+    let avatarArray = profile['avatar'];
+    let avatarString = String.fromCharCode.apply(null, avatarArray);
+    var imgSrc = "data:image/png;base64," + avatarString.toString('base64');
+    setAvatar(imgSrc);
   }
 
   useEffect(() => {

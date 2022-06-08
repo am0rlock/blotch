@@ -178,7 +178,7 @@ const ProfileHeader = ({ portalPrincipal }) => {
   return (
     <>
       <Wrapper>
-        <img className="avatar" src={window.URL.createObjectURL(defaultProfileBlob)} alt="avatar" />
+        <img className="avatar" src={''} alt="avatar" />
         <div className="profile-info">
           <div className="profile-meta">
             <h2>{profile['username']}</h2>
