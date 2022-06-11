@@ -46,6 +46,7 @@ module
             postTime = postData.postTime;
             numLikers = Nat64.fromNat(TrieSet.size(postData.likers));
             content = postData.content;
+            comments = postData.comments;
         };
     };
 
