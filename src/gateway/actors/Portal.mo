@@ -255,6 +255,31 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return #ok()
     };
 
+    public shared(msg) func reportPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller))
+        {
+            return #err(#NotAuthorized);
+        };
+
+        let otherPortal : Portal = actor(Principal.toText(postID.portalPrincipal));
+        let response : Result.Result<(), PortalError.PortalError> = await otherPortal.reportMyPost(postID);
+
+        switch (response)
+        {
+            case (#ok())
+            {
+                return #ok(());
+            };
+            case (#err(x))
+            {
+                return response;
+            };
+        };
+
+        return #ok()
+    };
+
     public shared(msg) func createComment(postID : PostID.PostID, content : Text) : async Result.Result<(), PortalError.PortalError>
     {
         if (not isAuthorized(msg.caller))
@@ -337,6 +362,16 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         };
 
         return postStore.addComment(postID, comment, msg.caller);
+    };
+
+    public shared(msg) func reportMyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not (await isPortalPrincipalValid(msg.caller)))
+        {
+            return #err(#InvalidPortal);
+        };
+
+        return postStore.reportPost(postID, msg.caller);
     };
 
     /*

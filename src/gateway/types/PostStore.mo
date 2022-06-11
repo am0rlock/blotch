@@ -72,7 +72,7 @@ module PostStore
 
                     let newLikers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
                     let comments : [Comment.Comment] = value.comments;
-                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments, value.reporters);
 
                     ignore idToData.replace(postID, newPostData);
 
@@ -96,7 +96,7 @@ module PostStore
 
                     let newLikers : TrieSet.Set<Principal> = TrieSet.delete(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
                     let comments : [Comment.Comment] = value.comments;
-                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments, value.reporters);
 
                     ignore idToData.replace(postID, newPostData);
 
@@ -116,9 +116,30 @@ module PostStore
                 };
                 case (?value)
                 {
-                    let likers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
+                    //let likers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
                     let newComments : [Comment.Comment] = Array.append(value.comments, [comment]);
-                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, likers, newComments);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, value.likers, newComments, value.reporters);
+
+                    ignore idToData.replace(postID, newPostData);
+
+                    return #ok(());
+                };
+            };
+        };
+
+        public func reportPost(postID : PostID.PostID, otherPortalPrincipal : Principal) : Result.Result<(), PortalError.PortalError>
+        {
+            let value : ?PostData.PostData = idToData.get(postID);
+            switch (value)
+            {
+                case null
+                {
+                    return #err(#PostNotFound);
+                };
+                case (?value)
+                {
+                    let reporters : TrieSet.Set<Principal> = TrieSet.put(value.reporters, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, value.likers, value.comments, reporters);
 
                     ignore idToData.replace(postID, newPostData);
 

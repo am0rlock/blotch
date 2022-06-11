@@ -15,6 +15,7 @@ module
         likers : TrieSet.Set<Principal>;
         content : PostContent.PostContent;
         comments : [Comment.Comment];
+        reporters : TrieSet.Set<Principal>;
     };
 
     public func construct(content0 : PostContent.PostContent) : PostData
@@ -24,16 +25,18 @@ module
             likers = TrieSet.empty();
             content = content0;
             comments = [];
+            reporters = TrieSet.empty();
         };
     };
 
-    public func constructWithChange(content0 : PostContent.PostContent, likers0 : TrieSet.Set<Principal>, comments0 : [Comment.Comment]) : PostData
+    public func constructWithChange(content0 : PostContent.PostContent, likers0 : TrieSet.Set<Principal>, comments0 : [Comment.Comment], reporters0 : TrieSet.Set<Principal>) : PostData
     {
         return {
             postTime = Timestamp.construct();
             likers = likers0;
             content = content0;
             comments = comments0;
+            reporters = reporters0;
         };
     };
 
