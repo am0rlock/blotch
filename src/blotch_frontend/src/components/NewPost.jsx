@@ -49,7 +49,11 @@ class NewPost extends React.Component {
           bytesEncoding[i] = b64Encoding.charCodeAt(i);
         }
         const blob = {'media': bytesEncoding, 'description': 'Test caption'};
-        portal.createPost(blob);
+        console.log('protail principal');
+        console.log(this.props.portalPrincipal);
+        portal.createPost(blob).then(r => {
+          console.log(r);
+        });
         imgPreview.style.display = "block";
         imgPreview.innerHTML = '<img src="' + fileReader.result + '" />';
         this.setState({'showModal': true});
