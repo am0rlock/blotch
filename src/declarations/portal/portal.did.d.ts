@@ -24,6 +24,8 @@ export interface Portal {
   'rechargeBlotches' : ActorMethod<[], undefined>,
   'removeFollower' : ActorMethod<[], Result>,
   'removeFollowing' : ActorMethod<[Principal], Result>,
+  'reportMyPost' : ActorMethod<[PostID], Result>,
+  'reportPost' : ActorMethod<[PostID], Result>,
   'setProfile' : ActorMethod<[ProfileUpdate], Result>,
   'subscribePostDatabase' : ActorMethod<[], undefined>,
   'subscribeProfileDatabase' : ActorMethod<[], undefined>,
@@ -42,10 +44,15 @@ export interface Post {
   'postTime' : Timestamp,
   'content' : PostContent,
   'numLikers' : bigint,
+  'comments' : Array<Comment>,
 }
-export interface PostContent { 'words' : string }
+export interface PostContent { 'media' : Array<number>, 'description' : string }
 export interface PostID { 'id' : bigint, 'portalPrincipal' : Principal }
-export interface PostStats { 'postTime' : Timestamp, 'numLikers' : bigint }
+export interface PostStats {
+  'postTime' : Timestamp,
+  'numLikers' : bigint,
+  'numComments' : bigint,
+}
 export interface Profile {
   'bio' : string,
   'username' : string,

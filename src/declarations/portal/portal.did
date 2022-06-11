@@ -24,6 +24,7 @@ type Profile =
  };
 type PostStats = 
  record {
+   numComments: nat64;
    numLikers: nat64;
    postTime: Timestamp;
  };
@@ -32,9 +33,14 @@ type PostID =
    id: nat64;
    portalPrincipal: principal;
  };
-type PostContent = record {words: text;};
+type PostContent = 
+ record {
+   description: text;
+   media: blob;
+ };
 type Post = 
  record {
+   comments: vec Comment;
    content: PostContent;
    numLikers: nat64;
    postTime: Timestamp;
@@ -70,6 +76,8 @@ type Portal =
    rechargeBlotches: () -> ();
    removeFollower: () -> (Result);
    removeFollowing: (principal) -> (Result);
+   reportMyPost: (PostID) -> (Result);
+   reportPost: (PostID) -> (Result);
    setProfile: (ProfileUpdate) -> (Result);
    subscribePostDatabase: () -> ();
    subscribeProfileDatabase: () -> ();

@@ -18,17 +18,22 @@ export const idlFactory = ({ IDL }) => {
     'content' : IDL.Text,
     'posterPortalPrincipal' : IDL.Principal,
   });
-  const PostContent = IDL.Record({ 'words' : IDL.Text });
+  const PostContent = IDL.Record({
+    'media' : IDL.Vec(IDL.Nat8),
+    'description' : IDL.Text,
+  });
   const Timestamp = IDL.Nat64;
   const Post = IDL.Record({
     'postTime' : Timestamp,
     'content' : PostContent,
     'numLikers' : IDL.Nat64,
+    'comments' : IDL.Vec(Comment),
   });
   const Result_1 = IDL.Variant({ 'ok' : Post, 'err' : PortalError });
   const PostStats = IDL.Record({
     'postTime' : Timestamp,
     'numLikers' : IDL.Nat64,
+    'numComments' : IDL.Nat64,
   });
   const Profile = IDL.Record({
     'bio' : IDL.Text,
@@ -60,6 +65,8 @@ export const idlFactory = ({ IDL }) => {
     'rechargeBlotches' : IDL.Func([], [], []),
     'removeFollower' : IDL.Func([], [Result], []),
     'removeFollowing' : IDL.Func([IDL.Principal], [Result], []),
+    'reportMyPost' : IDL.Func([PostID], [Result], []),
+    'reportPost' : IDL.Func([PostID], [Result], []),
     'setProfile' : IDL.Func([ProfileUpdate], [Result], []),
     'subscribePostDatabase' : IDL.Func([], [], []),
     'subscribeProfileDatabase' : IDL.Func([], [], []),
