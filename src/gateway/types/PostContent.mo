@@ -5,7 +5,7 @@ module
         media : Blob;
     };
 
-    private let MEDIA_MAX_LENGTH : Nat = 150;
+    private let MEDIA_MAX_LENGTH : Nat = 2000000;
 
     public func validateMedia(media : Blob) : Bool
     {
