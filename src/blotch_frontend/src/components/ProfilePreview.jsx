@@ -18,7 +18,7 @@ const Wrapper = styled.div`
   .avatar {
     width: 15%;
     padding: 1%;
-    border-radius: 5%;
+    border-radius: 25%;
     border: 3%;
   }
 
@@ -59,22 +59,7 @@ const BlotchWrapper = styled.div`
   justify-content: center;
 `;
 
-var hasRendered = {
-  'blotches': false,
-  'profile': false,
-  'portal': false,
-  'avatar': false
-};
-
-function doOnce(renderName, getFunc) {
-  if(!hasRendered[renderName]) {
-    getFunc()
-    hasRendered[renderName] = true;
-  }
-}
-
 var portal;
-
 class ProfilePreview extends React.Component {
   // const portalPrincipal = this.props.portalPrincipal;
   // const [profile, setProfile] = React.useState();
@@ -106,7 +91,9 @@ class ProfilePreview extends React.Component {
 
   getProfile = () => {
     portal.getProfile().then(p => {
-      this.setState({'profile': p}, () => {this.getAvatar(); this.getBlotches();});
+      this.setState({'profile': p}, () => {
+        this.getAvatar();
+        this.getBlotches();});
     });
   }
 

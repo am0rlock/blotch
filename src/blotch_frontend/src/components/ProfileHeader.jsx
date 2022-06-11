@@ -116,125 +116,127 @@ const Wrapper = styled.div`
   }
 `;
 
-var hasRendered = {
-  'blotches': false,
-  'followers': false,
-  'following': false,
-  'profile': false
-};
-
-async function doOnce(renderName, getFunc) {
-  if(!hasRendered[renderName]) {
-    getFunc()
-    hasRendered[renderName] = true;
-  }
-}
-
-const ProfileHeader = ({ portalPrincipal }) => {
-  const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...'});
-  const [blotches, setBlotches] = React.useState(0);
-  const [followers, setFollowers] = React.useState([]);
-  const [following, setFollowing] = React.useState([]);
-
-  async function getBlotches() {
-    let portal = createActor(portalPrincipal);
-    let blotchesTemp = (await portal.getNumBlotches()) + "";
-    blotchesTemp = blotchesTemp.substring(blotches.length - 1);
-    setBlotches(((await portal.getNumBlotches()) + "").substring(blotches.length - 1));
-    console.log('Blotches:', blotches);
-    hasRendered['blotches'] = true;
+var portal;
+class ProfileHeader extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      profile: {'username':'Loading...', 'bio':'Loading...', 'avatar': ''},
+      blotches: 0,
+      followers: [],
+      following: [],
+      avatar: ''
+    };
   }
 
-  async function getFollowers() {
-    let portal = createActor(portalPrincipal);
-    setFollowers(await portal.getFollowers())
-    console.log(followers)
+  getBlotches() {
+    portal.getNumBlotches().then(blotchesTemp => {
+      blotchesTemp = blotchesTemp + "";
+      blotchesTemp = blotchesTemp.substring(blotchesTemp.length - 1);
+      this.setState({'blotches': blotchesTemp});
+    });
   }
 
-  async function getFollowing() {
-    let portal = createActor(portalPrincipal);
-    setFollowing(await portal.getFollowing())
-    console.log(following)
+  getFollowers() {
+    portal.getFollowers().then(followers => {
+      this.setState({'followers': followers});
+    });
   }
 
-  async function getProfile() {
-    let portal = createActor(portalPrincipal);
-    setProfile(await portal.getProfile());
+  getFollowing() {
+    portal.getFollowing().then(following => {
+      this.setState({'following': following});
+    });
   }
 
-  useEffect(() => {
-    doOnce('profile', getProfile);
-    doOnce('blotches', getBlotches);
-    doOnce('followers', getFollowers);
-    doOnce('following', getFollowing);
-  });
-
-  function getNumFollowers() {
-    return followers.length;
+  getAvatar() {
+    let avatarArray = this.state.profile['avatar'];
+    let avatarString = String.fromCharCode.apply(null, avatarArray);
+    const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
+    this.setState({'avatar': imgSrc});
   }
 
-  function getNumFollowing() {
-    return following.length;
+  getProfile() {
+    portal.getProfile().then(profile => {
+      this.setState({'profile': profile}, () => {
+        this.getBlotches();
+        this.getFollowers();
+        this.getFollowing();
+        this.getAvatar();
+      });
+    });
   }
 
-  function getBio() {
-    // return '10101010 01010101 10101010 01010101 10101010 01010101 10101010 01010101 10101010 01010101 10101010 01010101 10101010 01010101 10101010 01010101';
-    return '5';
+  getPortal = () => {
+    if(this.props.portalPrincipal != '') {
+      portal = createActor(this.props.portalPrincipal);
+      this.getProfile();
+    }
   }
 
-  function getNumPosts() {
+  componentDidMount() {
+    this.getPortal();
+  }
+
+  componentDidUpdate() {
+    this.getPortal();
+  }
+
+  getNumPosts() {
     return 12;
   }
 
-  return (
-    <>
-      <Wrapper>
-        <img className="avatar" src={''} alt="avatar" />
-        <div className="profile-info">
-          <div className="profile-meta">
-            <h2>{profile['username']}</h2>
-            {profile?.isMe ? (
-              <div className="options">
-                <Button
-                  secondary
-                >
-                  Edit Profile
-                </Button>
-                <OptionsIcon onClick={handleLogout} />
-              </div>
-            ) : (
-              <Follow
-                isFollowing={profile?.isFollowing}
-                incFollowers={() => {}}
-                decFollowers={() => {}}
-                userId={profile?._id}
-              />
-            )}
-          </div>
-
-          <div className="profile-stats">
-            <span>{getNumPosts()} posts</span>
-
-            <span className="pointer" onClick={() => setFollowersModal(true)}>
-              {getNumFollowers()} followers
-            </span>
-
-            <span className="pointer" onClick={() => setFollowingModal(true)}>
-              {getNumFollowing()} following
-            </span>
-          </div>
-
-          <div className="bio">
-            <div className='blotchesContainer'>
-              <img className='blotchesCoin' src={blotchesCoin} />
-              <span className="bold blotches">{blotches}</span>
+  render() {
+    return (
+      <>
+        <Wrapper>
+          <img className="avatar" src={this.state.avatar} alt="avatar" />
+          <div className="profile-info">
+            <div className="profile-meta">
+              <h2>{this.state.profile['username']}</h2>
+              {this.state.profile?.isMe ? (
+                <div className="options">
+                  <Button
+                    secondary
+                  >
+                    Edit Profile
+                  </Button>
+                  <OptionsIcon onClick={handleLogout} />
+                </div>
+              ) : (
+                <Follow
+                  isFollowing={this.state.profile?.isFollowing}
+                  incFollowers={() => {}}
+                  decFollowers={() => {}}
+                  userId={this.state.profile?._id}
+                />
+              )}
             </div>
-            <p>{getBio()}</p>
+
+            <div className="profile-stats">
+              <span>{this.getNumPosts()} posts</span>
+
+              <span className="pointer" onClick={() => setFollowersModal(true)}>
+                {this.state.followers.length} followers
+              </span>
+
+              <span className="pointer" onClick={() => setFollowingModal(true)}>
+                {this.state.following.length} following
+              </span>
+            </div>
+
+            <div className="bio">
+              <div className='blotchesContainer'>
+                <img className='blotchesCoin' src={blotchesCoin} />
+                <span className="bold blotches">{this.state.blotches}</span>
+              </div>
+              <p>{this.state.profile['bio']}</p>
+            </div>
           </div>
-        </div>
-      </Wrapper>
-    </>
-  );
+        </Wrapper>
+      </>
+    );
+  }
 };
 
 export default ProfileHeader;
