@@ -71,8 +71,7 @@ module PostStore
                     if (TrieSet.mem(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal)) { return #err(#CannotLike); };
 
                     let newLikers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
-                    let comments : [Comment.Comment] = value.comments;
-                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments, value.reporters);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, value.comments, value.reporters);
 
                     ignore idToData.replace(postID, newPostData);
 
@@ -95,8 +94,7 @@ module PostStore
                     if (not TrieSet.mem(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal)) { return #err(#CannotUnlike); };
 
                     let newLikers : TrieSet.Set<Principal> = TrieSet.delete(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
-                    let comments : [Comment.Comment] = value.comments;
-                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, comments, value.reporters);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, newLikers, value.comments, value.reporters);
 
                     ignore idToData.replace(postID, newPostData);
 
@@ -116,7 +114,6 @@ module PostStore
                 };
                 case (?value)
                 {
-                    //let likers : TrieSet.Set<Principal> = TrieSet.put(value.likers, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
                     let newComments : [Comment.Comment] = Array.append(value.comments, [comment]);
                     let newPostData : PostData.PostData = PostData.constructWithChange(value.content, value.likers, newComments, value.reporters);
 
@@ -138,8 +135,8 @@ module PostStore
                 };
                 case (?value)
                 {
-                    let reporters : TrieSet.Set<Principal> = TrieSet.put(value.reporters, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
-                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, value.likers, value.comments, reporters);
+                    let newReporters : TrieSet.Set<Principal> = TrieSet.put(value.reporters, otherPortalPrincipal, Principal.hash(otherPortalPrincipal), Principal.equal);
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, value.likers, value.comments, newReporters);
 
                     ignore idToData.replace(postID, newPostData);
 
