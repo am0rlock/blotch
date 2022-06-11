@@ -6,5 +6,6 @@ module
     {
         postTime : Timestamp.Timestamp;
         numLikers : Nat64;
+        numComments : Nat64;
     };
 }
