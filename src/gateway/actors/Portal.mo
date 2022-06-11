@@ -27,6 +27,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     let RECHARGE_PERIOD : Nat64 = 86400000; //1 day
     let RECHARGE_BLOTCHES : Nat64 = 30;
     let POST_BLOTCHES_COST : Nat64 = 10;
+    let REPORT_BLOTCHES_COST : Nat64 = 5;
 
     let isPortalPrincipalValid : shared query (Principal) -> async Bool = isPortalPrincipalValid0;
     var portalProfileSubscribers : [PortalProfileSubscriber.PortalProfileSubscriber] = [];
@@ -260,6 +261,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         if (not isAuthorized(msg.caller))
         {
             return #err(#NotAuthorized);
+        };
+
+        if (numBlotches < REPORT_BLOTCHES_COST)
+        {
+            return #err(#NotEnoughBlotches);
         };
 
         let otherPortal : Portal = actor(Principal.toText(postID.portalPrincipal));
