@@ -2,21 +2,21 @@ module
 {
     public type PostContent = 
     {
-        words : Text;
+        media : Blob;
     };
 
-    private let WORDS_MAX_LENGTH : Nat = 150;
+    private let MEDIA_MAX_LENGTH : Nat = 150;
 
-    public func validateWords(words : Text) : Bool
+    public func validateMedia(media : Blob) : Bool
     {
-        if (words.size() > WORDS_MAX_LENGTH) { return false; };
+        if (media.size() > MEDIA_MAX_LENGTH) { return false; };
 
         return true;
     };
 
     public func validate(postContent : PostContent) : Bool
     {
-        if (not validateWords(postContent.words)) { return false; };
+        if (not validateMedia(postContent.media)) { return false; };
 
         return true;
     };
