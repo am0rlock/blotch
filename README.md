@@ -123,6 +123,13 @@ func unlikePost(postID : PostID) : async Result<(), PortalError>
 func createComment(postID : PostID, content : Text) : async Result<(), PortalError>
 ```
 
+```
+/*
+ * Reports the post and charges blotches
+ */
+func reportPost(postID : PostID) : async Result<(), PortalError>
+```
+
 <h3>PostDatabase Canister</h3>
 
 ```
