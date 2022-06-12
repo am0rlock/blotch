@@ -1,5 +1,4 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import Avatar from "../styles/Avatar";
 
@@ -9,30 +8,34 @@ const CommentWrapper = styled.div`
   span {
     padding-right: 0.4rem;
   }
+
+  Avatar {
+    width: 30px;
+  }
+
+  p {
+    word-break: break-all;
+  }
 `;
 
-const Comment = ({ comment, hideavatar }) => {
-  const history = useHistory();
-
+const Comment = ({ avatar, username, text, hideavatar }) => {
   return (
     <CommentWrapper style={{ padding: !hideavatar ? "0.4rem 0" : "" }}>
       {!hideavatar && (
         <Avatar
           className="pointer"
-          onClick={() => history.push(`/${comment.user.username}`)}
-          src={comment.user.avatar}
+          src={avatar}
           alt="avatar"
         />
       )}
 
       <p>
         <span
-          onClick={() => history.push(`/${comment.user.username}`)}
           className="bold pointer"
         >
-          {comment.user.username}
+          {username}
         </span>
-        {comment.text}
+        {text}
       </p>
     </CommentWrapper>
   );

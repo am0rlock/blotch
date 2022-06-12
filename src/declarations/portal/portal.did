@@ -66,6 +66,7 @@ type Portal =
    getFollowers: () -> (vec principal) query;
    getFollowing: () -> (vec principal) query;
    getFollowingPostIDs: () -> (vec PostID);
+   getLikedPosts: () -> (vec PostID) query;
    getNumBlotches: () -> (nat64) query;
    getPost: (PostID) -> (Result_1) query;
    getPostIDs: () -> (vec PostID) query;

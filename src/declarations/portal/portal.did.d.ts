@@ -14,6 +14,7 @@ export interface Portal {
   'getFollowers' : ActorMethod<[], Array<Principal>>,
   'getFollowing' : ActorMethod<[], Array<Principal>>,
   'getFollowingPostIDs' : ActorMethod<[], Array<PostID>>,
+  'getLikedPosts' : ActorMethod<[], Array<PostID>>,
   'getNumBlotches' : ActorMethod<[], bigint>,
   'getPost' : ActorMethod<[PostID], Result_1>,
   'getPostIDs' : ActorMethod<[], Array<PostID>>,

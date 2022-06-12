@@ -55,6 +55,7 @@ export const idlFactory = ({ IDL }) => {
     'getFollowers' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getFollowing' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getFollowingPostIDs' : IDL.Func([], [IDL.Vec(PostID)], []),
+    'getLikedPosts' : IDL.Func([], [IDL.Vec(PostID)], ['query']),
     'getNumBlotches' : IDL.Func([], [IDL.Nat64], ['query']),
     'getPost' : IDL.Func([PostID], [Result_1], ['query']),
     'getPostIDs' : IDL.Func([], [IDL.Vec(PostID)], ['query']),

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Follow from "./Follow";
-import Modal from "./Modal";
 import Button from "../styles/Button";
 import { OptionsIcon } from "./Icons";
-import { CloseIcon } from "./Icons";
 import { createActor } from "../../../declarations/portal";
 import blotchesCoin from '../../assets/blotches_logo.png';
-import unknownProfile from '../../assets/UnknownProfile.png';
-import defaultProfileBlob from '../../assets/default_profile.blob';
 
 const Wrapper = styled.div`
   display: flex;
@@ -117,6 +113,7 @@ const Wrapper = styled.div`
 `;
 
 var portal;
+let hasRendered = false;
 class ProfileHeader extends React.Component {
   constructor(props) {
     super(props);
@@ -132,7 +129,6 @@ class ProfileHeader extends React.Component {
   getBlotches() {
     portal.getNumBlotches().then(blotchesTemp => {
       blotchesTemp = blotchesTemp + "";
-      blotchesTemp = blotchesTemp.substring(blotchesTemp.length - 1);
       this.setState({'blotches': blotchesTemp});
     });
   }
@@ -168,18 +164,14 @@ class ProfileHeader extends React.Component {
   }
 
   getPortal = () => {
-    if(this.props.portalPrincipal != '') {
-      portal = createActor(this.props.portalPrincipal);
-      this.getProfile();
-    }
-  }
-
-  componentDidMount() {
-    this.getPortal();
+    portal = createActor(this.props.portalPrincipal);
+    this.getProfile();
   }
 
   componentDidUpdate() {
-    this.getPortal();
+    if(this.props.portalPrincipal != '') {
+      this.getPortal();
+    }
   }
 
   getNumPosts() {

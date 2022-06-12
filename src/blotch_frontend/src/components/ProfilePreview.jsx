@@ -60,6 +60,7 @@ const BlotchWrapper = styled.div`
 `;
 
 var portal;
+var hasRendered = false;
 class ProfilePreview extends React.Component {
   // const portalPrincipal = this.props.portalPrincipal;
   // const [profile, setProfile] = React.useState();
@@ -77,7 +78,6 @@ class ProfilePreview extends React.Component {
   getBlotches() {
     portal.getNumBlotches().then(blotchesTemp => {
       blotchesTemp = blotchesTemp + ""
-      blotchesTemp = blotchesTemp.substring(blotchesTemp.length - 1);
       this.setState({'blotches': blotchesTemp});
     })
   }
@@ -92,27 +92,30 @@ class ProfilePreview extends React.Component {
   getProfile = () => {
     portal.getProfile().then(p => {
       this.setState({'profile': p}, () => {
+        console.log(p);
         this.getAvatar();
         this.getBlotches();});
     });
   }
 
   getPortal = () => {
-    if(this.props.portalPrincipal != '') {
-      portal = createActor(this.props.portalPrincipal);
-      this.getProfile();
-    }
-  }
-  
-  componentDidMount = () => {
-    this.getPortal();
+    portal = createActor(this.props.portalPrincipal);
+    this.getProfile();
   }
 
   componentDidUpdate() {
+    if(!hasRendered && this.portalPrincipal != '') {
+      this.getPortal();
+      hasRendered = true;
+    }
+  }
+
+  componentDidMount() {
     this.getPortal();
   }
 
   render = () => {
+    console.log(this.props.portalPrincipal);
     return (
       <Wrapper key={'asdf'}>
         <img className='avatar' src={this.state.avatar} alt="avatar" />

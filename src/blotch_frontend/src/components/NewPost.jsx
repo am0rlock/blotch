@@ -5,6 +5,63 @@ import Modal from "./Modal";
 
 import { createActor } from "../../../declarations/portal";
 
+const ModalWrapper = styled.div`
+  #imgPreview {
+    width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .postImg {
+    min-width: 300px;
+    max-height: 400px;
+    object-fit: contain;
+    margin: 5%;
+  }
+
+  textarea {
+    resize: none;
+    min-width: 300px;
+    height: 75px;
+  }
+
+  h3:hover {
+    cursor: pointer;
+    border-radius: 5%;
+    color: black;
+  }
+
+  .buttonContainer {
+    position: relative;
+    z-index: 100;
+  }
+
+  h3 {
+    text-align: center;
+    background-color: gray;
+    padding: 1%;
+    margin: 1%;
+  }
+
+  #descriptionContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 75px;
+    margin-bottom: 3%;
+  }
+
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
 const Wrapper = styled.div`
   width: 20%;
 
@@ -22,11 +79,12 @@ const Wrapper = styled.div`
       position: absolute;
       z-index: -1;
   }
+
 `;
 
 var chooseFile;
-var imgPreview;
 var portal;
+var bytesEncoding;
 class NewPost extends React.Component {
 
   constructor(props) {
@@ -37,6 +95,7 @@ class NewPost extends React.Component {
   }
 
   getImgData = () => {
+    this.setState({'showModal': true});
     const files = chooseFile.files[0];
     if (files) {
       const fileReader = new FileReader();
@@ -44,19 +103,12 @@ class NewPost extends React.Component {
       fileReader.addEventListener("load", () => {
         // data:image/png;base64, is at the start of the result
         let b64Encoding = fileReader.result.replace('data:image/png;base64,', '');
-        let bytesEncoding = []
+        bytesEncoding = []
         for(let i = 0; i < b64Encoding.length; i++) {
           bytesEncoding[i] = b64Encoding.charCodeAt(i);
         }
-        const blob = {'media': bytesEncoding, 'description': 'Test caption'};
-        console.log('protail principal');
-        console.log(this.props.portalPrincipal);
-        portal.createPost(blob).then(r => {
-          console.log(r);
-        });
-        imgPreview.style.display = "block";
-        imgPreview.innerHTML = '<img src="' + fileReader.result + '" />';
-        this.setState({'showModal': true});
+        let imgPreview = document.getElementById("imgPreview");
+        imgPreview.innerHTML += '<img class="postImg" src="' + fileReader.result + '" />';
       });    
     }
   }
@@ -67,8 +119,14 @@ class NewPost extends React.Component {
     }
   }
 
-  handleSubmitPost() {
-    console.log('handle submit');
+  handleSubmitPost = () => {
+    let textDescription = document.getElementById('description').value;
+    const blob = {'media': bytesEncoding, 'description': textDescription};
+    console.log(textDescription);
+    portal.createPost(blob).then(result => {
+      this.setState({'showModal': false});
+    });
+    this.setState({'showModal': false});
   }
 
   componentDidMount() {
@@ -76,7 +134,6 @@ class NewPost extends React.Component {
     chooseFile.addEventListener("change", () => {
       this.getImgData();
     });
-    imgPreview = document.getElementById("imgPreview");
     this.getPortal();
   }
 
@@ -92,23 +149,27 @@ class NewPost extends React.Component {
           <label htmlFor="uploadPhoto"><img onClick={this.handleClick} className='newPostButton' src={newPostImage}></img></label>
           <input type="file" accept='image/*' name="photo" id="uploadPhoto" />
         </form>
-        <div id='imgPreview'></div>
+      </Wrapper>
+      <ModalWrapper>
         { this.state.showModal && 
           <Modal>
             <div className="modal-content">
-              <div className="newpost-header">
-                <h3 onClick={() => {this.setState({'showModal': false});}}>Cancel</h3>
-                <h3 onClick={this.handleSubmitPost}>Share</h3>
+              <div id='imgPreview'>
+                <div className="newpost-header">
+                </div>
+                <div id='descriptionContainer'>
+                  <textarea
+                    id='description'
+                    placeholder="Add caption"
+                  />
+                </div>
               </div>
-              <div>
-                <textarea
-                  placeholder="Add caption"
-                />
-              </div>
+              <h3 onClick={() => {this.setState({'showModal': false});}}>Cancel</h3>
+              <h3 onClick={this.handleSubmitPost}>Share</h3>
             </div>
           </Modal>
         }
-      </Wrapper>
+      </ModalWrapper>
       </>
     );
   }
