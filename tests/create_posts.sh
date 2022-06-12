@@ -12,7 +12,7 @@ do
     PRINCIPAL=$(echo $RESPONSE | cut -c28-54)
     for j in {1..10}
     do
-        dfx canister call $PRINCIPAL createPost '(record {words="random"})'
+        dfx canister call $PRINCIPAL createPost '(record {media=(blob "a"); description="Test caption"})'
     done
 done
 
