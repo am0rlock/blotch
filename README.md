@@ -66,6 +66,14 @@ func getPost(postID : PostID) : async Result<Post, PortalError>
 
 ```
 /*
+ * Get's all the PostIDs of this Portal's
+ * liked posts.
+ */
+func getLikedPosts() : async [PostID]
+```
+
+```
+/*
  * Get's all the PostIDs of the other Portals
  * this Portal is following
  */

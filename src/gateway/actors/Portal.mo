@@ -39,6 +39,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     var following : TrieSet.Set<Principal> = TrieSet.empty();
     var followers : TrieSet.Set<Principal> = TrieSet.empty();
     var postStore : PostStore.PostStore = PostStore.PostStore();
+    var likedPosts : TrieSet.Set<PostID.PostID> = TrieSet.empty();
 
     /*
      *  Anybody to Portal functions
@@ -71,6 +72,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     public shared query func getPost(postID : PostID.PostID) : async Result.Result<Post.Post, PortalError.PortalError>
     {
         return postStore.getPost(postID);
+    };
+
+    public shared query func getLikedPosts() : async [PostID.PostID]
+    {
+        return TrieSet.toArray(likedPosts);
     };
 
     public shared func getFollowingPostIDs() : async [PostID.PostID]
@@ -347,7 +353,19 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
             return #err(#InvalidPortal);
         };
 
-        return postStore.likePost(postID, msg.caller);
+        let response : Result.Result<(), PortalError.PortalError> = postStore.likePost(postID, msg.caller);
+        switch (response)
+        {
+            case (#ok())
+            {
+                likedPosts := TrieSet.put(likedPosts, postID, PostID.hash(postID), PostID.equal);
+                return response;
+            };
+            case (#err(x))
+            {
+                return response;      
+            };
+        };
     };
 
     public shared(msg) func unlikeMyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
@@ -357,7 +375,19 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
             return #err(#InvalidPortal);
         };
 
-        return postStore.unlikePost(postID, msg.caller);
+        let response : Result.Result<(), PortalError.PortalError> = postStore.unlikePost(postID, msg.caller);
+        switch (response)
+        {
+            case (#ok())
+            {
+                likedPosts := TrieSet.delete(likedPosts, postID, PostID.hash(postID), PostID.equal);
+                return response;
+            };
+            case (#err(x))
+            {
+                return response;      
+            };
+        };
     };
 
     public shared(msg) func createMyComment(postID : PostID.PostID, comment : Comment.Comment) : async Result.Result<(), PortalError.PortalError>
