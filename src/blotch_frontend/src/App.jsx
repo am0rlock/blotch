@@ -39,7 +39,7 @@ class App extends React.Component {
                     <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
                     <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
                 </div>
-                <PostPreview portalPrincipal={this.state.portalPrincipal} posts={[examplePost, examplePost, examplePost]}></PostPreview>
+                <PostPreview myPortalPrincipal={this.state.portalPrincipal} portalPrincipal={this.state.portalPrincipal} posts={[examplePost, examplePost, examplePost]}></PostPreview>
             </div>
             <Comment comment={{'user': {'username': 'commenterUser', 'avatar': randomPic}, 'text': 'hello world'}} hideavatar={true}></Comment>
             </>

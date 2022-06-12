@@ -161,6 +161,10 @@ const ModalWrapper = styled.div`
 		height: 40vh;
 		overflow: auto;
 	}
+
+	.liked {
+		color: red;
+	}
 `;
 
 class Post extends React.Component {
@@ -238,17 +242,19 @@ class PostPreview extends React.Component {
 
 	getPortal = () => {
 		if(this.props.portalPrincipal != '') {
-			myPortal = createActor(this.props.myPortal);
+			myPortal = createActor(this.props.myPortalPrincipal);
 			portal = createActor(this.props.portalPrincipal);
 			this.getPosts();
 		}
 	}
 
 	showPost(post) {
+		this.setState({'isLiked': false});
 		myPortal.getLikedPosts().then(likedPosts => {
-			console.log(likedPosts);
-			if(post.ID in likedPosts) {
-				this.setState({'isLiked': true});
+			for(let i = 0; i < likedPosts.length; i++) {
+				if(likedPosts[i].id == post.ID.id) {
+					this.setState({'isLiked': true});
+				}
 			}
 		});
 		let formattedComments = [];
@@ -273,8 +279,13 @@ class PostPreview extends React.Component {
 	}
 	
 	toggleLike() {
-		myPortal.likePost(this.state.activePost.ID);
-		this.getPortal();
+		if(this.state.isLiked == true) {
+			myPortal.unlikePost(this.state.activePost.ID);
+			this.setState({'isLiked': false});
+		} else {
+			myPortal.likePost(this.state.activePost.ID);
+			this.setState({'isLiked': true});
+		}
 	}
 
 	comment() {
@@ -310,7 +321,7 @@ class PostPreview extends React.Component {
 									<ProfilePreview portalPrincipal={this.state.activePost.ID.portalPrincipal}></ProfilePreview>
 									<Post className='modalImage' post={this.state.activePost} showPost={() => {this.hidePost()}}></Post>
 									<HeartIcon onClick={() => {this.toggleLike()}}></HeartIcon>
-									<div className={(this.state.isLiked ? "liked" : "") + "numLikers"}>{this.state.activePost.numLikers + ""}</div>
+									<div className={(this.state.isLiked ? "liked " : "") + "numLikers"}>{this.state.activePost.numLikers + ""}</div>
 								</div>
 								<div className='commentSection'>
 									<div className='comments'>
