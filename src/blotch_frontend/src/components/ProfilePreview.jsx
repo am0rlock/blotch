@@ -78,7 +78,12 @@ class ProfilePreview extends React.Component {
   getBlotches() {
     portal.getNumBlotches().then(blotchesTemp => {
       blotchesTemp = blotchesTemp + ""
-      this.setState({'blotches': blotchesTemp});
+      this.setState(prevState => {
+        if(prevState.blotches > blotchesTemp) {
+          window.location.reload();
+        }
+        return {'blotches': blotchesTemp};
+      });
     })
   }
 

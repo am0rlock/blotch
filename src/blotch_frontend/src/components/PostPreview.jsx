@@ -227,6 +227,8 @@ class PostPreview extends React.Component {
 		portal.getPost(postID).then(post => {
 			let postObject = post['ok'];
 			postObject['ID'] = postID;
+			console.log('posg ojb e')
+			console.log(postObject);
 			this.setState(prevState => ({'posts': [...prevState.posts, postObject]}), () => {
 			});
 		});
@@ -281,18 +283,32 @@ class PostPreview extends React.Component {
 	toggleLike() {
 		if(this.state.isLiked == true) {
 			myPortal.unlikePost(this.state.activePost.ID);
-			this.setState({'isLiked': false});
+			let newActivePost = this.state.activePost;
+			newActivePost.numLikers -= 1n;
+			this.setState({activePost: newActivePost, 'isLiked': false});
 		} else {
 			myPortal.likePost(this.state.activePost.ID);
-			this.setState({'isLiked': true});
+			let newActivePost = this.state.activePost;
+			newActivePost.numLikers += 1n;
+			this.setState({activePost: newActivePost, 'isLiked': true});
 		}
 	}
 
 	comment() {
 		console.log('commenting');
 		const commentText = document.getElementById('commentBox').value;
-		myPortal.createComment(this.state.activePost.ID, commentText);
-		this.hidePost();
+		myPortal.createComment(this.state.activePost.ID, commentText).then(() => {
+			myPortal.getProfile().then(p => {
+				let username = p['username'];
+				let avatarArray = p['avatar'];
+				let avatarString = String.fromCharCode.apply(null, avatarArray);
+				const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
+				let newComments = this.state.comments;
+				newComments.push({text: commentText, username: username, avatar: imgSrc});
+				this.setState({comments: newComments});
+				document.getElementById('commentBox').value = '';
+			});
+		});
 	}
 
 	componentDidUpdate() {
@@ -330,7 +346,10 @@ class PostPreview extends React.Component {
 										))}
 									</div>
 									<textarea id='commentBox' placeholder="Add comment"></textarea>
-									<h3 onClick={() => {this.comment()}} className='commentButton'>Comment</h3>
+									<h3 onClick={() => {this.comment(this.state.activePost)}} className='commentButton'>Comment</h3>
+									<br></br>
+									<br></br>
+									<p>{this.state.activePost.content.description}</p>
 								</div>
 							</div>
 						</Modal>

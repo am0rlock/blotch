@@ -120,6 +120,7 @@ class ProfileHeader extends React.Component {
     this.state = {
       profile: {'username':'Loading...', 'bio':'Loading...', 'avatar': ''},
       blotches: 0,
+      numPosts: 0,
       followers: [],
       following: [],
       avatar: ''
@@ -129,7 +130,12 @@ class ProfileHeader extends React.Component {
   getBlotches() {
     portal.getNumBlotches().then(blotchesTemp => {
       blotchesTemp = blotchesTemp + "";
-      this.setState({'blotches': blotchesTemp});
+      this.setState(prevState => {
+        if(prevState.blotches > blotchesTemp) {
+          window.location.reload();
+        }
+        return {'blotches': blotchesTemp};
+      });
     });
   }
 
@@ -159,6 +165,7 @@ class ProfileHeader extends React.Component {
         this.getFollowers();
         this.getFollowing();
         this.getAvatar();
+        this.getNumPosts();
       });
     });
   }
@@ -175,7 +182,9 @@ class ProfileHeader extends React.Component {
   }
 
   getNumPosts() {
-    return 12;
+    portal.getPostIDs().then(pids => {
+      this.setState({numPosts: pids.length})
+    })
   }
 
   render() {
@@ -206,7 +215,7 @@ class ProfileHeader extends React.Component {
             </div>
 
             <div className="profile-stats">
-              <span>{this.getNumPosts()} posts</span>
+              <span>{this.state.numPosts} posts</span>
 
               <span className="pointer" onClick={() => setFollowersModal(true)}>
                 {this.state.followers.length} followers
