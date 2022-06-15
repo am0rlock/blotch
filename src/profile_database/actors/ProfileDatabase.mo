@@ -8,13 +8,15 @@ import TrieSet "mo:base/TrieSet";
 
 import Gateway "canister:gateway";
 
+import ProfileInfo "../types/ProfileInfo";
+
 import Portal "../../gateway/actors/Portal";
 import Profile "../../gateway/types/Profile";
 
 actor ProfileDatabase
 {
     var hasSubscribed : Bool = false;
-    var usernameToPortalPrincipal : HashMap.HashMap<Text, Principal> = HashMap.HashMap(0, Text.equal, Text.hash);
+    var usernameToPortalPrincipal : HashMap.HashMap<ProfileInfo.ProfileInfo, Principal> = HashMap.HashMap(0, ProfileInfo.equal, ProfileInfo.hash);
 
     public shared func initialize() : async ()
     {
@@ -38,15 +40,18 @@ actor ProfileDatabase
         await newPortal.subscribeProfileDatabase();
 
         let profile : Profile.Profile = await newPortal.getProfile();
-        usernameToPortalPrincipal.put(profile.username, newPortalPrincipal);
+        let profileInfo : ProfileInfo.ProfileInfo = ProfileInfo.construct(profile);
+        usernameToPortalPrincipal.put(profileInfo, newPortalPrincipal);
     };
 
     public shared(msg) func notifyProfileUpdate(newProfile : Profile.Profile) : async ()
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        usernameToPortalPrincipal.delete(newProfile.bio);
+        let profileInfo : ProfileInfo.ProfileInfo = ProfileInfo.construct(newProfile);
 
-        usernameToPortalPrincipal.put(newProfile.username, msg.caller);
+        usernameToPortalPrincipal.delete(profileInfo);
+
+        usernameToPortalPrincipal.put(profileInfo, msg.caller);
     };
 };

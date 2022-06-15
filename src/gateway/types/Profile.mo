@@ -39,16 +39,6 @@ module
         };
     };
 
-    public func setBio(profile : Profile, bio0 : Text) : Profile
-    {
-        return {
-            userPrincipal = profile.userPrincipal;
-            avatar = profile.avatar;
-            username = profile.username;
-            bio = bio0;
-        };
-    };
-
     public func equal(x : Profile, y : Profile) : Bool
     {
         return x.userPrincipal == y.userPrincipal;
