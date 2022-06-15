@@ -214,6 +214,23 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return #ok(());
     };
 
+    public shared(msg) func deletePost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller))
+        {
+            return #err(#NotAuthorized);
+        };
+
+        for (subscriber in portalPostSubscribers.vals())
+        {
+            ignore subscriber.notifyPostUpdate(postID);
+        };
+
+        postStore.deletePostData(postID);
+
+        return #ok(());
+    };
+
     public shared(msg) func likePost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
     {
         if (not isAuthorized(msg.caller))

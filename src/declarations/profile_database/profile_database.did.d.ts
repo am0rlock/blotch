@@ -11,4 +11,5 @@ export interface _SERVICE {
   'initialize' : ActorMethod<[], undefined>,
   'notifyNewPortal' : ActorMethod<[Principal], undefined>,
   'notifyProfileUpdate' : ActorMethod<[Profile], undefined>,
+  'search' : ActorMethod<[string], Array<Principal>>,
 }

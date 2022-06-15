@@ -23,6 +23,11 @@ module PostStore
             idToData.put(key, value);
         };
 
+        public func deletePostData(key : PostID.PostID) : ()
+        {
+            idToData.delete(key);
+        };
+
         public func getPost(key : PostID.PostID) : Result.Result<Post.Post, PortalError.PortalError>
         {
             let value : ?PostData.PostData = idToData.get(key);

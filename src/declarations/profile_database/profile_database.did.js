@@ -9,6 +9,7 @@ export const idlFactory = ({ IDL }) => {
     'initialize' : IDL.Func([], [], []),
     'notifyNewPortal' : IDL.Func([IDL.Principal], [], []),
     'notifyProfileUpdate' : IDL.Func([Profile], [], []),
+    'search' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Principal)], ['query']),
   });
 };
 export const init = ({ IDL }) => { return []; };

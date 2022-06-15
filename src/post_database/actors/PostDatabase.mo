@@ -63,21 +63,35 @@ actor PostDatabase
         {
             return;
         };
-        Debug.print("new post");
-        let portal : Portal.Portal = actor(Principal.toText(postID.portalPrincipal));
-        let postStats : ?PostStats.PostStats = await portal.getPostStats(postID);
-        switch (postStats)
+
+        func f(x : PostIDScore.PostIDScore) : Bool = PostID.equal(x.postID, postID);
+        let value : ?PostIDScore.PostIDScore = Array.find(postIDScores, f);
+        switch (value)
         {
             case null
             {
-                return;
+                Debug.print("new post");
+                let portal : Portal.Portal = actor(Principal.toText(postID.portalPrincipal));
+                let postStats : ?PostStats.PostStats = await portal.getPostStats(postID);
+                switch (postStats)
+                {
+                    case null
+                    {
+                        return;
+                    };
+                    case (?postStats)
+                    {
+                        let postIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postID, postStats);
+                        postIDScores := Array.append(postIDScores, [postIDScore]);
+                    };
+                };
             };
-            case (?postStats)
+            case (?value)
             {
-                let postIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postID, postStats);
-                postIDScores := Array.append(postIDScores, [postIDScore]);
-            }
-        }
+                func f(x : PostIDScore.PostIDScore) : Bool = not PostID.equal(x.postID, postID);
+                postIDScores := Array.filter(postIDScores, f);
+            };
+        };
     };
 
     system func heartbeat() : async ()

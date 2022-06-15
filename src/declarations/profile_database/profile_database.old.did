@@ -9,5 +9,4 @@ service : {
   initialize: () -> ();
   notifyNewPortal: (principal) -> ();
   notifyProfileUpdate: (Profile) -> ();
-  search: (text) -> (vec principal) query;
 }

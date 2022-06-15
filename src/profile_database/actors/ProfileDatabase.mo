@@ -1,5 +1,7 @@
 import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
+import Iter "mo:base/Iter";
+import Order "mo:base/Order";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import TrieSet "mo:base/TrieSet";
@@ -21,6 +23,11 @@ actor ProfileDatabase
             await Gateway.subscribe();
             hasSubscribed := true;
         };
+    };
+
+    public shared query func search(searchQuery : Text) : async [Principal]
+    {
+        return Iter.toArray(usernameToPortalPrincipal.vals());
     };
 
     public shared(msg) func notifyNewPortal(newPortalPrincipal : Principal) : async ()
