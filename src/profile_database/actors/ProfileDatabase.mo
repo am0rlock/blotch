@@ -38,7 +38,6 @@ actor ProfileDatabase
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        //TODO
         usernameToPortalPrincipal.delete(newProfile.bio);
 
         usernameToPortalPrincipal.put(newProfile.username, msg.caller);
