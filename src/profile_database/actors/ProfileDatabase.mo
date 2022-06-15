@@ -1,6 +1,7 @@
 import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
 import Principal "mo:base/Principal";
+import Text "mo:base/Text";
 import TrieSet "mo:base/TrieSet";
 
 import Gateway "canister:gateway";
@@ -11,7 +12,7 @@ import Profile "../../gateway/types/Profile";
 actor ProfileDatabase
 {
     var hasSubscribed : Bool = false;
-    var profileToPortalPrincipal : HashMap.HashMap<Profile.Profile, Principal> = HashMap.HashMap(0, Profile.equal, Profile.hash);
+    var usernameToPortalPrincipal : HashMap.HashMap<Text, Principal> = HashMap.HashMap(0, Text.equal, Text.hash);
 
     public shared func initialize() : async ()
     {
@@ -30,15 +31,16 @@ actor ProfileDatabase
         await newPortal.subscribeProfileDatabase();
 
         let profile : Profile.Profile = await newPortal.getProfile();
-        profileToPortalPrincipal.put(profile, newPortalPrincipal);
+        usernameToPortalPrincipal.put(profile.username, newPortalPrincipal);
     };
 
     public shared(msg) func notifyProfileUpdate(newProfile : Profile.Profile) : async ()
     {
         if (not (await Gateway.isPortalPrincipalValid(msg.caller))) { return; };
 
-        profileToPortalPrincipal.delete(newProfile);
+        //TODO
+        usernameToPortalPrincipal.delete(newProfile.bio);
 
-        profileToPortalPrincipal.put(newProfile, msg.caller);
+        usernameToPortalPrincipal.put(newProfile.username, msg.caller);
     };
 };

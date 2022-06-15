@@ -110,9 +110,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         let oldProfile : Profile.Profile = profile;
         profile := Profile.construct(oldProfile, newProfile);
 
+        let updateMessage = Profile.setBio(profile, oldProfile.username);
+
         for (subscriber in portalProfileSubscribers.vals())
         {
-            ignore subscriber.notifyProfileUpdate(profile);
+            ignore subscriber.notifyProfileUpdate(updateMessage);
         };
 
         return #ok(());
