@@ -35,10 +35,10 @@ class App extends React.Component {
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
             <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                <Search></Search>
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '5%'}}>
                     <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
                     <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
+                    <Search></Search>
                 </div>
                 <PostPreview myPortalPrincipal={this.state.portalPrincipal} portalPrincipal={this.state.portalPrincipal} posts={[examplePost, examplePost, examplePost]}></PostPreview>
             </div>

@@ -1,7 +1,8 @@
 import React from "react";
-import { toast } from "react-toastify";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
+
+import { profile_database } from '../../../declarations/profile_database/'
 
 const InputWrapper = styled.input`
   padding: 0.4rem 0.6rem;
@@ -12,25 +13,32 @@ const InputWrapper = styled.input`
   border-radius: ${(props) => props.theme.borderRadius};
 `;
 
-const Search = () => {
-  const searchterm = useInput("");
+class Search extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchInput: ""
+    }
+  }
 
-  const handleSearch = (e) => {
+  handleSearch = (e) => {
+    console.log(e);
     if (e.keyCode === 13) {
-      searchterm.setValue("");
-      return toast.success("Sorry, the search feature isn't finished yet");
+      profile_database.search('hello').then(r => {
+        console.log(r);
+      });
     }
   };
 
-  return (
-    <InputWrapper
-      type="text"
-      value={searchterm.value}
-      onKeyDown={handleSearch}
-      onChange={searchterm.onChange}
-      placeholder="Search"
-    />
-  );
+  render() {
+    return (
+      <InputWrapper
+        type="text"
+        onKeyDown={this.handleSearch}
+        placeholder="Search profiles"
+      />
+    );
+  }
 };
 
 export default Search;
