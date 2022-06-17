@@ -10,6 +10,10 @@
 			"type": "motoko",
 			"main": "src/initializer/actors/Initializer.mo"
 		},
+        "moderator": {
+			"type": "motoko",
+			"main": "src/moderator/actors/Moderator.mo"
+		},
         "post_database": {
 			"type": "motoko",
 			"main": "src/post_database/actors/PostDatabase.mo"
