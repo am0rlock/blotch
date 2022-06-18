@@ -4,6 +4,6 @@ module
 {
     public type PortalProfileSubscriber = actor
     {
-        notifyProfileUpdate : (newProfile : Profile.Profile) -> async ()
+        notifyProfileUpdate : (newProfile : Profile.Profile) -> async ();
     };
 }

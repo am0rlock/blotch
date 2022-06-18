@@ -44,6 +44,22 @@ module PostStore
             };
         };
 
+        public func getPostData(key : PostID.PostID) : Result.Result<PostData.PostData, PortalError.PortalError>
+        {
+            let value : ?PostData.PostData = idToData.get(key);
+            switch (value)
+            {
+                case null
+                {
+                    return #err(#PostNotFound);
+                };
+                case (?value)
+                {
+                    return #ok(value);
+                };
+            };
+        };
+
         public func getPostStats(key : PostID.PostID) : ?PostStats.PostStats
         {
             let value : ?PostData.PostData = idToData.get(key);

@@ -28,6 +28,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     let RECHARGE_BLOTCHES : Nat64 = 30;
     let POST_BLOTCHES_COST : Nat64 = 10;
     let REPORT_BLOTCHES_COST : Nat64 = 5;
+    let REWARD_BLOTCHES : Nat64 = 10;
 
     let isPortalPrincipalValid : shared query (Principal) -> async Bool = isPortalPrincipalValid0;
     var portalProfileSubscribers : [PortalProfileSubscriber.PortalProfileSubscriber] = [];
@@ -332,10 +333,10 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
      */
     public shared(msg) func addFollower() : async Result.Result<(), PortalError.PortalError>
     {
-        // if (msg.caller == getMyPrincipal())
-        // {
-        //     return #err(#InvalidPortal);
-        // };
+        if (msg.caller == getMyPrincipal())
+        {
+            return #err(#InvalidPortal);
+        };
         if (TrieSet.mem(followers, msg.caller, Principal.hash(msg.caller), Principal.equal))
         {
             return #err(#InvalidPortal);
@@ -386,6 +387,16 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
                 return response;
             };
         };
+    };
+
+    public shared(msg) func giveReward() : async ()
+    {
+        if (not (await isPortalPrincipalValid(msg.caller)))
+        {
+            return;
+        };
+
+        numBlotches := numBlotches + REWARD_BLOTCHES;
     };
 
     public shared(msg) func unlikeMyPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
@@ -453,7 +464,26 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     public shared(msg) func deleteReportedPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
     {
 
-        return await deletePost(postID);
+        let response = postStore.getPostData(postID);
+        switch (response)
+        {
+            case (#ok(x))
+            {
+                let reporters : [Principal] = TrieSet.toArray(x.reporters);
+                for (reporterPrincipal in reporters.vals())
+                {
+                    let reporterPortal : Portal = actor(Principal.toText(reporterPrincipal));
+                    
+                    ignore reporterPortal.giveReward();
+
+                };
+                return await deletePost(postID);
+            };
+            case (#err(x))
+            {
+                return #err(#PostNotFound);
+            };
+        }
     };
 
     /*

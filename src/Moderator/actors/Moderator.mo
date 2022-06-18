@@ -9,9 +9,9 @@ import Result "mo:base/Result";
 import TrieSet "mo:base/TrieSet";
 
 import Gateway "canister:gateway";
-import Portal "../../gateway/actors/Portal";
 
 import PostIDScore "../types/PostIDScore";
+import PortalInterface "../types/PortalInterface";
 
 import PostID "../../gateway/types/PostID";
 import PostStats "../../gateway/types/PostStats";
@@ -40,7 +40,7 @@ actor PostDatabase
             for (i in Iter.range(0, postIDScores.size()))
             {
                 let postIDScore : PostIDScore.PostIDScore = postIDScores[i];
-                let portal : Portal.Portal = actor(Principal.toText(postIDScore.postID.portalPrincipal));
+                let portal : PortalInterface.PortalInterface = actor(Principal.toText(postIDScore.postID.portalPrincipal));
                 let postStats : ?PostStats.PostStats = await portal.getPostStats(postIDScore.postID);
                 switch (postStats)
                 {
@@ -78,7 +78,7 @@ actor PostDatabase
     {
         if (msg.caller != Principal.fromActor(Gateway)) { return; };
         Debug.print("new portal");
-        let newPortal : Portal.Portal = actor(Principal.toText(newPortalPrincipal));
+        let newPortal : PortalInterface.PortalInterface = actor(Principal.toText(newPortalPrincipal));
         await newPortal.subscribePostDatabase();
     };
 
@@ -96,7 +96,7 @@ actor PostDatabase
             case null
             {
                 Debug.print("new post");
-                let portal : Portal.Portal = actor(Principal.toText(postID.portalPrincipal));
+                let portal : PortalInterface.PortalInterface = actor(Principal.toText(postID.portalPrincipal));
                 let postStats : ?PostStats.PostStats = await portal.getPostStats(postID);
                 switch (postStats)
                 {
