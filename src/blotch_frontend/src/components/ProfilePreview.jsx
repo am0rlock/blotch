@@ -41,6 +41,13 @@ const Wrapper = styled.div`
     align-items: center;
     padding-top: 2%;
   }
+
+  .profilePreviewButtonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 33%;
+  }
 `;
 
 const NameWrapper = styled.div`
@@ -72,7 +79,8 @@ class ProfilePreview extends React.Component {
     this.state = {
       profile: {'username':'Loading...', 'bio':'Loading...'},
       blotches: 0,
-      avatar: avatar
+      avatar: avatar,
+      iFollowThem: false
     };
   }
 
@@ -95,12 +103,25 @@ class ProfilePreview extends React.Component {
     this.setState({'avatar': imgSrc});
   }
 
+  getIFollowThem() {
+    myPortal.getFollowing().then(principalsFollowing => {
+      // if it is not following
+      if(!this.containsPrincipal(principalsFollowing, this.props.portalPrincipal)) {
+        this.setState({iFollowThem: false});
+      } else {
+        this.setState({iFollowThem: true});
+      }
+    });
+  }
+
   getProfile = () => {
     portal.getProfile().then(p => {
       this.setState({'profile': p}, () => {
         console.log(p);
         this.getAvatar();
-        this.getBlotches();});
+        this.getBlotches();
+      });
+      this.getIFollowThem();
     });
   }
 
@@ -110,42 +131,48 @@ class ProfilePreview extends React.Component {
     this.getProfile();
   }
 
+  principalsEqual = (principalLeft, principalRight) => {
+    let arrayLeft = principalLeft._arr;
+    let arrayRight = principalRight._arr;
+    for(let i = 0; i < arrayLeft.length; i++) {
+      if(arrayLeft[i] != arrayRight[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  containsPrincipal = (principalsFollowing, portalPrincipalClicked) => {
+    for(let i = 0; i < principalsFollowing.length; i++) {
+      if(this.principalsEqual(principalsFollowing[i], portalPrincipalClicked)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   handleClick = () => {
-    let b = document.getElementById(this.state.profile.username + "Button");
-    b.innerText += 'o';
-    portal.getFollowers().then(portalPrincipals => {
-      console.log('chekcing contains');
-      console.log(portalPrincipals.length);
-      console.log(portalPrincipals);
+    // let buttonClicked = document.getElementById(this.state.profile.username + "Button");
+    // buttonClicked.innerText += 'z';
+    this.setState({iFollowThem: !this.state.iFollowThem})
+    let portalPrincipalClicked = this.props.portalPrincipal;
+    myPortal.getFollowing().then(principalsFollowing => {
+      // portalPrincipal clicked is either in there or it is not
+      // check if its in there
 
-      console.log('portal principal of clicked')
-      console.log(this.props.portalPrincipal)
-      console.log('my portal princiapl');
-      console.log(this.props.myPortalPrincipal)
-
-      let contains = false;
-      for(let i = 0; i < portalPrincipals.length; i++) {
-        console.log(portalPrincipals[i]._arr);
-        console.log(this.props.myPortalPrincipal._arr);
-
-        let iterContains = true;
-        for(let j = 0; j < portalPrincipals[i]._arr.length; j++) {
-          if(portalPrincipals[i]._arr[j] != this.props.myPortalPrincipal._arr[j]) {
-            iterContains = false;
-          }
-        }
-        if(iterContains) {
-          contains = true;
-        }
+      // if it is not following
+      if(!this.containsPrincipal(principalsFollowing, portalPrincipalClicked)) {
+        myPortal.addFollowing(portalPrincipalClicked).then(result => {
+          console.log('Adding')
+          console.log(result);
+        });
+      } else {
+        myPortal.removeFollowing(portalPrincipalClicked).then(result => {
+          console.log('Removing')
+          console.log(result);
+        });
       }
-      if(contains) {
-          console.log('remove');
-          myPortal.removeFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
-          return;
-      }
-      console.log('adding fooelwogin')
-      myPortal.addFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
-    })
+    });
   }
 
   componentDidUpdate() {
@@ -173,10 +200,49 @@ class ProfilePreview extends React.Component {
             <span className="blotches">{this.state.blotches}</span>
           </BlotchWrapper>
         </NameWrapper>
-        <Button id={this.state.profile.username + "Button"} className='profilePreviewButton' onClick={() => {this.handleClick()}}>Follow</Button>
+        <div className='profilePreviewButtonContainer'>
+          <Button id={this.state.profile.username + "Button"} className='profilePreviewButton' onClick={() => {this.handleClick()}}>
+            {this.state.iFollowThem ? 'Following' : 'Follow'}
+          </Button>
+        </div>
       </Wrapper>
     );
   }
 }
 
 export default ProfilePreview;
+    // let b = document.getElementById(this.state.profile.username + "Button");
+    // b.innerText += 'o';
+    // portal.getFollowers().then(portalPrincipals => {
+    //   console.log('chekcing contains');
+    //   console.log(portalPrincipals.length);
+    //   console.log(portalPrincipals);
+
+    //   console.log('portal principal of clicked')
+    //   console.log(this.props.portalPrincipal)
+    //   console.log('my portal princiapl');
+    //   console.log(this.props.myPortalPrincipal)
+
+    //   let contains = false;
+    //   for(let i = 0; i < portalPrincipals.length; i++) {
+    //     console.log(portalPrincipals[i]._arr);
+    //     console.log(this.props.myPortalPrincipal._arr);
+
+    //     let iterContains = true;
+    //     for(let j = 0; j < portalPrincipals[i]._arr.length; j++) {
+    //       if(portalPrincipals[i]._arr[j] != this.props.myPortalPrincipal._arr[j]) {
+    //         iterContains = false;
+    //       }
+    //     }
+    //     if(iterContains) {
+    //       contains = true;
+    //     }
+    //   }
+    //   if(contains) {
+    //       console.log('remove');
+    //       myPortal.removeFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
+    //       return;
+    //   }
+    //   console.log('adding fooelwogin')
+    //   myPortal.addFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
+    // })

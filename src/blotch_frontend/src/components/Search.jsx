@@ -14,6 +14,7 @@ const InputWrapper = styled.input`
   font-family: "Fira Sans", sans-serif;
   font-size: 1rem;
   border-radius: ${(props) => props.theme.borderRadius};
+  border-radius: 10px;
 `;
 
 const ModalWrapper = styled.div`

@@ -4,6 +4,8 @@ const GlobalStyle = createGlobalStyle`
 	html {
 		font-size: 16px;
 		box-sizing: border-box;
+		height: 100%;
+		background-color: gray;
 	}
 
 	*, *:before, *:after {
@@ -19,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
 		background: ${(props) => props.theme.bg};
 		color: ${(props) => props.theme.primaryColor};
 		overflow-x: hidden;
+		background-color: gray;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
@@ -53,6 +56,20 @@ const GlobalStyle = createGlobalStyle`
 
 	*:focus {
 	  outline: none;
+	}
+
+	#container {
+		position: relative;
+		background-color: gray;
+	}
+
+	.bottomNavigationContainer {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
+	}
+
+	.bottomNavigation {
 	}
 `;
 

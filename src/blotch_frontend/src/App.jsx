@@ -1,20 +1,29 @@
 import React from 'react';
-import MiniProfile from './components/MiniProfile'
-import { gateway } from '../../declarations/gateway/'
+import { gateway } from '../../declarations/gateway/';
 import Search from './components/Search';
 import PostPreview from './components/PostPreview';
 import ProfileHeader from './components/ProfileHeader';
 import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
 import NewPost from './components/NewPost';
-import randomPic from '../assets/blotches_logo.png';
-import Comment from './components/Comment';
+import SearchBackup from './components/SearchBackup';
+
+import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
+import Home from '../assets/home.svg';
+import HomeOutline from '../assets/home-outline.svg';
+import Flame from '../assets/flame.svg';
+import FlameOutline from '../assets/flame-outline.svg';
+import HeartCircle from '../assets/heart-circle.svg';
+import HeartCircleOutline from '../assets/heart-circle-outline.svg';
+import People from '../assets/people.svg';
+import PeopleOutline from '../assets/people-outline.svg';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            'portalPrincipal': ''
+            'portalPrincipal': '',
+            selectedPage: 0
         };
     }
 
@@ -30,19 +39,34 @@ class App extends React.Component {
 
 
     render() {
-        const examplePost = {_id: '0', imgSrc: randomPic, likesCount: 5, commentsCount: 10};
         return (
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '5%'}}>
-                    <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
-                    <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
-                    <Search portalPrincipal={this.state.portalPrincipal}></Search>
+            <div id='container'>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '1%'}}>
+                        <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
+                        <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
+                        <Search portalPrincipal={this.state.portalPrincipal}></Search>
+                    </div>
+                    <PostPreview myPortalPrincipal={this.state.portalPrincipal} portalPrincipal={this.state.portalPrincipal}></PostPreview>
                 </div>
-                <PostPreview myPortalPrincipal={this.state.portalPrincipal} portalPrincipal={this.state.portalPrincipal} posts={[examplePost, examplePost, examplePost]}></PostPreview>
+                <div className='bottomNavigationContainer'>
+                    <BottomNavigation
+                        showLabels
+                        value={this.state.selectedPage}
+                        onChange={(event, newValue) => {
+                            this.setState({selectedPage: newValue})
+                        }}
+                        className='bottomNavigation'
+                    >
+                        <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
+                        <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
+                        <BottomNavigationAction label="Following" icon={this.state.selectedPage == 2 ? <People /> : <PeopleOutline />} />
+                        <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 3 ? <HeartCircle /> : <HeartCircleOutline />} />
+                    </BottomNavigation>
+                </div>
             </div>
-            <Comment comment={{'user': {'username': 'commenterUser', 'avatar': randomPic}, 'text': 'hello world'}} hideavatar={true}></Comment>
             </>
         )
     }

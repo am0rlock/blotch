@@ -124,11 +124,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         {
             return #err(#NotAuthorized);
         };
-        if (newPortalPrincipal == getMyPrincipal())
-        {
-            Debug.print("new portal princiapl eqaul to get my pronciapl");
-            return #err(#InvalidPortal);
-        };
+        // if (newPortalPrincipal == getMyPrincipal())
+        // {
+        //     Debug.print("new portal princiapl eqaul to get my pronciapl");
+        //     return #err(#InvalidPortal);
+        // };
         if (TrieSet.mem(following, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal))
         {
             Debug.print("Aleready following");
@@ -332,10 +332,10 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
      */
     public shared(msg) func addFollower() : async Result.Result<(), PortalError.PortalError>
     {
-        if (msg.caller == getMyPrincipal())
-        {
-            return #err(#InvalidPortal);
-        };
+        // if (msg.caller == getMyPrincipal())
+        // {
+        //     return #err(#InvalidPortal);
+        // };
         if (TrieSet.mem(followers, msg.caller, Principal.hash(msg.caller), Principal.equal))
         {
             return #err(#InvalidPortal);
