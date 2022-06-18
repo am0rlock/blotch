@@ -6,8 +6,7 @@ import ProfileHeader from './components/ProfileHeader';
 import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
 import NewPost from './components/NewPost';
-import randomPic from '../assets/blotches_logo.png';
-import Comment from './components/Comment';
+import SearchBackup from './components/SearchBackup';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -45,7 +44,7 @@ class App extends React.Component {
             <GlobalStyle theme={lightTheme}></GlobalStyle>
             <div id='container'>
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '5%'}}>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '1%'}}>
                         <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
                         <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
                         <Search portalPrincipal={this.state.portalPrincipal}></Search>
@@ -59,6 +58,7 @@ class App extends React.Component {
                         onChange={(event, newValue) => {
                             this.setState({selectedPage: newValue})
                         }}
+                        className='bottomNavigation'
                     >
                         <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
                         <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
