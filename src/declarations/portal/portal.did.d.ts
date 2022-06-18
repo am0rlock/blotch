@@ -11,8 +11,11 @@ export interface Portal {
   'createComment' : ActorMethod<[PostID, string], Result>,
   'createMyComment' : ActorMethod<[PostID, Comment], Result>,
   'createPost' : ActorMethod<[PostContent], Result>,
+  'deletePost' : ActorMethod<[PostID], Result>,
+  'deleteReportedPost' : ActorMethod<[PostID], Result>,
   'getFollowers' : ActorMethod<[], Array<Principal>>,
   'getFollowing' : ActorMethod<[], Array<Principal>>,
+  'getFollowingFollowers' : ActorMethod<[], Array<Principal>>,
   'getFollowingPostIDs' : ActorMethod<[], Array<PostID>>,
   'getLikedPosts' : ActorMethod<[], Array<PostID>>,
   'getNumBlotches' : ActorMethod<[], bigint>,
@@ -20,6 +23,7 @@ export interface Portal {
   'getPostIDs' : ActorMethod<[], Array<PostID>>,
   'getPostStats' : ActorMethod<[PostID], [] | [PostStats]>,
   'getProfile' : ActorMethod<[], Profile>,
+  'giveReward' : ActorMethod<[], undefined>,
   'likeMyPost' : ActorMethod<[PostID], Result>,
   'likePost' : ActorMethod<[PostID], Result>,
   'rechargeBlotches' : ActorMethod<[], undefined>,
@@ -52,6 +56,7 @@ export interface PostID { 'id' : bigint, 'portalPrincipal' : Principal }
 export interface PostStats {
   'postTime' : Timestamp,
   'numLikers' : bigint,
+  'numReporters' : bigint,
   'numComments' : bigint,
 }
 export interface Profile {

@@ -33,6 +33,7 @@ export const idlFactory = ({ IDL }) => {
   const PostStats = IDL.Record({
     'postTime' : Timestamp,
     'numLikers' : IDL.Nat64,
+    'numReporters' : IDL.Nat64,
     'numComments' : IDL.Nat64,
   });
   const Profile = IDL.Record({
@@ -52,8 +53,11 @@ export const idlFactory = ({ IDL }) => {
     'createComment' : IDL.Func([PostID, IDL.Text], [Result], []),
     'createMyComment' : IDL.Func([PostID, Comment], [Result], []),
     'createPost' : IDL.Func([PostContent], [Result], []),
+    'deletePost' : IDL.Func([PostID], [Result], []),
+    'deleteReportedPost' : IDL.Func([PostID], [Result], []),
     'getFollowers' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
     'getFollowing' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'getFollowingFollowers' : IDL.Func([], [IDL.Vec(IDL.Principal)], []),
     'getFollowingPostIDs' : IDL.Func([], [IDL.Vec(PostID)], []),
     'getLikedPosts' : IDL.Func([], [IDL.Vec(PostID)], ['query']),
     'getNumBlotches' : IDL.Func([], [IDL.Nat64], ['query']),
@@ -61,6 +65,7 @@ export const idlFactory = ({ IDL }) => {
     'getPostIDs' : IDL.Func([], [IDL.Vec(PostID)], ['query']),
     'getPostStats' : IDL.Func([PostID], [IDL.Opt(PostStats)], ['query']),
     'getProfile' : IDL.Func([], [Profile], ['query']),
+    'giveReward' : IDL.Func([], [], []),
     'likeMyPost' : IDL.Func([PostID], [Result], []),
     'likePost' : IDL.Func([PostID], [Result], []),
     'rechargeBlotches' : IDL.Func([], [], []),
