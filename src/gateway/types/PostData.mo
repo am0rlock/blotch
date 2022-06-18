@@ -56,6 +56,7 @@ module
             postTime = postData.postTime;
             numLikers = Nat64.fromNat(TrieSet.size(postData.likers));
             numComments = Nat64.fromNat(postData.comments.size());
+            numReporters = Nat64.fromNat(TrieSet.size(postData.reporters));
         };
     };
 };

@@ -7,5 +7,6 @@ module
         postTime : Timestamp.Timestamp;
         numLikers : Nat64;
         numComments : Nat64;
+        numReporters : Nat64;
     };
 }

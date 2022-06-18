@@ -447,6 +447,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return postStore.getPostStats(postID);
     };
 
+    public shared(msg) func deleteReportedPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        return await deletePost(postID);
+    };
+
     /*
      *  System functions
      */

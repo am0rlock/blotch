@@ -1,0 +1,11 @@
+type PostID = 
+ record {
+   id: nat64;
+   portalPrincipal: principal;
+ };
+service : {
+  getTopNReportedPosts: (nat64, int64) -> (vec PostID);
+  initialize: () -> ();
+  notifyNewPortal: (principal) -> ();
+  notifyPostUpdate: (PostID) -> ();
+}
