@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 export const idlFactory = ({ IDL }) => {
   const PostID = IDL.Record({
     'id' : IDL.Nat64,
@@ -15,7 +14,4 @@ export const idlFactory = ({ IDL }) => {
     'notifyPostUpdate' : IDL.Func([PostID], [], []),
   });
 };
-=======
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
->>>>>>> 4332f43b0626bc9497fc58118af5e4c032552b8b
 export const init = ({ IDL }) => { return []; };

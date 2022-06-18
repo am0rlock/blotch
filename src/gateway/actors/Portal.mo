@@ -383,7 +383,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
             };
             case (#err(x))
             {
-                return response;      
+                return response;
             };
         };
     };
@@ -452,6 +452,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
 
     public shared(msg) func deleteReportedPost(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
     {
+
         return await deletePost(postID);
     };
 
