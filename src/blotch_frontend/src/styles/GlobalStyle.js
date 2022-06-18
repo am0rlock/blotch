@@ -4,6 +4,7 @@ const GlobalStyle = createGlobalStyle`
 	html {
 		font-size: 16px;
 		box-sizing: border-box;
+		height: 100%;
 	}
 
 	*, *:before, *:after {
@@ -53,6 +54,16 @@ const GlobalStyle = createGlobalStyle`
 
 	*:focus {
 	  outline: none;
+	}
+
+	#container {
+		position: relative;
+	}
+
+	.bottomNavigationContainer {
+		position: fixed;
+		bottom: 0;
+		width: 100%;
 	}
 `;
 
