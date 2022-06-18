@@ -38,7 +38,7 @@ class App extends React.Component {
                 <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '5%'}}>
                     <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
                     <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
-                    <Search></Search>
+                    <Search portalPrincipal={this.state.portalPrincipal}></Search>
                 </div>
                 <PostPreview myPortalPrincipal={this.state.portalPrincipal} portalPrincipal={this.state.portalPrincipal} posts={[examplePost, examplePost, examplePost]}></PostPreview>
             </div>

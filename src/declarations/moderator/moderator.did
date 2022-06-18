@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 type PostID = 
  record {
    id: nat64;
@@ -8,4 +9,7 @@ service : {
   initialize: () -> ();
   notifyNewPortal: (principal) -> ();
   notifyPostUpdate: (PostID) -> ();
+=======
+service : {
+>>>>>>> 4332f43b0626bc9497fc58118af5e4c032552b8b
 }
