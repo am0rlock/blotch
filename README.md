@@ -82,6 +82,15 @@ func getFollowingPostIDs() : async [PostID]
 
 ```
 /*
+ * Get's all the Portal principal's of the
+ * Portal's this portal is following is 
+ * following
+ */
+func getFollowingFollowers() : async [Principal]
+```
+
+```
+/*
  * Sets the Portal's profile to newProfile
  */
 func setProfile(newProfile : ProfileUpdate) : async Result<(), PortalError>

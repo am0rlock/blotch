@@ -8,12 +8,12 @@ module
     public type PostIDScore = 
     {
         postID : PostID.PostID;
-        score : Float;
+        score : Nat64;
     };
 
-    public func computeScore(postStats : PostStats.PostStats) : Float
+    public func computeScore(postStats : PostStats.PostStats) : Nat64
     {
-        return 1.0;
+        return postStats.numLikers - 2 * postStats.numReporters;
     };
 
     public func construct(postID0 : PostID.PostID, postStats : PostStats.PostStats) : PostIDScore

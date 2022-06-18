@@ -94,6 +94,20 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return postIDs;
     };
 
+    public shared func getFollowingFollowers() : async [Principal]
+    {
+        var portalPrincipals : [Principal] = [];
+        for (followingPrincipal in (await getFollowing()).vals())
+        {
+            let otherPortal : Portal = actor(Principal.toText(followingPrincipal));
+            let otherPortals : [Principal] = await otherPortal.getFollowing();
+
+            portalPrincipals := Array.append(portalPrincipals, otherPortals);
+        };
+
+        return portalPrincipals;
+    };
+
     /*
      *  User to Portal functions
      */
@@ -125,11 +139,11 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         {
             return #err(#NotAuthorized);
         };
-        // if (newPortalPrincipal == getMyPrincipal())
-        // {
-        //     Debug.print("new portal princiapl eqaul to get my pronciapl");
-        //     return #err(#InvalidPortal);
-        // };
+        if (newPortalPrincipal == getMyPrincipal())
+        {
+            Debug.print("new portal princiapl eqaul to get my pronciapl");
+            return #err(#InvalidPortal);
+        };
         if (TrieSet.mem(following, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal))
         {
             Debug.print("Aleready following");
