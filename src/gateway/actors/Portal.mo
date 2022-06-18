@@ -126,14 +126,17 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         };
         if (newPortalPrincipal == getMyPrincipal())
         {
+            Debug.print("new portal princiapl eqaul to get my pronciapl");
             return #err(#InvalidPortal);
         };
         if (TrieSet.mem(following, newPortalPrincipal, Principal.hash(newPortalPrincipal), Principal.equal))
         {
+            Debug.print("Aleready following");
             return #err(#InvalidPortal);
         };
         if (not (await isPortalPrincipalValid(newPortalPrincipal)))
         {
+            Debug.print("the protal pirncipal is not valid");
             return #err(#InvalidPortal);
         };
 

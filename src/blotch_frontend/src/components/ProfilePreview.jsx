@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import styled from "styled-components";
-import avatar from "../assets/default_avatar.jpg";
+import avatar from "../../assets/default_profile.png";
 import Button from "../styles/Button";
 import blotchCoin from '../../assets/blotches_logo.png'
 
@@ -60,6 +60,7 @@ const BlotchWrapper = styled.div`
 `;
 
 var portal;
+var myPortal;
 var hasRendered = false;
 class ProfilePreview extends React.Component {
   // const portalPrincipal = this.props.portalPrincipal;
@@ -69,9 +70,9 @@ class ProfilePreview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: {'username':'Loading...', 'bio':'Loading...', 'avatar': ''},
+      profile: {'username':'Loading...', 'bio':'Loading...'},
       blotches: 0,
-      avatar: ''
+      avatar: avatar
     };
   }
 
@@ -105,11 +106,53 @@ class ProfilePreview extends React.Component {
 
   getPortal = () => {
     portal = createActor(this.props.portalPrincipal);
+    myPortal = createActor(this.props.myPortalPrincipal);
     this.getProfile();
   }
 
+  handleClick = () => {
+    let b = document.getElementById(this.state.profile.username + "Button");
+    b.innerText += 'o';
+    portal.getFollowers().then(portalPrincipals => {
+      console.log('chekcing contains');
+      console.log(portalPrincipals.length);
+      console.log(portalPrincipals);
+
+      console.log('portal principal of clicked')
+      console.log(this.props.portalPrincipal)
+      console.log('my portal princiapl');
+      console.log(this.props.myPortalPrincipal)
+
+      let contains = false;
+      for(let i = 0; i < portalPrincipals.length; i++) {
+        console.log(portalPrincipals[i]._arr);
+        console.log(this.props.myPortalPrincipal._arr);
+
+        let iterContains = true;
+        for(let j = 0; j < portalPrincipals[i]._arr.length; j++) {
+          if(portalPrincipals[i]._arr[j] != this.props.myPortalPrincipal._arr[j]) {
+            iterContains = false;
+          }
+        }
+        if(iterContains) {
+          contains = true;
+        }
+      }
+      if(contains) {
+          console.log('remove');
+          myPortal.removeFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
+          return;
+      }
+      console.log('adding fooelwogin')
+      myPortal.addFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
+    })
+  }
+
   componentDidUpdate() {
-    if(!hasRendered && this.portalPrincipal != '') {
+    if(!hasRendered && this.props.portalPrincipal != '') {
+      console.log('comp update');
+      console.log(this.props.portalPrincipal);
+      console.log(this.props.myPortalPrincipal);
       this.getPortal();
       hasRendered = true;
     }
@@ -120,18 +163,17 @@ class ProfilePreview extends React.Component {
   }
 
   render = () => {
-    console.log(this.props.portalPrincipal);
     return (
-      <Wrapper key={'asdf'}>
+      <Wrapper>
         <img className='avatar' src={this.state.avatar} alt="avatar" />
         <NameWrapper>
-          <h4>{this.state.profile['username']}</h4>
+          <h4>{this.state.profile.username}</h4>
           <BlotchWrapper>
             <img className='blotchCoin' src={blotchCoin} alt='blotch coin' />
             <span className="blotches">{this.state.blotches}</span>
           </BlotchWrapper>
         </NameWrapper>
-        <Button className='profilePreviewButton'>Follow</Button>
+        <Button id={this.state.profile.username + "Button"} className='profilePreviewButton' onClick={() => {this.handleClick()}}>Follow</Button>
       </Wrapper>
     );
   }

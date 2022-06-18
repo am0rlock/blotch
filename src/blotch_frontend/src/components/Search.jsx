@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import Modal from "./Modal";
+import levenshtein from 'js-levenshtein'
 
 import { profile_database } from '../../../declarations/profile_database/'
 import ProfilePreview from "./ProfilePreview";
+import { createActor } from "../../../declarations/portal";
 
 const InputWrapper = styled.input`
   padding: 0.4rem 0.6rem;
@@ -85,20 +87,33 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchInput: "",
       showModal: false,
       profiles: []
     }
   }
 
   handleSearch = (e) => {
-    console.log(e);
     if (e.keyCode === 13) {
       profile_database.search('').then(r => {
-        this.setState({profiles: r, showModal: true}, () => {
-
-          console.log(this.state.profiles)
-        })
+		let promises = []
+		const searchQuery = document.getElementById('searchInput').value;
+		for(let i = 0; i < r.length; i++) {
+			const returnedPortal = createActor(r[i]);
+			promises.push(returnedPortal.getProfile());
+		}
+		let distances = []
+		Promise.all(promises).then(profiles => {
+			for(let i = 0; i < profiles.length; i++) {
+				const profile = profiles[i];
+				distances[i] = [levenshtein(profile.username, searchQuery), r[i], profile.username];
+			}
+			distances.sort((a, b) => {return a[0] - b[0]});
+			let sortedProfilesUsernames = [];
+			for(let i = 0; i < distances.length; i++) {
+				sortedProfilesUsernames.push([distances[i][1], distances[i][2]]);
+			}
+			this.setState({profiles: sortedProfilesUsernames.slice(0, 5), showModal: true});
+		});
       });
     }
   };
@@ -108,22 +123,26 @@ class Search extends React.Component {
   }
 
   render() {
+	console.log('profile start');
+	console.log(this.state.profiles);
+	console.log('profile end');
     return (
       <>
       <InputWrapper
         type="text"
-        onKeyDown={this.handleSearch}
+        onKeyDown={(e) => {this.handleSearch(e)}}
         placeholder="Search profiles"
+		id='searchInput'
       />
 			<ModalWrapper>
 				{this.state.showModal && 
 				<>
 					<div className='modalContainer'>
 						<Modal>
-              {this.state.profiles?.map((profile) => (
-                <ProfilePreview key={profile} portalPrincipal={profile}></ProfilePreview>
-              ))}
-              <h3 onClick={() => {this.hideModal()}}>Cancel</h3>
+							{this.state.showModal && this.state.profiles?.map((profile) => (
+								<ProfilePreview key={profile[1]} myPortalPrincipal={this.props.portalPrincipal} portalPrincipal={profile[0]}></ProfilePreview>
+							))}
+							<h3 onClick={() => {this.hideModal()}}>Cancel</h3>
 						</Modal>
 					</div>
 				</>
