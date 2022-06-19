@@ -20,7 +20,7 @@ import Timestamp "../../gateway/types/Timestamp";
 
 actor PostDatabase
 {
-    let REINDEX_PERIOD : Nat64 = 10000; //1 day
+    let REINDEX_PERIOD : Nat64 = 60000; //1 minutes
 
     stable var lastReindex : Timestamp.Timestamp = Timestamp.construct();
     stable var hasSubscribed : Bool = false;
