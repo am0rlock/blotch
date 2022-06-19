@@ -9,6 +9,7 @@ import { post_database } from '../../declarations/post_database';
 import { init, getPortalFromPrincipal } from './utils/index';
 import Header from './components/Header';
 import defaultProfile from '../assets/default_profile.png';
+import Splash from './components/Splash';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -33,7 +34,8 @@ class App extends React.Component {
             topPostObjects: [],
             followingPostObjects: [],
             likedPostObjects: [],
-            avatar: defaultProfile
+            avatar: defaultProfile,
+            loggedIn: false
         };
     }
 
@@ -150,8 +152,13 @@ class App extends React.Component {
         this.setState({selectedPage: newValue})
     }
 
+    logInUser() {
+        console.log('logging in')
+        this.setState({loggedIn: true});
+    }
+
     componentDidMount() {
-        init().then(result => {
+        init(() => {this.logInUser()}).then(result => {
             gateway = result;
             this.grabPortalPrincipal();
         });
@@ -163,64 +170,69 @@ class App extends React.Component {
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
             <Header avatar={this.state.avatar}/>
-            <div id='container'>
-                {/*Section 0 is home page*/}
-                {   this.state.selectedPage == 0 &&
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '1%'}}>
-                            <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
-                            <Search portalPrincipal={this.state.portalPrincipal}></Search>
+            { !this.state.loggedIn &&
+                <Splash></Splash>
+            }
+            { this.state.loggedIn &&
+                <div id='container'>
+                    {/*Section 0 is home page*/}
+                    {   this.state.selectedPage == 0 &&
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '1%'}}>
+                                <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
+                                <Search portalPrincipal={this.state.portalPrincipal}></Search>
+                            </div>
+                            <PostPreview
+                                myPortalPrincipal={this.state.portalPrincipal}
+                                postObjects={this.state.postObjects}
+                            />
                         </div>
-                        <PostPreview
-                            myPortalPrincipal={this.state.portalPrincipal}
-                            postObjects={this.state.postObjects}
-                        />
+                    }
+                    {/*Section 1 is featured page*/}
+                    { this.state.selectedPage == 1 &&
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                            <PostPreview
+                                myPortalPrincipal={this.state.portalPrincipal}
+                                postObjects={this.state.topPostObjects}
+                            />
+                        </div>
+                    }
+                    {/*Section 2 is featured page*/}
+                    { this.state.selectedPage == 3 &&
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                            <PostPreview
+                                myPortalPrincipal={this.state.portalPrincipal}
+                                postObjects={this.state.followingPostObjects}
+                            />
+                        </div>
+                    }
+                    {/*Section 3 is featured page*/}
+                    { this.state.selectedPage == 4 &&
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                            <PostPreview
+                                myPortalPrincipal={this.state.portalPrincipal}
+                                postObjects={this.state.likedPostObjects}
+                            />
+                        </div>
+                    }
+                    <div className='bottomNavigationContainer'>
+                        <BottomNavigation
+                            showLabels
+                            value={this.state.selectedPage}
+                            onChange={(event, newValue) => {
+                                this.handlePageChange(newValue);
+                            }}
+                            className='bottomNavigation'
+                        >
+                            <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
+                            <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
+                            <NewPost portalPrincipal={this.state.portalPrincipal} />
+                            <BottomNavigationAction label="Following" icon={this.state.selectedPage == 3 ? <People /> : <PeopleOutline />} />
+                            <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 4 ? <HeartCircle /> : <HeartCircleOutline />} />
+                        </BottomNavigation>
                     </div>
-                }
-                {/*Section 1 is featured page*/}
-                { this.state.selectedPage == 1 &&
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                        <PostPreview
-                            myPortalPrincipal={this.state.portalPrincipal}
-                            postObjects={this.state.topPostObjects}
-                        />
-                    </div>
-                }
-                {/*Section 2 is featured page*/}
-                { this.state.selectedPage == 3 &&
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                        <PostPreview
-                            myPortalPrincipal={this.state.portalPrincipal}
-                            postObjects={this.state.followingPostObjects}
-                        />
-                    </div>
-                }
-                {/*Section 3 is featured page*/}
-                { this.state.selectedPage == 4 &&
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                        <PostPreview
-                            myPortalPrincipal={this.state.portalPrincipal}
-                            postObjects={this.state.likedPostObjects}
-                        />
-                    </div>
-                }
-                <div className='bottomNavigationContainer'>
-                    <BottomNavigation
-                        showLabels
-                        value={this.state.selectedPage}
-                        onChange={(event, newValue) => {
-                            this.handlePageChange(newValue);
-                        }}
-                        className='bottomNavigation'
-                    >
-                        <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
-                        <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
-                        <NewPost portalPrincipal={this.state.portalPrincipal} />
-                        <BottomNavigationAction label="Following" icon={this.state.selectedPage == 3 ? <People /> : <PeopleOutline />} />
-                        <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 4 ? <HeartCircle /> : <HeartCircleOutline />} />
-                    </BottomNavigation>
                 </div>
-            </div>
+            }
             </>
         )
     }

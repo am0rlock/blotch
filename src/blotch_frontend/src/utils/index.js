@@ -7,7 +7,7 @@ import { idlFactory as idlFactoryPortal } from '../../../declarations/portal/por
 
 var agent;
 var gateway;
-export const init = async () => {
+export const init = async (logInUser) => {
   let iiUrl;
   if (true) { // process.env.DFX_NETWORK === "local") {
     iiUrl = `http://localhost:8000/?canisterId=qjdve-lqaaa-aaaaa-aaaeq-cai`;
@@ -23,6 +23,7 @@ export const init = async () => {
     console.log('auth');
     console.log(isAuth);
     if(isAuth) {
+      logInUser();
       return;
     } else {
       // Call authClient.login(...) to login with Internet Identity. This will open a new tab
