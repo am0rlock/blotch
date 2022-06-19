@@ -11,8 +11,8 @@ do
     RESPONSE=$(dfx canister call gateway grabPortal)
     PRINCIPAL=$(echo $RESPONSE | cut -c28-54)
 
-    # AVATAR=$(cat tests/resources/default_profile.blob)
-    # dfx canister call $PRINCIPAL setProfile '(record {avatar=(blob "'${AVATAR}'"); username="user_'${i}'"; bio="random bio"})'
+    AVATAR=$(cat tests/resources/default_profile.blob)
+    dfx canister call $PRINCIPAL setProfile '(record {avatar=(blob "'${AVATAR}'"); username="user_'${i}'"; bio="random bio"})'
 
     MEDIA=$(cat tests/sample_posts/$i.blob)
     DESCRIPTION=$(sed -n "$ip" < tests/sample_posts/descriptions.txt)
