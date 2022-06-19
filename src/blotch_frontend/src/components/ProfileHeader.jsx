@@ -272,14 +272,14 @@ class ProfileHeader extends React.Component {
             </div>
 
             <div className="profile-stats">
-              <span>{this.state.numPosts} posts</span>
+              <span>{this.state.numPosts} Posts</span>
 
               <span className="pointer" onClick={() => setFollowersModal(true)}>
-                {this.state.followers.length} followers
+                {this.state.followers.length} Followers
               </span>
 
               <span className="pointer" onClick={() => setFollowingModal(true)}>
-                {this.state.following.length} following
+                {this.state.following.length} Following
               </span>
             </div>
 
