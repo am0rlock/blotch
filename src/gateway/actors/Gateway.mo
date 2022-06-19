@@ -12,8 +12,9 @@ import GatewaySubscriber "../types/GatewaySubscriber";
 
 actor Gateway
 {
-    var userToPortal : HashMap.HashMap<Principal, Portal.Portal> = HashMap.HashMap(0, Principal.equal, Principal.hash);
-    var subscribers : [GatewaySubscriber.GatewaySubscriber] = [];
+    stable var userToPortalStable : [(Principal, Portal.Portal)] = [];
+    var userToPortal : HashMap.HashMap<Principal, Portal.Portal> = HashMap.fromIter(userToPortalStable.vals(), 0, Principal.equal, Principal.hash);//HashMap.HashMap(0, Principal.equal, Principal.hash);
+    stable var subscribers : [GatewaySubscriber.GatewaySubscriber] = [];
 
     public shared(msg) func grabPortal() : async Result.Result<Principal, GatewayError.GatewayError>
     {
@@ -67,5 +68,15 @@ actor Gateway
     {
         let subscriber : GatewaySubscriber.GatewaySubscriber = actor(Principal.toText(msg.caller));
         subscribers := Array.append(subscribers, [subscriber]);
+    };
+
+    system func preupgrade()
+    {
+        userToPortalStable := Iter.toArray(userToPortal.entries());
+    };
+
+    system func postupgrade()
+    {
+        userToPortalStable := [];
     };
 };

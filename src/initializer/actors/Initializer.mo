@@ -4,7 +4,7 @@ import ProfileDatabase "canister:profile_database";
 
 actor Initializer
 {
-    var hasInitialized : Bool = false;
+    stable var hasInitialized : Bool = false;
 
     system func heartbeat() : async ()
     {

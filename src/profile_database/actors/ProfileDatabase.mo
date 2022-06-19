@@ -15,8 +15,9 @@ import Profile "../../gateway/types/Profile";
 
 actor ProfileDatabase
 {
-    var hasSubscribed : Bool = false;
-    var usernameToPortalPrincipal : HashMap.HashMap<ProfileInfo.ProfileInfo, Principal> = HashMap.HashMap(0, ProfileInfo.equal, ProfileInfo.hash);
+    stable var hasSubscribed : Bool = false;
+    stable var usernameToPortalPrincipalStable : [(ProfileInfo.ProfileInfo, Principal)] = [];
+    var usernameToPortalPrincipal : HashMap.HashMap<ProfileInfo.ProfileInfo, Principal> = HashMap.fromIter(usernameToPortalPrincipalStable.vals(), 0, ProfileInfo.equal, ProfileInfo.hash);
 
     public shared func initialize() : async ()
     {
@@ -53,5 +54,15 @@ actor ProfileDatabase
         usernameToPortalPrincipal.delete(profileInfo);
 
         usernameToPortalPrincipal.put(profileInfo, msg.caller);
+    };
+
+    system func preupgrade()
+    {
+        usernameToPortalPrincipalStable := Iter.toArray(usernameToPortalPrincipal.entries());
+    };
+
+    system func postupgrade()
+    {
+        usernameToPortalPrincipalStable := [];
     };
 };

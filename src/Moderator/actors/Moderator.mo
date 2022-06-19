@@ -19,8 +19,8 @@ import Profile "../../gateway/types/Profile";
 
 actor PostDatabase
 {
-    var hasSubscribed : Bool = false;
-    var postIDScores : [PostIDScore.PostIDScore] = [];
+    stable var hasSubscribed : Bool = false;
+    stable var postIDScores : [PostIDScore.PostIDScore] = [];
 
     public shared func initialize() : async ()
     {
