@@ -205,12 +205,7 @@ class ProfileHeader extends React.Component {
                   <OptionsIcon onClick={handleLogout} />
                 </div>
               ) : (
-                <Follow
-                  isFollowing={this.state.profile?.isFollowing}
-                  incFollowers={() => {}}
-                  decFollowers={() => {}}
-                  userId={this.state.profile?._id}
-                />
+                  <div></div>
               )}
             </div>
 
