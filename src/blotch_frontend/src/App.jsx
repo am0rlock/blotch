@@ -127,11 +127,11 @@ class App extends React.Component {
             });
         } else if(newValue == 1) {
             this.getTopPosts();
-        } else if(newValue == 2) {
+        } else if(newValue == 3) {
             this.setState({followingPostObjects: []}, () => {
                 this.getFollowingPosts(portal);
             });
-        } else {
+        } else if(newValue == 4) {
             this.setState({likedPostObjects: []}, () => {
                 this.getLikedPosts(portal);
             });
@@ -176,7 +176,7 @@ class App extends React.Component {
                     </div>
                 }
                 {/*Section 2 is featured page*/}
-                { this.state.selectedPage == 2 &&
+                { this.state.selectedPage == 3 &&
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
                         <PostPreview
                             myPortalPrincipal={this.state.portalPrincipal}
@@ -185,7 +185,7 @@ class App extends React.Component {
                     </div>
                 }
                 {/*Section 3 is featured page*/}
-                { this.state.selectedPage == 3 &&
+                { this.state.selectedPage == 4 &&
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
                         <PostPreview
                             myPortalPrincipal={this.state.portalPrincipal}
