@@ -14,6 +14,10 @@ const Wrapper = styled.div`
   max-width: 350px;
   align-items: center;
 
+  h4 {
+    color: white;
+  }
+
   .avatar {
     width: 15%;
     padding: 1%;
@@ -23,7 +27,7 @@ const Wrapper = styled.div`
 
   .blotches {
     font-size: 0.9rem;
-    color: ${(props) => props.theme.secondaryColor};
+    color: white;
   }
 
   .profilePreviewButton {
@@ -39,6 +43,7 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     padding-top: 2%;
+    color: white;
   }
 
   .profilePreviewButtonContainer {
