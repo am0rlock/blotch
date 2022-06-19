@@ -18,7 +18,6 @@ import HeartCircle from '../assets/heart-circle.svg';
 import HeartCircleOutline from '../assets/heart-circle-outline.svg';
 import People from '../assets/people.svg';
 import PeopleOutline from '../assets/people-outline.svg';
-import { portal, portal } from '../../declarations/portal/index';
 
 class App extends React.Component {
     constructor(props) {
@@ -38,7 +37,6 @@ class App extends React.Component {
                 const portal = createActor(this.state.portalPrincipal);
                 this.getPosts(portal);
                 this.getFollowingPosts(portal);
-                this.getTopPosts();
             });
         });
     }
@@ -78,7 +76,7 @@ class App extends React.Component {
     }
 
     getTopPosts = () => {
-        post_database.getTopNPosts(0, 16).then(posts => {
+        post_database.getTopNPosts(0, 11).then(posts => {
             let promises = [];
             let postIDs = [];
             for(let i = 0; i < posts.length; i++) {
