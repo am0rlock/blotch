@@ -4,7 +4,7 @@ type PostID =
    portalPrincipal: principal;
  };
 service : {
-  getTopPosts: (nat64, int64) -> (vec PostID) query;
+  getTopNPosts: (nat64, int64) -> (vec PostID) query;
   initialize: () -> ();
   notifyNewPortal: (principal) -> ();
   notifyPostUpdate: (PostID) -> ();

@@ -4,7 +4,7 @@ export const idlFactory = ({ IDL }) => {
     'portalPrincipal' : IDL.Principal,
   });
   return IDL.Service({
-    'getTopPosts' : IDL.Func(
+    'getTopNPosts' : IDL.Func(
         [IDL.Nat64, IDL.Int64],
         [IDL.Vec(PostID)],
         ['query'],

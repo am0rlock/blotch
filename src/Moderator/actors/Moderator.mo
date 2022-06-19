@@ -37,7 +37,7 @@ actor PostDatabase
         if (postIDScores.size() > 0)
         {
             let postIDScoresVar : [var PostIDScore.PostIDScore] = Array.init(postIDScores.size(), postIDScores[0]);
-            for (i in Iter.range(0, postIDScores.size()))
+            for (i in Iter.range(0, postIDScores.size() - 1))
             {
                 let postIDScore : PostIDScore.PostIDScore = postIDScores[i];
                 let portal : PortalInterface.PortalInterface = actor(Principal.toText(postIDScore.postID.portalPrincipal));
