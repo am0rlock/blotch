@@ -261,6 +261,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         {
             case (#ok())
             {
+                likedPosts := TrieSet.put(likedPosts, postID, PostID.hash(postID), PostID.equal);
                 return #ok(());
             };
             case (#err(x))
@@ -286,6 +287,7 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         {
             case (#ok())
             {
+                likedPosts := TrieSet.delete(likedPosts, postID, PostID.hash(postID), PostID.equal);
                 return #ok(());
             };
             case (#err(x))
@@ -393,7 +395,6 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         {
             case (#ok())
             {
-                likedPosts := TrieSet.put(likedPosts, postID, PostID.hash(postID), PostID.equal);
                 return response;
             };
             case (#err(x))
@@ -425,7 +426,6 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         {
             case (#ok())
             {
-                likedPosts := TrieSet.delete(likedPosts, postID, PostID.hash(postID), PostID.equal);
                 return response;
             };
             case (#err(x))
