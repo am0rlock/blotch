@@ -16,9 +16,13 @@ import PostIDScore "../types/PostIDScore";
 import PostID "../../gateway/types/PostID";
 import PostStats "../../gateway/types/PostStats";
 import Profile "../../gateway/types/Profile";
+import Timestamp "../../gateway/types/Timestamp";
 
 actor PostDatabase
 {
+    let REINDEX_PERIOD : Nat64 = 10000; //1 day
+
+    stable var lastReindex : Timestamp.Timestamp = Timestamp.construct();
     stable var hasSubscribed : Bool = false;
     stable var postIDScores : [PostIDScore.PostIDScore] = [];
 
@@ -96,6 +100,14 @@ actor PostDatabase
 
     system func heartbeat() : async ()
     {
+        let now : Timestamp.Timestamp = Timestamp.construct();
+        let elapsed : Nat64 = now - lastReindex;
+        if (elapsed < REINDEX_PERIOD)
+        {
+            return;
+        };
+        lastReindex := now;
+
         if (postIDScores.size() > 0)
         {
             let postIDScoresVar : [var PostIDScore.PostIDScore] = Array.init(postIDScores.size(), postIDScores[0]);
