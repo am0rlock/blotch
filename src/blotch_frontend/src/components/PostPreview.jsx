@@ -242,10 +242,8 @@ class PostPreview extends React.Component {
 	}
 
 	getPortal = () => {
-		if(this.props.portalPrincipal != '') {
+		if(this.props.myPortalPrincipal != '') {
 			myPortal = createActor(this.props.myPortalPrincipal);
-			portal = createActor(this.props.portalPrincipal);
-			this.getPosts();
 		}
 	}
 
@@ -311,7 +309,7 @@ class PostPreview extends React.Component {
 	}
 
 	componentDidUpdate() {
-		if(!hasRendered && this.portalPrincipal != '') {
+		if(!hasRendered) {
 			this.getPortal();
 			hasRendered = true;
 		}
@@ -322,7 +320,7 @@ class PostPreview extends React.Component {
 		return (
 			<>
 			<Wrapper>
-			{this.state.posts?.map((post) => (
+			{this.props.postObjects?.map((post) => (
 				<Post key={post.postTime} post={post} showPost={() => {this.showPost(post)}}></Post>
 			))}
 			</Wrapper>

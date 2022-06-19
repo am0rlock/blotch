@@ -6,7 +6,7 @@ import ProfileHeader from './components/ProfileHeader';
 import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
 import NewPost from './components/NewPost';
-import SearchBackup from './components/SearchBackup';
+import { createActor } from "../../declarations/portal";
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -23,20 +23,41 @@ class App extends React.Component {
         super(props);
         this.state = {
             'portalPrincipal': '',
-            selectedPage: 0
+            selectedPage: 0,
+            postObjects: []
         };
     }
 
     grabPortalPrincipal() {
         gateway.grabPortal().then((portal) => {
-            this.setState({'portalPrincipal': portal['ok']});
+            this.setState({'portalPrincipal': portal['ok']}, () => {
+                console.log('portal princ')
+                console.log(this.state.portalPrincipal);
+                this.getPosts(createActor(this.state.portalPrincipal));
+            });
         });
     }
+
+	getPost = (portal, postID) => {
+		portal.getPost(postID).then(post => {
+			let postObject = post['ok'];
+			postObject['ID'] = postID;
+			this.setState(prevState => ({'postObjects': [...prevState.postObjects, postObject]}), () => {
+			});
+		});
+	}
+
+	getPosts = (portal) => {
+		portal.getPostIDs().then(posts => {
+			for(let i = 0; i < posts.length; i++) {
+				this.getPost(portal, posts[i]);
+			}
+		});
+	}
 
     componentDidMount() {
         this.grabPortalPrincipal();
     }
-
 
     render() {
         return (
@@ -49,7 +70,11 @@ class App extends React.Component {
                         <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
                         <Search portalPrincipal={this.state.portalPrincipal}></Search>
                     </div>
-                    <PostPreview myPortalPrincipal={this.state.portalPrincipal} portalPrincipal={this.state.portalPrincipal}></PostPreview>
+                    <PostPreview
+                        myPortalPrincipal={this.state.portalPrincipal}
+                        postObjects={this.state.postObjects}
+                        portalPrincipal={this.state.portalPrincipal}
+                    />
                 </div>
                 <div className='bottomNavigationContainer'>
                     <BottomNavigation
