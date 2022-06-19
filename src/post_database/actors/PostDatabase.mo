@@ -114,6 +114,9 @@ actor PostDatabase
                     {
                         let newPostIDScore : PostIDScore.PostIDScore = PostIDScore.construct(postIDScore.postID, postStats);
                         postIDScoresVar[i] := newPostIDScore;
+                        Debug.print("Post id score then new post id score");
+                        Debug.print(Nat64.toText(postIDScoresVar[i].score));
+                        Debug.print(Nat64.toText(newPostIDScore.score));
                     };
                 }
             };

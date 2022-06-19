@@ -26,11 +26,11 @@ module
 
     public func cmp(x : PostIDScore, y : PostIDScore) : Order.Order
     {
-        if (x.score > y.score)
+        if (x.score < y.score)
         {
             return #greater;
         };
-        if (x.score < y.score)
+        if (x.score > y.score)
         {
             return #less;
         };

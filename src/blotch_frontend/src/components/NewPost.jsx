@@ -122,7 +122,6 @@ class NewPost extends React.Component {
   handleSubmitPost = () => {
     let textDescription = document.getElementById('description').value;
     const blob = {'media': bytesEncoding, 'description': textDescription};
-    console.log(textDescription);
     portal.createPost(blob).then(result => {
       this.setState({'showModal': false});
     });

@@ -124,9 +124,6 @@ class Search extends React.Component {
   }
 
   render() {
-	console.log('profile start');
-	console.log(this.state.profiles);
-	console.log('profile end');
     return (
       <>
       <InputWrapper

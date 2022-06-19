@@ -117,7 +117,6 @@ class ProfilePreview extends React.Component {
   getProfile = () => {
     portal.getProfile().then(p => {
       this.setState({'profile': p}, () => {
-        console.log(p);
         this.getAvatar();
         this.getBlotches();
       });
@@ -163,30 +162,24 @@ class ProfilePreview extends React.Component {
       // if it is not following
       if(!this.containsPrincipal(principalsFollowing, portalPrincipalClicked)) {
         myPortal.addFollowing(portalPrincipalClicked).then(result => {
-          console.log('Adding')
-          console.log(result);
         });
       } else {
         myPortal.removeFollowing(portalPrincipalClicked).then(result => {
-          console.log('Removing')
-          console.log(result);
         });
       }
     });
   }
 
   componentDidUpdate() {
-    if(!hasRendered && this.props.portalPrincipal != '') {
-      console.log('comp update');
-      console.log(this.props.portalPrincipal);
-      console.log(this.props.myPortalPrincipal);
+    if(this.props.portalPrincipal != '' && this.props.myPortalPrincipal != '') {
       this.getPortal();
-      hasRendered = true;
     }
   }
 
   componentDidMount() {
-    this.getPortal();
+    if(this.props.portalPrincipal != '' && this.props.myPortalPrincipal != '') {
+      this.getPortal();
+    }
   }
 
   render = () => {
@@ -214,19 +207,8 @@ export default ProfilePreview;
     // let b = document.getElementById(this.state.profile.username + "Button");
     // b.innerText += 'o';
     // portal.getFollowers().then(portalPrincipals => {
-    //   console.log('chekcing contains');
-    //   console.log(portalPrincipals.length);
-    //   console.log(portalPrincipals);
-
-    //   console.log('portal principal of clicked')
-    //   console.log(this.props.portalPrincipal)
-    //   console.log('my portal princiapl');
-    //   console.log(this.props.myPortalPrincipal)
-
     //   let contains = false;
     //   for(let i = 0; i < portalPrincipals.length; i++) {
-    //     console.log(portalPrincipals[i]._arr);
-    //     console.log(this.props.myPortalPrincipal._arr);
 
     //     let iterContains = true;
     //     for(let j = 0; j < portalPrincipals[i]._arr.length; j++) {
@@ -239,10 +221,8 @@ export default ProfilePreview;
     //     }
     //   }
     //   if(contains) {
-    //       console.log('remove');
-    //       myPortal.removeFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
+    //       myPortal.removeFollowing(this.props.portalPrincipal).then(r => {});
     //       return;
     //   }
-    //   console.log('adding fooelwogin')
-    //   myPortal.addFollowing(this.props.portalPrincipal).then(r => {console.log(r)});
+    //   myPortal.addFollowing(this.props.portalPrincipal).then(r => {});
     // })

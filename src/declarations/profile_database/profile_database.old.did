@@ -1,0 +1,13 @@
+type Profile = 
+ record {
+   avatar: blob;
+   bio: text;
+   userPrincipal: principal;
+   username: text;
+ };
+service : {
+  initialize: () -> ();
+  notifyNewPortal: (principal) -> ();
+  notifyProfileUpdate: (Profile) -> ();
+  search: (text) -> (vec principal) query;
+}

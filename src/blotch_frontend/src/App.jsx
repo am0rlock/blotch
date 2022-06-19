@@ -7,6 +7,7 @@ import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
 import NewPost from './components/NewPost';
 import { createActor } from "../../declarations/portal";
+import { post_database } from '../../declarations/post_database';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -24,16 +25,16 @@ class App extends React.Component {
         this.state = {
             'portalPrincipal': '',
             selectedPage: 0,
-            postObjects: []
+            postObjects: [],
+            topPostObjects: []
         };
     }
 
     grabPortalPrincipal() {
         gateway.grabPortal().then((portal) => {
             this.setState({'portalPrincipal': portal['ok']}, () => {
-                console.log('portal princ')
-                console.log(this.state.portalPrincipal);
                 this.getPosts(createActor(this.state.portalPrincipal));
+                this.getTopPosts();
             });
         });
     }
@@ -55,8 +56,57 @@ class App extends React.Component {
 		});
 	}
 
+    getTopPosts = () => {
+        post_database.getTopPosts(0, 11).then(posts => {
+            let promises = [];
+            let postIDs = [];
+            for(let i = 0; i < posts.length; i++) {
+                const portalPrincipal = posts[i].portalPrincipal;
+                const portal = createActor(portalPrincipal);
+                postIDs[i] = posts[i];
+                promises[i] = portal.getPost(postIDs[i]);
+            }
+            let postObjects = []
+            Promise.all(promises).then(posts => {
+                for(let i = 0; i < posts.length; i++) {
+                    const post = posts[i];
+                    let postObject = post['ok'];
+                    postObject['ID'] = postIDs[i];
+                    postObjects[i] = postObject;
+                }
+                this.setState({topPostObjects: postObjects}, () => {
+                    console.log('types of posts')
+                    console.log(this.state.postObjects);
+                    console.log(this.state.topPostObjects);
+                });
+            })
+        });
+    }
+
+    handlePageChange = (newValue) => {
+        if(newValue == 0) {
+            this.setState({postObjects: []}, () => {
+                this.getPosts(createActor(this.state.portalPrincipal));
+            });
+        } else if(newValue == 1) {
+            // this.getTopPosts();
+        } else if(newValue == 2) {
+            
+        } else {
+
+        }
+        this.setState({selectedPage: newValue})
+    }
+
     componentDidMount() {
         this.grabPortalPrincipal();
+        this.getTopPosts();
+    }
+
+    showPostObjects() {
+        console.log('show post objects');
+        console.log(this.state.topPostObjects);
+        return true;
     }
 
     render() {
@@ -64,24 +114,43 @@ class App extends React.Component {
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
             <div id='container'>
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '1%'}}>
-                        <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
-                        <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
-                        <Search portalPrincipal={this.state.portalPrincipal}></Search>
+                {/*Section 0 is home page*/}
+                {   this.state.selectedPage == 0 &&
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '1%'}}>
+                            <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
+                            <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
+                            <Search portalPrincipal={this.state.portalPrincipal}></Search>
+                        </div>
+                        <PostPreview
+                            myPortalPrincipal={this.state.portalPrincipal}
+                            postObjects={this.state.postObjects}
+                        />
                     </div>
-                    <PostPreview
-                        myPortalPrincipal={this.state.portalPrincipal}
-                        postObjects={this.state.postObjects}
-                        portalPrincipal={this.state.portalPrincipal}
-                    />
-                </div>
+                }
+                {/*Section 1 is featured page*/}
+                { this.state.selectedPage == 1 && this.showPostObjects() &&
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                        <PostPreview
+                            myPortalPrincipal={this.state.portalPrincipal}
+                            postObjects={this.state.topPostObjects}
+                        />
+                    </div>
+                }
+                {/*Section 2 is featured page*/}
+                { this.state.selectedPage == 2 &&
+                    <div>Following</div>
+                }
+                {/*Section 3 is featured page*/}
+                { this.state.selectedPage == 3 &&
+                    <div>Liked</div>
+                }
                 <div className='bottomNavigationContainer'>
                     <BottomNavigation
                         showLabels
                         value={this.state.selectedPage}
                         onChange={(event, newValue) => {
-                            this.setState({selectedPage: newValue})
+                            this.handlePageChange(newValue);
                         }}
                         className='bottomNavigation'
                     >

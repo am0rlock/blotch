@@ -172,6 +172,8 @@ class Post extends React.Component {
 	}
 
 	getImageFromPost(post) {
+		console.log('getting image');
+		console.log(post);
 		let picArray = post['content'].media;
 		let picString = String.fromCharCode.apply(null, picArray);
 		const imgSrc = "data:image/png;base64," + picString.toString('base64');
@@ -207,9 +209,7 @@ class Post extends React.Component {
 
 }
 
-var portal;
 var myPortal;
-var hasRendered = false;
 class PostPreview extends React.Component {
 	constructor(props) {
 		super(props);
@@ -222,24 +222,22 @@ class PostPreview extends React.Component {
 		};
 	}
 
-	getPost = (postID) => {
-		portal.getPost(postID).then(post => {
-			let postObject = post['ok'];
-			postObject['ID'] = postID;
-			console.log('posg ojb e')
-			console.log(postObject);
-			this.setState(prevState => ({'posts': [...prevState.posts, postObject]}), () => {
-			});
-		});
-	}
+	// getPost = (postID) => {
+	// 	portal.getPost(postID).then(post => {
+	// 		let postObject = post['ok'];
+	// 		postObject['ID'] = postID;
+	// 		this.setState(prevState => ({'posts': [...prevState.posts, postObject]}), () => {
+	// 		});
+	// 	});
+	// }
 
-	getPosts = () => {
-		portal.getPostIDs().then(posts => {
-			for(let i = 0; i < posts.length; i++) {
-				this.getPost(posts[i]);
-			}
-		});
-	}
+	// getPosts = () => {
+	// 	portal.getPostIDs().then(posts => {
+	// 		for(let i = 0; i < posts.length; i++) {
+	// 			this.getPost(posts[i]);
+	// 		}
+	// 	});
+	// }
 
 	getPortal = () => {
 		if(this.props.myPortalPrincipal != '') {
@@ -292,7 +290,6 @@ class PostPreview extends React.Component {
 	}
 
 	comment() {
-		console.log('commenting');
 		const commentText = document.getElementById('commentBox').value;
 		myPortal.createComment(this.state.activePost.ID, commentText).then(() => {
 			myPortal.getProfile().then(p => {
@@ -309,9 +306,8 @@ class PostPreview extends React.Component {
 	}
 
 	componentDidUpdate() {
-		if(!hasRendered) {
+		if(this.props.myPortalPrincipal != '') {
 			this.getPortal();
-			hasRendered = true;
 		}
 	}
 
@@ -331,7 +327,9 @@ class PostPreview extends React.Component {
 						<Modal>
 							<div className='postContainer'>
 								<div className='postImageContainer'>
-									<ProfilePreview portalPrincipal={this.state.activePost.ID.portalPrincipal}></ProfilePreview>
+									<ProfilePreview
+										portalPrincipal={this.state.activePost.ID.portalPrincipal}
+										myPortalPrincipal={this.props.myPortalPrincipal}></ProfilePreview>
 									<Post className='modalImage' post={this.state.activePost} showPost={() => {this.hidePost()}}></Post>
 									<HeartIcon onClick={() => {this.toggleLike()}}></HeartIcon>
 									<div className={(this.state.isLiked ? "liked " : "") + "numLikers"}>{this.state.activePost.numLikers + ""}</div>
