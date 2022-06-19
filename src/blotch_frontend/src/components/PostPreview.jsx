@@ -125,6 +125,7 @@ const ModalWrapper = styled.div`
 	}
 
 	.postImageContainer {
+        border-radius: 4px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
