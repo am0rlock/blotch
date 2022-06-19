@@ -64,10 +64,12 @@ const ModalWrapper = styled.div`
   h3 {
     text-align: center;
     margin: 2%;
+	color: white;
   }
 
 	h3:hover {
 		cursor: pointer;
+		color: black;
 	}
 
 	.numLikers {

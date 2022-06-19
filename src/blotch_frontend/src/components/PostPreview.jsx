@@ -1,7 +1,7 @@
 import React from "react";
 // import { useHistory } from "react-router-dom";
 import styled from "styled-components";
-import { HeartIcon, CommentIcon } from "./Icons";
+import { HeartIcon, CommentIcon, WhiteHeartIcon } from "./Icons";
 import Comment from './Comment';
 
 import Modal from "./Modal";
@@ -49,7 +49,6 @@ const Wrapper = styled.div`
 		justify-content: center;
 		align-items: center;
 		height: 100%;
-		color: ${(props) => props.theme.white};
 		font-weight: 500;
 		font-size: 1.1rem;
 	}
@@ -165,6 +164,10 @@ const ModalWrapper = styled.div`
 		width: 30vw;
 		height: 40vh;
 		overflow: auto;
+	}
+
+	.numLikers {
+		color: white;
 	}
 
 	.liked {
@@ -337,7 +340,7 @@ class PostPreview extends React.Component {
 										portalPrincipal={this.state.activePost.ID.portalPrincipal}
 										myPortalPrincipal={this.props.myPortalPrincipal}></ProfilePreview>
 									<Post className='modalImage' post={this.state.activePost} showPost={() => {this.hidePost()}}></Post>
-									<HeartIcon onClick={() => {this.toggleLike()}}></HeartIcon>
+									<WhiteHeartIcon onClick={() => {this.toggleLike()}} />
 									<div className={(this.state.isLiked ? "liked " : "") + "numLikers"}>{this.state.activePost.numLikers + ""}</div>
 								</div>
 								<div className='commentSection'>
