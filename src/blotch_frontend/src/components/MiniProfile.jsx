@@ -3,17 +3,17 @@ import { Profiler } from 'react';
 import { Avatar } from '../../../../node_modules/@mui/material/index';
 import { Card, CardContent } from '../../../../node_modules/@mui/material/index';
 import { Typography } from '../../../../node_modules/@mui/material/index';
-import { createActor } from "../../../declarations/portal";
 import Box from '../../../../node_modules/@mui/material/Box';
 
 import unknownProfile from '../../assets/UnknownProfile.png';
 import blotchesLogo from '../../assets/blotches_logo.png';
+import { getPortalFromPrincipal } from '../utils/index';
 
 const MiniProfile = ({ portalPrincipal }) => {
     const [profile, setProfile] = React.useState({'username':'Loading...', 'bio':'Loading...'});
 
     async function grabProfile() {
-        let portal = createActor(portalPrincipal);
+        let portal = getPortalFromPrincipal(portalPrincipal);
         setProfile(await portal.getProfile());
     }
 

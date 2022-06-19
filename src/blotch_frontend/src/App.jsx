@@ -6,16 +6,7 @@ import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
 import NewPost from './components/NewPost';
 import { post_database } from '../../declarations/post_database';
-
-// index.ts
-import { Actor, HttpAgent } from "@dfinity/agent";
-import { AuthClient } from "@dfinity/auth-client";
-
-import { canisterId as canisterIDGateway } from '../../declarations/gateway/';
-import { idlFactory as idlFactoryGateway } from '../../declarations/gateway/gateway.did.js';
-import { idlFactory as idlFactoryPortal } from '../../declarations/portal/portal.did.js';
-
-
+import { init, getPortalFromPrincipal } from './utils/index';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -27,8 +18,8 @@ import HeartCircleOutline from '../assets/heart-circle-outline.svg';
 import People from '../assets/people.svg';
 import PeopleOutline from '../assets/people-outline.svg';
 
-var agent;
 var gateway;
+export var ph;
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -42,13 +33,11 @@ class App extends React.Component {
         };
     }
 
+
     grabPortalPrincipal() {
         gateway.grabPortal().then((portal) => {
             this.setState({'portalPrincipal': portal['ok']}, () => {
-                const portal = Actor.createActor(idlFactoryPortal, {
-                    agent,
-                    canisterId: this.state.portalPrincipal,
-                });
+                const portal = getPortalFromPrincipal(this.state.portalPrincipal);
                 this.getPosts(portal);
             });
         });
@@ -75,7 +64,7 @@ class App extends React.Component {
         myPortal.getFollowingPostIDs().then(posts => {
             for(let i = 0; i < posts.length; i++) {
                 const portalPrincipal = posts[i].portalPrincipal;
-                const portal = createActor(portalPrincipal);
+                const portal = getPortalFromPrincipal(portalPrincipal);
                 portal.getPost(posts[i]).then(post => {
                     let postObject = post['ok'];
                     postObject['ID'] = posts[i];
@@ -91,7 +80,7 @@ class App extends React.Component {
             console.log(posts);
             for(let i = 0; i < posts.length; i++) {
                 const portalPrincipal = posts[i].portalPrincipal;
-                const portal = createActor(portalPrincipal);
+                const portal = getPortalFromPrincipal(portalPrincipal);
                 portal.getPost(posts[i]).then(post => {
                     let postObject = post['ok'];
                     postObject['ID'] = posts[i];
@@ -107,7 +96,7 @@ class App extends React.Component {
             let postIDs = [];
             for(let i = 0; i < posts.length; i++) {
                 const portalPrincipal = posts[i].portalPrincipal;
-                const portal = createActor(portalPrincipal);
+                const portal = getPortalFromPrincipal(portalPrincipal);
                 postIDs[i] = posts[i];
                 promises[i] = portal.getPost(postIDs[i]);
             }
@@ -129,67 +118,32 @@ class App extends React.Component {
     }
 
     handlePageChange = (newValue) => {
-        console.log(newValue);
+        const portal = getPortalFromPrincipal(this.state.portalPrincipal);
         if(newValue == 0) {
             this.setState({postObjects: []}, () => {
-                this.getPosts(createActor(this.state.portalPrincipal));
+                this.getPosts(portal);
             });
         } else if(newValue == 1) {
             this.getTopPosts();
         } else if(newValue == 2) {
             this.setState({followingPostObjects: []}, () => {
-                this.getFollowingPosts(createActor(this.state.portalPrincipal));
+                this.getFollowingPosts(portal);
             });
         } else {
             this.setState({likedPostObjects: []}, () => {
-                this.getLikedPosts(createActor(this.state.portalPrincipal));
+                this.getLikedPosts(portal);
             });
         }
         this.setState({selectedPage: newValue})
     }
 
     componentDidMount() {
-        this.init();
+        init().then(result => {
+            gateway = result;
+            this.grabPortalPrincipal();
+        });
     }
 
-
-    init = async () => {
-        let iiUrl;
-        if (true) { // process.env.DFX_NETWORK === "local") {
-            iiUrl = `http://localhost:8000/?canisterId=qjdve-lqaaa-aaaaa-aaaeq-cai`;
-        } else if (process.env.DFX_NETWORK === "ic") {
-            iiUrl = `https://${process.env.II_CANISTER_ID}.ic0.app`;
-        } else {
-            iiUrl = `https://${process.env.II_CANISTER_ID}.dfinity.network`;
-        }
-
-        // First we have to create and AuthClient.
-        const authClient = await AuthClient.create();
-
-        // Call authClient.login(...) to login with Internet Identity. This will open a new tab
-        // with the login prompt. The code has to wait for the login process to complete.
-        // We can either use the callback functions directly or wrap in a promise.
-        await new Promise((resolve, reject) => {
-            authClient.login({
-                identityProvider: iiUrl,
-                onSuccess: resolve,
-                onError: reject,
-            });
-        });
-
-        // Get the identity from the auth client:
-        const identity = authClient.getIdentity();
-        // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
-        agent = new HttpAgent({ identity });
-        agent.fetchRootKey();
-        // Using the interface description of our webapp, we create an Actor that we use to call the service methods.
-        const gatewayActor = Actor.createActor(idlFactoryGateway, {
-            agent,
-            canisterId: canisterIDGateway,
-        });
-        gateway = gatewayActor;
-        this.grabPortalPrincipal()
-    };
 
     render() {
         return (

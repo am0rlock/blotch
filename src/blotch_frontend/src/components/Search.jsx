@@ -5,7 +5,7 @@ import levenshtein from 'js-levenshtein'
 
 import { profile_database } from '../../../declarations/profile_database/'
 import ProfilePreview from "./ProfilePreview";
-import { createActor } from "../../../declarations/portal";
+import { getPortalFromPrincipal } from "../utils/index";
 
 const InputWrapper = styled.input`
   padding: 0.4rem 0.6rem;
@@ -99,7 +99,7 @@ class Search extends React.Component {
 		let promises = []
 		const searchQuery = document.getElementById('searchInput').value;
 		for(let i = 0; i < r.length; i++) {
-			const returnedPortal = createActor(r[i]);
+			const returnedPortal = getPortalFromPrincipal(r[i]);
 			promises.push(returnedPortal.getProfile());
 		}
 		let distances = []

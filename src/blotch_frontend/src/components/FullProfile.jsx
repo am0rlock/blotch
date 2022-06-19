@@ -3,7 +3,7 @@ import { Card } from '../../../../node_modules/@mui/material/index';
 import { Typography } from '../../../../node_modules/@mui/material/index';
 import { Grid } from '../../../../node_modules/@mui/material/index';
 import MiniProfile from './MiniProfile';
-import { createActor } from "../../../declarations/portal";
+import { getPortalFromPrincipal } from './utils/index';
 
 const FullProfile = ({ portalPrincipal }) => {
     const [profile, setProfile] = React.useState('');
@@ -11,7 +11,7 @@ const FullProfile = ({ portalPrincipal }) => {
     const [followers, setFollowers] = React.useState('');
 
     async function grabProfileParts() {
-        let portal = createActor(portalPrincipal);
+        let portal = getPortalFromPrincipal(portalPrincipal);
 
         setProfile(await portal.getProfile());
         setFollowing(await portal.getFollowing());

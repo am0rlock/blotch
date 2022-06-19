@@ -1,10 +1,9 @@
-import React, {useEffect} from "react";
+import React from "react";
 import styled from "styled-components";
 import avatar from "../../assets/default_profile.png";
 import Button from "../styles/Button";
 import blotchCoin from '../../assets/blotches_logo.png'
-
-import { createActor } from "../../../declarations/portal";
+import { getPortalFromPrincipal } from "../utils/index";
 
 const Wrapper = styled.div`
   display: flex;
@@ -125,8 +124,8 @@ class ProfilePreview extends React.Component {
   }
 
   getPortal = () => {
-    portal = createActor(this.props.portalPrincipal);
-    myPortal = createActor(this.props.myPortalPrincipal);
+    portal = getPortalFromPrincipal(this.props.portalPrincipal);
+    myPortal = getPortalFromPrincipal(this.props.myPortalPrincipal);
     this.getProfile();
   }
 

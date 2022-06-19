@@ -1,76 +1,64 @@
-export const timeSince = (timestamp) => {
-  const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
+import { Actor, HttpAgent } from "@dfinity/agent";
+import { AuthClient } from "@dfinity/auth-client";
 
-  let interval = Math.floor(seconds / 31536000);
+import { canisterId as canisterIDGateway } from '../../../declarations/gateway/';
+import { idlFactory as idlFactoryGateway } from '../../../declarations/gateway/gateway.did.js';
+import { idlFactory as idlFactoryPortal } from '../../../declarations/portal/portal.did.js';
 
-  if (interval > 1) {
-    return interval + " years";
+var agent;
+var gateway;
+export const init = async () => {
+  let iiUrl;
+  if (true) { // process.env.DFX_NETWORK === "local") {
+    iiUrl = `http://localhost:8000/?canisterId=qjdve-lqaaa-aaaaa-aaaeq-cai`;
+  } else if (process.env.DFX_NETWORK === "ic") {
+    iiUrl = `https://${process.env.II_CANISTER_ID}.ic0.app`;
+  } else {
+    iiUrl = `https://${process.env.II_CANISTER_ID}.dfinity.network`;
   }
 
-  interval = Math.floor(seconds / 2592000);
-  if (interval > 1) {
-    return interval + " months";
-  }
-
-  interval = Math.floor(seconds / 86400);
-  if (interval > 1) {
-    return interval + " days";
-  }
-
-  interval = Math.floor(seconds / 3600);
-  if (interval > 1) {
-    return interval + " hours";
-  }
-
-  interval = Math.floor(seconds / 60);
-  if (interval > 1) {
-    return interval + " minutes";
-  }
-
-  return Math.floor(seconds) + " seconds";
-};
-
-export const client = (endpoint, { body, ...customConfig } = {}) => {
-  const token = localStorage.getItem("token");
-  const headers = { "Content-Type": "application/json" };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
-
-  const config = {
-    method: body ? "POST" : "GET",
-    ...customConfig,
-    headers: {
-      ...headers,
-      ...customConfig.headers,
-    },
-  };
-
-  if (body) {
-    config.body = JSON.stringify(body);
-  }
-
-  return fetch(`${process.env.REACT_APP_BACKEND_URL}${endpoint}`, config).then(
-    async (res) => {
-      const data = await res.json();
-
-      if (res.ok) {
-        return data;
-      } else {
-        return Promise.reject(data);
-      }
+  // First we have to create and AuthClient.
+  const authClient = await AuthClient.create();
+  authClient.isAuthenticated().then(async (isAuth) => {
+    console.log('auth');
+    console.log(isAuth);
+    if(isAuth) {
+      return;
+    } else {
+      // Call authClient.login(...) to login with Internet Identity. This will open a new tab
+      // with the login prompt. The code has to wait for the login process to complete.
+      // We can either use the callback functions directly or wrap in a promise.
+      await new Promise((resolve, reject) => {
+        authClient.login({
+          identityProvider: iiUrl,
+          onSuccess: resolve,
+          onError: reject,
+        });
+      });
     }
+  })
+
+
+  // Get the identity from the auth client:
+  const identity = authClient.getIdentity();
+  // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
+  agent = new HttpAgent({ identity });
+  agent.fetchRootKey();
+  // Using the interface description of our webapp, we create an Actor that we use to call the service methods.
+  const gatewayActor = Actor.createActor(idlFactoryGateway, {
+    agent,
+    canisterId: canisterIDGateway,
+  });
+  gateway = gatewayActor;
+  return gateway;
+};
+
+
+export const getPortalFromPrincipal = (portalPrincipal) => {
+  return (
+    Actor.createActor(idlFactoryPortal, {
+      agent,
+      canisterId: portalPrincipal
+    })
   );
-};
-
-export const uploadImage = (file) => {
-  const data = new FormData();
-  data.append("file", file);
-  data.append("upload_preset", "instaclone");
-
-  return fetch(process.env.REACT_APP_CLOUDINARY_URL, {
-    method: "POST",
-    body: data,
-  }).then((res) => res.json());
-};
+}

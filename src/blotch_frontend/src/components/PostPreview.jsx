@@ -4,9 +4,9 @@ import styled from "styled-components";
 import { HeartIcon, CommentIcon } from "./Icons";
 import Comment from './Comment';
 
-import { createActor } from "../../../declarations/portal";
 import Modal from "./Modal";
 import ProfilePreview from "./ProfilePreview";
+import { getPortalFromPrincipal } from "../utils/index";
 
 const Wrapper = styled.div`
 	margin-top: 1rem;
@@ -241,7 +241,7 @@ class PostPreview extends React.Component {
 
 	getPortal = () => {
 		if(this.props.myPortalPrincipal != '') {
-			myPortal = createActor(this.props.myPortalPrincipal);
+			myPortal = getPortalFromPrincipal(this.props.myPortalPrincipal);
 		}
 	}
 
@@ -256,7 +256,7 @@ class PostPreview extends React.Component {
 		});
 		let formattedComments = [];
 		for(let i = 0; i < post.comments.length; i++) {
-			let commenterPortal = createActor(post.comments[i].posterPortalPrincipal);
+			let commenterPortal = getPortalFromPrincipal(post.comments[i].posterPortalPrincipal);
 			commenterPortal.getProfile().then(p => {
 				let username = p['username'];
 				let avatarArray = p['avatar'];

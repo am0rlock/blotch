@@ -1,9 +1,8 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import newPostImage from '../../assets/new_post.png';
+import { getPortalFromPrincipal } from "../utils/index";
 import Modal from "./Modal";
-
-import { createActor } from "../../../declarations/portal";
 
 const ModalWrapper = styled.div`
   #imgPreview {
@@ -115,7 +114,7 @@ class NewPost extends React.Component {
 
   getPortal = () => {
     if(this.props.portalPrincipal != '') {
-      portal = createActor(this.props.portalPrincipal);
+      portal = getPortalFromPrincipal(this.props.portalPrincipal);
     }
   }
 

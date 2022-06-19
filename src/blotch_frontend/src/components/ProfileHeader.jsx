@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Follow from "./Follow";
 import Button from "../styles/Button";
 import { OptionsIcon } from "./Icons";
-import { createActor } from "../../../declarations/portal";
 import blotchesCoin from '../../assets/blotches_logo.png';
+import { getPortalFromPrincipal } from "../utils/index";
+import React from 'react';
 
 const Wrapper = styled.div`
   display: flex;
@@ -171,7 +170,7 @@ class ProfileHeader extends React.Component {
   }
 
   getPortal = () => {
-    portal = createActor(this.props.portalPrincipal);
+    portal = getPortalFromPrincipal(this.props.portalPrincipal);
     this.getProfile();
   }
 
@@ -179,6 +178,10 @@ class ProfileHeader extends React.Component {
     if(this.props.portalPrincipal != '') {
       this.getPortal();
     }
+  }
+
+  setProfile() {
+    console.log('settig');
   }
 
   getNumPosts() {
