@@ -18,6 +18,16 @@ module PostStore
     {
         private var idToData : HashMap.HashMap<PostID.PostID, PostData.PostData> = HashMap.HashMap(0, PostID.equal, PostID.hash);
 
+        public func fromStable(idToData0 : [(PostID.PostID, PostData.PostData)])
+        {
+            idToData := HashMap.fromIter(idToData0.vals(), 0, PostID.equal, PostID.hash);
+        };
+
+        public func toStable() : [(PostID.PostID, PostData.PostData)]
+        {
+            return Iter.toArray(idToData.entries());
+        };
+
         public func addPostData(key : PostID.PostID, value : PostData.PostData) : ()
         {
             idToData.put(key, value);

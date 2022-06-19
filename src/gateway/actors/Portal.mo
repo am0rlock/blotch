@@ -31,16 +31,17 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     let REWARD_BLOTCHES : Nat64 = 10;
 
     let isPortalPrincipalValid : shared query (Principal) -> async Bool = isPortalPrincipalValid0;
-    var portalProfileSubscribers : [PortalProfileSubscriber.PortalProfileSubscriber] = [];
-    var portalPostSubscribers : [PortalPostSubscriber.PortalPostSubscriber] = [];
+    stable var portalProfileSubscribers : [PortalProfileSubscriber.PortalProfileSubscriber] = [];
+    stable var portalPostSubscribers : [PortalPostSubscriber.PortalPostSubscriber] = [];
 
-    var lastRecharge : Timestamp.Timestamp = Timestamp.construct();
-    var numBlotches : Nat64 = 100;
-    var profile : Profile.Profile = Profile.getDefault(userPrincipal);
-    var following : TrieSet.Set<Principal> = TrieSet.empty();
-    var followers : TrieSet.Set<Principal> = TrieSet.empty();
+    stable var lastRecharge : Timestamp.Timestamp = Timestamp.construct();
+    stable var numBlotches : Nat64 = 100;
+    stable var profile : Profile.Profile = Profile.getDefault(userPrincipal);
+    stable var following : TrieSet.Set<Principal> = TrieSet.empty();
+    stable var followers : TrieSet.Set<Principal> = TrieSet.empty();
+    stable var postStoreStable : [(PostID.PostID, PostData.PostData)] = [];
     var postStore : PostStore.PostStore = PostStore.PostStore();
-    var likedPosts : TrieSet.Set<PostID.PostID> = TrieSet.empty();
+    stable var likedPosts : TrieSet.Set<PostID.PostID> = TrieSet.empty();
 
     /*
      *  Anybody to Portal functions
@@ -506,6 +507,16 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
     system func heartbeat() : async ()
     {
         await rechargeBlotches();
+    };
+
+    system func preupgrade()
+    {
+        postStoreStable := postStore.toStable();
+    };
+
+    system func postupgrade()
+    {
+        postStore.fromStable(postStoreStable);
     };
 
     /*
