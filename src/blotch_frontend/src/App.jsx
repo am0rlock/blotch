@@ -205,8 +205,8 @@ class App extends React.Component {
                         <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
                         <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
                         <NewPost portalPrincipal={this.state.portalPrincipal} />
-                        <BottomNavigationAction label="Following" icon={this.state.selectedPage == 2 ? <People /> : <PeopleOutline />} />
-                        <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 3 ? <HeartCircle /> : <HeartCircleOutline />} />
+                        <BottomNavigationAction label="Following" icon={this.state.selectedPage == 3 ? <People /> : <PeopleOutline />} />
+                        <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 4 ? <HeartCircle /> : <HeartCircleOutline />} />
                     </BottomNavigation>
                 </div>
             </div>

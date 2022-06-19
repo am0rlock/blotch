@@ -163,6 +163,45 @@ const ModalWrapper = styled.div`
   }
 `;
 
+const AvatarWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5%;
+
+  .newPostButton {
+    width: 64%;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* Style as you please, it will become the visible UI component. */
+  }
+
+  form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .editProfileAvatar {
+    width: 300px;
+    height: 300px;
+    margin: 5%;
+  }
+ 
+  #uploadPhoto {
+      opacity: 0;
+      position: absolute;
+      z-index: -1;
+  }
+
+`;
+
+
 
 var portal;
 let hasRendered = false;
@@ -246,6 +285,24 @@ class ProfileHeader extends React.Component {
 
   handleSubmitProfileClick() {
     console.log('submit');
+    let newUsername = document.getElementById('newUsername').value;
+    let newBio = document.getElementById('newBio').value;
+    let newAvatar = this.state.profile['avatar'];
+    if(newUsername == '') {
+      newUsername = this.state.profile['username'];
+    }
+    if(newBio == '') {
+      newBio = this.state.profile['bio']
+    }
+    let profileUpdate = {
+      'avatar': newAvatar,
+      'username': newUsername,
+      'bio': newBio
+    };
+    const portal = getPortalFromPrincipal(this.props.portalPrincipal);
+    portal.setProfile(profileUpdate).then(result => {
+      console.log(result);
+    });
     this.setState({showModal: false});
   }
 
@@ -301,11 +358,19 @@ class ProfileHeader extends React.Component {
                 <div className='editProfileContainer'>
                   <textarea
                     id='newUsername'
-                    placeholder="New username"
+                    placeholder={this.state.profile['username']}
                   />
+                  <AvatarWrapper>
+                    <form>
+                      <label htmlFor="uploadPhoto">
+                        <img className="editProfileAvatar" src={this.state.avatar} alt="avatar" />
+                      </label>
+                      <input type="file" accept='image/*' name="photo" id="uploadPhoto" />
+                    </form>
+                  </AvatarWrapper>
                   <textarea
                     id='newBio'
-                    placeholder="New bio"
+                    placeholder={this.state.profile['bio']}
                   />
                 </div>
                 <h3 onClick={() => {this.handleCancelProfileClick()}}>Cancel</h3>
