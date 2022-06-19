@@ -26,15 +26,17 @@ class App extends React.Component {
             'portalPrincipal': '',
             selectedPage: 0,
             postObjects: [],
-            topPostObjects: []
+            topPostObjects: [],
+            followingPostObjects: []
         };
     }
 
     grabPortalPrincipal() {
         gateway.grabPortal().then((portal) => {
             this.setState({'portalPrincipal': portal['ok']}, () => {
-                this.getPosts(createActor(this.state.portalPrincipal));
-                this.getTopPosts();
+                const portal = createActor(this.state.portalPrincipal);
+                this.getPosts(portal);
+                this.getFollowingPosts(portal);
             });
         });
     }
@@ -56,8 +58,25 @@ class App extends React.Component {
 		});
 	}
 
+    getFollowingPosts = (myPortal) => {
+        myPortal.getFollowingPostIDs().then(posts => {
+            for(let i = 0; i < posts.length; i++) {
+                console.log(posts[i]);
+                const portalPrincipal = posts[i].portalPrincipal;
+                const portal = createActor(portalPrincipal);
+                portal.getPost(posts[i]).then(post => {
+                    console.log('posts @ i');
+                    console.log(posts[i]);
+                    let postObject = post['ok'];
+                    postObject['ID'] = posts[i];
+                    this.setState(prevState => ({followingPostObjects: [...prevState.followingPostObjects, postObject]}))
+                })
+            }
+        })
+    }
+
     getTopPosts = () => {
-        post_database.getTopPosts(0, 11).then(posts => {
+        post_database.getTopNPosts(0, 11).then(posts => {
             let promises = [];
             let postIDs = [];
             for(let i = 0; i < posts.length; i++) {
@@ -91,7 +110,9 @@ class App extends React.Component {
         } else if(newValue == 1) {
             // this.getTopPosts();
         } else if(newValue == 2) {
-            
+            this.setState({followingPostObjects: []}, () => {
+                this.getFollowingPosts(createActor(this.state.portalPrincipal));
+            });
         } else {
 
         }
@@ -139,7 +160,12 @@ class App extends React.Component {
                 }
                 {/*Section 2 is featured page*/}
                 { this.state.selectedPage == 2 &&
-                    <div>Following</div>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
+                        <PostPreview
+                            myPortalPrincipal={this.state.portalPrincipal}
+                            postObjects={this.state.followingPostObjects}
+                        />
+                    </div>
                 }
                 {/*Section 3 is featured page*/}
                 { this.state.selectedPage == 3 &&
