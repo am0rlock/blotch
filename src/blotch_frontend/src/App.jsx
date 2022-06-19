@@ -7,6 +7,7 @@ import {lightTheme} from './styles/theme'
 import NewPost from './components/NewPost';
 import { post_database } from '../../declarations/post_database';
 import { init, getPortalFromPrincipal } from './utils/index';
+import Header from './components/Header';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -17,6 +18,7 @@ import HeartCircle from '../assets/heart-circle.svg';
 import HeartCircleOutline from '../assets/heart-circle-outline.svg';
 import People from '../assets/people.svg';
 import PeopleOutline from '../assets/people-outline.svg';
+import Header from './components/Header';
 
 var gateway;
 export var ph;
@@ -149,6 +151,7 @@ class App extends React.Component {
         return (
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
+            <Header />
             <div id='container'>
                 {/*Section 0 is home page*/}
                 {   this.state.selectedPage == 0 &&
