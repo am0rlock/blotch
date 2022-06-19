@@ -16,10 +16,9 @@ const Wrapper = styled.div`
 	grid-gap: 1.5rem;
 
 	img {
-		border-radius: 4px;
-		box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-		width: 300px;
-		height: 300px;
+		border-radius: 5px;
+		width: 250px;
+		height: 250px;
 		object-fit: cover;
 	}
 
@@ -39,8 +38,8 @@ const Wrapper = styled.div`
 		right: 0;
 		bottom: 0;
 		background-color: rgba(0, 0, 0, 0.6);
-		width: 300px;
-		height: 300px;
+		width: 250px;
+		height: 250px;
 		display: none;
 	}
 
@@ -125,7 +124,7 @@ const ModalWrapper = styled.div`
 	}
 
 	.postImageContainer {
-        border-radius: 4px;
+        border-radius: 40px;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -133,7 +132,6 @@ const ModalWrapper = styled.div`
 	}
 
 	.postImage {
-		border-radius: 4px;
 		min-width: 500px;
 		min-height: 500px;
 		max-width: 500px;

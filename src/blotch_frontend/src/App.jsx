@@ -8,6 +8,7 @@ import NewPost from './components/NewPost';
 import { post_database } from '../../declarations/post_database';
 import { init, getPortalFromPrincipal } from './utils/index';
 import Header from './components/Header';
+import defaultProfile from '../assets/default_profile.png';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -31,16 +32,26 @@ class App extends React.Component {
             postObjects: [],
             topPostObjects: [],
             followingPostObjects: [],
-            likedPostObjects: []
+            likedPostObjects: [],
+            avatar: defaultProfile
         };
     }
 
+    getAvatar(portal) {
+        portal.getProfile().then(profile => {
+            let avatarArray = profile['avatar'];
+            let avatarString = String.fromCharCode.apply(null, avatarArray);
+            const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
+            this.setState({'avatar': imgSrc});
+        });
+    }
 
     grabPortalPrincipal() {
         gateway.grabPortal().then((portal) => {
             this.setState({'portalPrincipal': portal['ok']}, () => {
                 const portal = getPortalFromPrincipal(this.state.portalPrincipal);
                 this.getPosts(portal);
+                this.getAvatar(portal);
             });
         });
     }
@@ -151,7 +162,7 @@ class App extends React.Component {
         return (
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
-            <Header />
+            <Header avatar={this.state.avatar}/>
             <div id='container'>
                 {/*Section 0 is home page*/}
                 {   this.state.selectedPage == 0 &&

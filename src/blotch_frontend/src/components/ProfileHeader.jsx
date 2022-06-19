@@ -4,6 +4,7 @@ import { getPortalFromPrincipal } from "../utils/index";
 import React from 'react';
 import Modal from "./Modal";
 import PencilOutline from '../../assets/pencil-outline.svg';
+import defaultAvatar from '../../assets/default_profile.png';
 
 const Wrapper = styled.div`
   display: flex;
@@ -14,9 +15,10 @@ const Wrapper = styled.div`
   width: 50%;
 
   .avatar {
-    width: 35%;
+    width: 250px;
+    height: 250px;
     object-fit: cover;
-    border-radius: 90px;
+    border-radius: 70px;
     margin-right: 2rem;
   }
 
@@ -193,7 +195,7 @@ const AvatarWrapper = styled.div`
     margin: 5%;
   }
  
-  #uploadPhoto {
+  #uploadPhotoEditProfile {
       opacity: 0;
       position: absolute;
       z-index: -1;
@@ -204,17 +206,18 @@ const AvatarWrapper = styled.div`
 
 
 var portal;
-let hasRendered = false;
+var chooseFile;
+var bytesEncoding;
 class ProfileHeader extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: {'username':'Loading...', 'bio':'Loading...', 'avatar': ''},
+      profile: {'username':'Loading...', 'bio':'Loading...', 'avatar': defaultAvatar},
       blotches: 0,
       numPosts: 0,
       followers: [],
       following: [],
-      avatar: '',
+      avatar: defaultAvatar,
       showModal: false
     };
   }
@@ -272,6 +275,31 @@ class ProfileHeader extends React.Component {
       this.getPortal();
       this.setProfile();
     }
+    chooseFile = document.getElementById("uploadPhotoEditProfile");
+    if(chooseFile != null) {
+      chooseFile.addEventListener("change", () => {
+        this.getImageData();
+      });
+    }
+  }
+
+  getImageData() {
+    console.log('image');
+    const files = chooseFile.files[0];
+    if (files) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.addEventListener("load", () => {
+        // data:image/png;base64, is at the start of the result
+        let b64Encoding = fileReader.result.replace('data:image/png;base64,', '');
+        bytesEncoding = []
+        for(let i = 0; i < b64Encoding.length; i++) {
+          bytesEncoding[i] = b64Encoding.charCodeAt(i);
+        }
+        let imgPreview = document.getElementById("imgPreview");
+        imgPreview.src = fileReader.result;
+      });    
+    }
   }
 
   handleEditProfileClick() {
@@ -279,7 +307,7 @@ class ProfileHeader extends React.Component {
   }
 
   handleCancelProfileClick() {
-    console.log('cance');
+    bytesEncoding = [];
     this.setState({showModal: false});
   }
 
@@ -287,12 +315,15 @@ class ProfileHeader extends React.Component {
     console.log('submit');
     let newUsername = document.getElementById('newUsername').value;
     let newBio = document.getElementById('newBio').value;
-    let newAvatar = this.state.profile['avatar'];
+    let newAvatar = bytesEncoding;
     if(newUsername == '') {
       newUsername = this.state.profile['username'];
     }
     if(newBio == '') {
       newBio = this.state.profile['bio']
+    }
+    if(newAvatar == []) {
+      newAvatar = this.state.avatar;
     }
     let profileUpdate = {
       'avatar': newAvatar,
@@ -362,10 +393,10 @@ class ProfileHeader extends React.Component {
                   />
                   <AvatarWrapper>
                     <form>
-                      <label htmlFor="uploadPhoto">
-                        <img className="editProfileAvatar" src={this.state.avatar} alt="avatar" />
+                      <label htmlFor="uploadPhotoEditProfile">
+                        <img id='imgPreview' className="editProfileAvatar" src={this.state.avatar} alt="avatar" />
                       </label>
-                      <input type="file" accept='image/*' name="photo" id="uploadPhoto" />
+                      <input type="file" accept='image/*' name="photo" id="uploadPhotoEditProfile" />
                     </form>
                   </AvatarWrapper>
                   <textarea
