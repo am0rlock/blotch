@@ -125,28 +125,8 @@ const Wrapper = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-	.modalContainer {
-		border: 1px solid red;
-	}
-
 	.overlay {
 		display: None;
-	}
-
-	.postContainer {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		max-width: 75vw;
-		max-height: 75vh;
-	}
-
-	.postImageContainer {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
 	}
 
 	.postImage {
@@ -165,9 +145,22 @@ const ModalWrapper = styled.div`
 		margin-top: 5%;
 	}
 
+  h3 {
+    color: white;
+    text-align: center;
+  }
+
 	h3:hover {
 		cursor: pointer;
+    color: black;
 	}
+
+  .editProfileContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 
@@ -302,8 +295,19 @@ class ProfileHeader extends React.Component {
         {this.state.showModal &&
           <ModalWrapper>
           <>
+            <div className='blurryBox'></div>
             <div className='modalContainer'>
               <Modal>
+                <div className='editProfileContainer'>
+                  <textarea
+                    id='newUsername'
+                    placeholder="New username"
+                  />
+                  <textarea
+                    id='newBio'
+                    placeholder="New bio"
+                  />
+                </div>
                 <h3 onClick={() => {this.handleCancelProfileClick()}}>Cancel</h3>
                 <h3 onClick={() => {this.handleSubmitProfileClick()}}>Submit</h3>
               </Modal>

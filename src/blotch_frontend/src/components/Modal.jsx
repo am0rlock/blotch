@@ -11,6 +11,17 @@ const openModal = keyframes`
 	}
 `;
 
+export const BlurryBox = styled.div`
+  position: fixed;
+  top: 1vh;
+  left: 1vw;
+  width: 98vw;
+  height: 98vh;
+  background: radial-gradient(rgba(24, 24, 25, 1), rgba(24, 24, 25, 0));
+  blur: 100%;
+  z-index: 10;
+`;
+
 export const ModalWrapper = styled.div`
   display: flex;
   position: fixed;
@@ -20,8 +31,6 @@ export const ModalWrapper = styled.div`
   height: 100%;
   background-color: rgba(24, 24, 25, .5);
   z-index: 50;
-  overflow: hidden;
-  animation: ${openModal} 0.5s ease-in-out;
 
   .modal-content {
     background: ${(props) => props.theme.white};
@@ -39,9 +48,12 @@ export const ModalWrapper = styled.div`
 
 const Modal = ({ children }) => {
   return (
+    <>
+    <BlurryBox></BlurryBox>
     <ModalWrapper>
       <div className="modal-content">{children}</div>
     </ModalWrapper>
+    </>
   );
 };
 

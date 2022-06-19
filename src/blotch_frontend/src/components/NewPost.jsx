@@ -28,7 +28,6 @@ const ModalWrapper = styled.div`
 
   h3:hover {
     cursor: pointer;
-    border-radius: 5%;
     color: black;
   }
 
@@ -39,9 +38,7 @@ const ModalWrapper = styled.div`
 
   h3 {
     text-align: center;
-    background-color: gray;
-    padding: 1%;
-    margin: 1%;
+    color: white;
   }
 
   #descriptionContainer {

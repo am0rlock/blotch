@@ -148,11 +148,17 @@ const ModalWrapper = styled.div`
 		margin-top: 5%;
 	}
 
-	h3:hover {
-		cursor: pointer;
+	p {
+		color: white;
 	}
 
-	.numLikers {
+	h3:hover {
+		cursor: pointer;
+		color: black;
+	}
+
+	h3 {
+		color: white;
 	}
 
 	.comments {
