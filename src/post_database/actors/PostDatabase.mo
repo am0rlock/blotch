@@ -34,19 +34,17 @@ actor PostDatabase
 
     public shared query func getTopPosts(start : Nat64, end : Int64) : async [PostID.PostID]
     {
-        //let startConverted : Nat = Nat64.toNat(start);
-        //let endConverted : Int = Int64.toInt(end);
+        let startConverted : Nat = Nat64.toNat(start);
+        let endConverted : Int = Int64.toInt(end);
 
         var topNPosts : [PostID.PostID] = [];
-        //for (i in Iter.range(startConverted, endConverted))
-        for (i in Iter.range(0, postIDScores.size() - 1))
+        for (i in Iter.range(startConverted, endConverted))
+        // for (i in Iter.range(0, postIDScores.size() - 1))
         {
-            /*
             if (i < 0 or i >= postIDScores.size())
             {
                 return topNPosts;
             };
-            */
             topNPosts := Array.append(topNPosts, [postIDScores[i].postID]);
         };
         return topNPosts;
@@ -102,7 +100,7 @@ actor PostDatabase
         if (postIDScores.size() > 0)
         {
             let postIDScoresVar : [var PostIDScore.PostIDScore] = Array.init(postIDScores.size(), postIDScores[0]);
-            for (i in Iter.range(0, postIDScores.size()))
+            for (i in Iter.range(0, postIDScores.size() - 1))
             {
                 let postIDScore : PostIDScore.PostIDScore = postIDScores[i];
                 let portal : Portal.Portal = actor(Principal.toText(postIDScore.postID.portalPrincipal));
