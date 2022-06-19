@@ -18,7 +18,7 @@ export const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(142, 128, 106, .99);
+  background-color: rgba(24, 24, 25, .5);
   z-index: 50;
   overflow: hidden;
   animation: ${openModal} 0.5s ease-in-out;

@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import Button from "../styles/Button";
-import { OptionsIcon } from "./Icons";
 import blotchesCoin from '../../assets/blotches_logo.png';
 import { getPortalFromPrincipal } from "../utils/index";
 import React from 'react';
+import Modal from "./Modal";
+import PencilOutline from '../../assets/pencil-outline.svg';
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,14 +22,17 @@ const Wrapper = styled.div`
 
   .profile-meta {
     display: flex;
+    flex-direction: row;
     align-items: baseline;
     margin-bottom: 1rem;
-    flex-direction: column;
   }
 
   .profile-meta h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
-    top: 3px;
+    color: white;
   }
 
   .profile-info {
@@ -65,6 +68,7 @@ const Wrapper = styled.div`
 
   span {
     padding-right: 1%;
+    color: white;
   }
 
   a {
@@ -72,6 +76,15 @@ const Wrapper = styled.div`
   }
 
   .bio {
+    color: white;
+  }
+
+  .pencilOutlineContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5%;
+    margin: 2%;
   }
 
   @media screen and (max-width: 645px) {
@@ -111,6 +124,53 @@ const Wrapper = styled.div`
   }
 `;
 
+const ModalWrapper = styled.div`
+	.modalContainer {
+		border: 1px solid red;
+	}
+
+	.overlay {
+		display: None;
+	}
+
+	.postContainer {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		max-width: 75vw;
+		max-height: 75vh;
+	}
+
+	.postImageContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.postImage {
+		border-radius: 4px;
+		min-width: 500px;
+		min-height: 500px;
+		max-width: 500px;
+		max-height: 500px;
+		object-fit: cover;
+		padding: 5%;
+	}
+
+	textarea {
+		resize: none;
+		width: 300px;
+		margin-top: 5%;
+	}
+
+	h3:hover {
+		cursor: pointer;
+	}
+`;
+
+
 var portal;
 let hasRendered = false;
 class ProfileHeader extends React.Component {
@@ -122,7 +182,8 @@ class ProfileHeader extends React.Component {
       numPosts: 0,
       followers: [],
       following: [],
-      avatar: ''
+      avatar: '',
+      showModal: false
     };
   }
 
@@ -177,11 +238,25 @@ class ProfileHeader extends React.Component {
   componentDidUpdate() {
     if(this.props.portalPrincipal != '') {
       this.getPortal();
+      this.setProfile();
     }
   }
 
+  handleEditProfileClick() {
+    this.setState({showModal: true}, () => {console.log(this.state.showModal)});
+  }
+
+  handleCancelProfileClick() {
+    console.log('cance');
+    this.setState({showModal: false});
+  }
+
+  handleSubmitProfileClick() {
+    console.log('submit');
+    this.setState({showModal: false});
+  }
+
   setProfile() {
-    console.log('settig');
   }
 
   getNumPosts() {
@@ -198,18 +273,9 @@ class ProfileHeader extends React.Component {
           <div className="profile-info">
             <div className="profile-meta">
               <h2>{this.state.profile['username']}</h2>
-              {this.state.profile?.isMe ? (
-                <div className="options">
-                  <Button
-                    secondary
-                  >
-                    Edit Profile
-                  </Button>
-                  <OptionsIcon onClick={handleLogout} />
-                </div>
-              ) : (
-                  <div></div>
-              )}
+              <div className='pencilOutlineContainer'>
+                <PencilOutline onClick={() => {this.handleEditProfileClick()}}/>
+              </div>
             </div>
 
             <div className="profile-stats">
@@ -233,6 +299,18 @@ class ProfileHeader extends React.Component {
             </div>
           </div>
         </Wrapper>
+        {this.state.showModal &&
+          <ModalWrapper>
+          <>
+            <div className='modalContainer'>
+              <Modal>
+                <h3 onClick={() => {this.handleCancelProfileClick()}}>Cancel</h3>
+                <h3 onClick={() => {this.handleSubmitProfileClick()}}>Submit</h3>
+              </Modal>
+            </div>
+          </>
+          </ModalWrapper>
+        }
       </>
     );
   }

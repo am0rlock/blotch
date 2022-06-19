@@ -155,7 +155,6 @@ class App extends React.Component {
                     <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', width: '100%'}}>
                         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%', margin: '1%'}}>
                             <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
-                            <NewPost portalPrincipal={this.state.portalPrincipal}></NewPost>
                             <Search portalPrincipal={this.state.portalPrincipal}></Search>
                         </div>
                         <PostPreview
@@ -202,6 +201,7 @@ class App extends React.Component {
                     >
                         <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
                         <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
+                        <NewPost portalPrincipal={this.state.portalPrincipal} />
                         <BottomNavigationAction label="Following" icon={this.state.selectedPage == 2 ? <People /> : <PeopleOutline />} />
                         <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 3 ? <HeartCircle /> : <HeartCircleOutline />} />
                     </BottomNavigation>

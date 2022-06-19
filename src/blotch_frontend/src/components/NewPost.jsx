@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import styled from "styled-components";
-import newPostImage from '../../assets/new_post.png';
 import { getPortalFromPrincipal } from "../utils/index";
 import Modal from "./Modal";
+import AddCircleOutline from '../../assets/add-circle-outline.svg';
 
 const ModalWrapper = styled.div`
   #imgPreview {
@@ -62,15 +62,27 @@ const ModalWrapper = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5%;
 
   .newPostButton {
-    width: 20%;
+    width: 64%;
   }
 
   label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     /* Style as you please, it will become the visible UI component. */
+  }
+
+  form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
  
   #uploadPhoto {
@@ -144,7 +156,7 @@ class NewPost extends React.Component {
       <>
       <Wrapper>
         <form>
-          <label htmlFor="uploadPhoto"><img onClick={this.handleClick} className='newPostButton' src={newPostImage}></img></label>
+          <label htmlFor="uploadPhoto"><AddCircleOutline onClick={this.handleClick} className='newPostButton'/></label>
           <input type="file" accept='image/*' name="photo" id="uploadPhoto" />
         </form>
       </Wrapper>

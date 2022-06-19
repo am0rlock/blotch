@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
 		font-size: 16px;
 		box-sizing: border-box;
 		height: 100%;
-		background-color: gray;
+		background-color: rgb(24, 24, 25);
 	}
 
 	*, *:before, *:after {
@@ -21,7 +21,7 @@ const GlobalStyle = createGlobalStyle`
 		background: ${(props) => props.theme.bg};
 		color: ${(props) => props.theme.primaryColor};
 		overflow-x: hidden;
-		background-color: gray;
+		background-color: rgb(24, 24, 25);
 	}
 
 	h1, h2, h3, h4, h5, h6 {
@@ -60,16 +60,13 @@ const GlobalStyle = createGlobalStyle`
 
 	#container {
 		position: relative;
-		background-color: gray;
+		background-color: rgb(24, 24, 25);
 	}
 
 	.bottomNavigationContainer {
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-	}
-
-	.bottomNavigation {
 	}
 `;
 
