@@ -9,7 +9,8 @@ var agent;
 var gateway;
 export const init = async (logInUser) => {
   let iiUrl;
-  if (true) { // process.env.DFX_NETWORK === "local") {
+  console.log(process.env);
+  if (process.env.DFX_NETWORK === "local") {
     iiUrl = `http://localhost:8000/?canisterId=qjdve-lqaaa-aaaaa-aaaeq-cai`;
   } else if (process.env.DFX_NETWORK === "ic") {
     iiUrl = `https://${process.env.II_CANISTER_ID}.ic0.app`;
