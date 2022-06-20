@@ -21,6 +21,7 @@ import HeartCircleOutline from '../assets/heart-circle-outline.svg';
 import People from '../assets/people.svg';
 import PeopleOutline from '../assets/people-outline.svg';
 import Header from './components/Header';
+import ReportMenu from './components/ReportMenu';
 
 var gateway;
 export var ph;
@@ -172,7 +173,6 @@ class App extends React.Component {
             { !this.state.loggedIn &&
                 <Splash></Splash>
             }
-            
             { this.state.loggedIn &&
                 <><Header avatar={this.state.avatar}/>
                 <div id='container'>

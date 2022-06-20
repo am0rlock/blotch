@@ -2,11 +2,14 @@ import React from "react";
 // import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import { HeartIcon, CommentIcon, WhiteHeartIcon } from "./Icons";
+import AlertCircleOutline from '../../assets/alert-circle-outline.svg';
 import Comment from './Comment';
 
 import Modal from "./Modal";
 import ProfilePreview from "./ProfilePreview";
+import ReportMenu from "./ReportMenu";
 import { getPortalFromPrincipal, arrayBufferToBase64 } from "../utils/index";
+import { portal } from "../../../declarations/portal/index";
 
 const Wrapper = styled.div`
 	margin-top: 1rem;
@@ -107,11 +110,21 @@ const Wrapper = styled.div`
 
 const ModalWrapper = styled.div`
 	.modalContainer {
-		border: 1px solid red;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		jusitfy-content: center;
 	}
 
 	.overlay {
 		display: None;
+	}
+
+	.reportContainer {
+		display: flex;
+		flex-align: center;
+		justify-content: center;
+		width: 30px;
 	}
 
 	.postContainer {
@@ -196,6 +209,7 @@ class Post extends React.Component {
 	render() {
 		let post = this.props.post;
 		return (
+			<>
 			<div
 				className="container-overlay"
 				onClick={() => {this.props.showPost(post)}}
@@ -212,6 +226,7 @@ class Post extends React.Component {
 					</div>
 				</div>
 			</div>
+			</>
 		);
 	}
 
@@ -225,6 +240,7 @@ class PostPreview extends React.Component {
 			posts: [],
 			comments: [],
 			showModal: false,
+			showReport: false,
 			activePost: {},
 			isLiked: false
 		};
@@ -251,6 +267,24 @@ class PostPreview extends React.Component {
 		if(this.props.myPortalPrincipal != '') {
 			myPortal = getPortalFromPrincipal(this.props.myPortalPrincipal);
 		}
+	}
+
+	showReport(post) {
+		console.log('show report');
+		this.setState({showReport: true, showModal: false});
+	}
+
+	cancelReport() {
+		console.log('cancel report');
+		this.setState({showReport: false, showModal: true});
+	}
+
+	submitReport() {
+		console.log('submit report');
+		myPortal.reportPost(this.state.activePost.ID).then(response => {
+			console.log(response);
+		})
+		this.setState({showReport: false, showModal: true});
 	}
 
 	showPost(post) {
@@ -331,35 +365,45 @@ class PostPreview extends React.Component {
 			<ModalWrapper>
 				{this.state.showModal && 
 				<>
-					<div className='modalContainer'>
-						<Modal>
-							<div className='postContainer'>
-								<div className='postImageContainer'>
-									<ProfilePreview
-										portalPrincipal={this.state.activePost.ID.portalPrincipal}
-										myPortalPrincipal={this.props.myPortalPrincipal}></ProfilePreview>
-									<Post className='modalImage' post={this.state.activePost} showPost={() => {this.hidePost()}}></Post>
-									<WhiteHeartIcon onClick={() => {this.toggleLike()}} />
-									<div className={(this.state.isLiked ? "liked " : "") + "numLikers"}>{this.state.activePost.numLikers + ""}</div>
-								</div>
-								<div className='commentSection'>
-									<div className='comments'>
-										{this.state.comments.map(comment => (
-											<Comment key={i++} avatar={comment.avatar} username={comment.username} text={comment.text}></Comment>
-										))}
+					<Modal>
+						<div className='modalContainer'>
+							<div className='reportContainer'>
+								<AlertCircleOutline onClick={() => {this.showReport(this.state.activePost);}}/>
+							</div>
+							<div style={{}}>
+								<div className='postContainer'>
+									<div className='postImageContainer'>
+										<ProfilePreview
+											portalPrincipal={this.state.activePost.ID.portalPrincipal}
+											myPortalPrincipal={this.props.myPortalPrincipal}></ProfilePreview>
+										<Post className='modalImage' post={this.state.activePost} showPost={() => {this.hidePost()}}></Post>
+										<WhiteHeartIcon onClick={() => {this.toggleLike()}} />
+										<div className={(this.state.isLiked ? "liked " : "") + "numLikers"}>{this.state.activePost.numLikers + ""}</div>
 									</div>
-									<textarea id='commentBox' placeholder="Add comment"></textarea>
-									<h3 onClick={() => {this.comment(this.state.activePost)}} className='commentButton'>Comment</h3>
-									<br></br>
-									<br></br>
-									<p>{this.state.activePost.content.description}</p>
+									<div className='commentSection'>
+										<div className='comments'>
+											{this.state.comments.map(comment => (
+												<Comment key={i++} avatar={comment.avatar} username={comment.username} text={comment.text}></Comment>
+											))}
+										</div>
+										<textarea id='commentBox' placeholder="Add comment"></textarea>
+										<h3 onClick={() => {this.comment(this.state.activePost)}} className='commentButton'>Comment</h3>
+										<br></br>
+										<br></br>
+										<p>{this.state.activePost.content.description}</p>
+									</div>
 								</div>
 							</div>
-						</Modal>
-					</div>
+						</div>
+					</Modal>
 				</>
 				}
 			</ModalWrapper>
+			{ this.state.showReport && 
+				<Modal>
+					<ReportMenu cancel={() => {this.cancelReport()}} submit={() => {this.submitReport()}}></ReportMenu>
+				</Modal>
+			}
 			</>
 		);
 	}

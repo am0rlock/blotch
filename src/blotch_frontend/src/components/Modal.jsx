@@ -13,10 +13,10 @@ const openModal = keyframes`
 
 export const BlurryBox = styled.div`
   position: fixed;
-  top: 1vh;
-  left: 1vw;
-  width: 98vw;
-  height: 98vh;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
   background: radial-gradient(rgba(24, 24, 25, 1), rgba(24, 24, 25, 0));
   blur: 100%;
   z-index: 10;

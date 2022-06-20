@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { getPortalFromPrincipal } from "../utils/index";
 import Modal from "./Modal";
 import AddCircleOutline from '../../assets/add-circle-outline.svg';
+import ReportMenu from "./ReportMenu";
 
 const ModalWrapper = styled.div`
   #imgPreview {
