@@ -7,12 +7,10 @@ import { idlFactory as idlFactoryPortal } from '../../../declarations/portal/por
 
 var agent;
 var gateway;
-export const init = async (logInUser) => {
+export async function init(setGateway) {
   let iiUrl;
-  console.log(process.env.NODE_ENV);
-  console.log(process.env.DFX_NETWORK);
   if (true) { // process.env.DFX_NETWORK === "local") {
-    iiUrl = `http://localhost:8000/?canisterId=qjdve-lqaaa-aaaaa-aaaeq-cai`;
+    iiUrl = `http://localhost:8000/?canisterId=rkp4c-7iaaa-aaaaa-aaaca-cai`;
   } else if (process.env.DFX_NETWORK === "ic") {
     iiUrl = `https://${process.env.II_CANISTER_ID}.ic0.app`;
   } else {
@@ -20,27 +18,34 @@ export const init = async (logInUser) => {
   }
 
   // First we have to create and AuthClient.
-  const authClient = await AuthClient.create();
-  authClient.isAuthenticated().then(async (isAuth) => {
-    console.log('auth');
-    console.log(isAuth);
-    if(isAuth) {
-      logInUser();
-      return;
-    } else {
-      // Call authClient.login(...) to login with Internet Identity. This will open a new tab
-      // with the login prompt. The code has to wait for the login process to complete.
-      // We can either use the callback functions directly or wrap in a promise.
-      await new Promise((resolve, reject) => {
-        authClient.login({
-          identityProvider: iiUrl,
-          onSuccess: resolve,
-          onError: reject,
+  let authClientToUse;
+  AuthClient.create().then(authClient => {
+    authClient.isAuthenticated().then(async (isAuth) => {
+      console.log('auth');
+      console.log(isAuth);
+      if(!isAuth) {
+        // Call authClient.login(...) to login with Internet Identity. This will open a new tab
+        // with the login prompt. The code has to wait for the login process to complete.
+        // We can either use the callback functions directly or wrap in a promise.
+        await new Promise((resolve, reject) => {
+          authClient.login({
+            identityProvider: iiUrl,
+            onSuccess: resolve,
+            onError: reject,
+          });
         });
-      });
-    }
-  })
+        gateway = getGatewayFromAuthClient(authClientToUse);
+        setGateway(gateway);
+      } else {
+        authClientToUse = (authClient);
+        gateway = getGatewayFromAuthClient(authClientToUse);
+        setGateway(gateway);
+      }
+    })
+  });
+};
 
+const getGatewayFromAuthClient = (authClient) => {
   // Get the identity from the auth client:
   const identity = authClient.getIdentity();
   // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
@@ -53,7 +58,7 @@ export const init = async (logInUser) => {
   });
   gateway = gatewayActor;
   return gateway;
-};
+}
 
 export function arrayBufferToBase64( buffer ) {
   var binary = '';

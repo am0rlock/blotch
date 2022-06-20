@@ -50,7 +50,16 @@ class App extends React.Component {
         });
     }
 
+    setGateway(gatewayValue) {
+        gateway = gatewayValue;
+        this.grabPortalPrincipal();
+        this.setState({loggedIn: true});
+        console.log('state change');
+    }
+
     grabPortalPrincipal() {
+        console.log('grabbing portal principal in app ')
+        console.log(gateway)
         gateway.grabPortal().then((portal) => {
             this.setState({'portalPrincipal': portal['ok']}, () => {
                 const portal = getPortalFromPrincipal(this.state.portalPrincipal);
@@ -156,16 +165,12 @@ class App extends React.Component {
 
     logInUser() {
         console.log('logging in')
-        this.setState({loggedIn: true});
     }
 
     componentDidMount() {
-        init(() => {this.logInUser()}).then(result => {
-            gateway = result;
-            this.grabPortalPrincipal();
+        init((gatewayValue) => {this.setGateway(gatewayValue)}).then((result) => {
         });
     }
-
 
     render() {
         return (

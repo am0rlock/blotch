@@ -21,7 +21,7 @@ const Wrapper = styled.div`
   .avatar {
     width: 15%;
     padding: 1%;
-    border-radius: 25%;
+    border-radius: 5%;
     border: 3%;
   }
 

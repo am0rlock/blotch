@@ -19,7 +19,6 @@ const Wrapper = styled.div`
 	grid-gap: 1.5rem;
 
 	img {
-		border-radius: 5px;
 		width: 250px;
 		height: 250px;
 		object-fit: cover;
