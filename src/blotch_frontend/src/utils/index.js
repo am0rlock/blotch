@@ -9,8 +9,8 @@ var agent;
 var gateway;
 export async function init(setGateway) {
   let iiUrl;
-  if (false) { // process.env.DFX_NETWORK === "local") {
-    iiUrl = `http://localhost:8000/?canisterId=rkp4c-7iaaa-aaaaa-aaaca-cai`;
+  if (true) { // process.env.DFX_NETWORK === "local") {
+    iiUrl = `http://localhost:8000/?canisterId=qoctq-giaaa-aaaaa-aaaea-cai`;
   } else if (true) {//(process.env.DFX_NETWORK === "ic") {
     //iiUrl = `https://${process.env.II_CANISTER_ID}.ic0.app`;identity
     iiUrl = `https://identity.ic0.app`;
