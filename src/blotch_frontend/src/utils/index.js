@@ -39,21 +39,10 @@ export const init = async (logInUser) => {
         });
       });
     }
-})
+  })
 
-function _arrayBufferToBase64( buffer ) {
-  var binary = '';
-  var bytes = new Uint8Array( buffer );
-  var len = bytes.byteLength;
-  for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode( bytes[ i ] );
-  }
-  return window.btoa( binary );
-}
-
-
-// Get the identity from the auth client:
-const identity = authClient.getIdentity();
+  // Get the identity from the auth client:
+  const identity = authClient.getIdentity();
   // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
   agent = new HttpAgent({ identity });
   agent.fetchRootKey();
@@ -66,6 +55,15 @@ const identity = authClient.getIdentity();
   return gateway;
 };
 
+export function arrayBufferToBase64( buffer ) {
+  var binary = '';
+  var bytes = new Uint8Array( buffer );
+  var len = bytes.byteLength;
+  for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode( bytes[ i ] );
+  }
+  return binary;
+}
 
 export const getPortalFromPrincipal = (portalPrincipal) => {
   return (

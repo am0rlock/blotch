@@ -6,7 +6,7 @@ import GlobalStyle from './styles/GlobalStyle';
 import {lightTheme} from './styles/theme'
 import NewPost from './components/NewPost';
 import { post_database } from '../../declarations/post_database';
-import { init, getPortalFromPrincipal } from './utils/index';
+import { init, getPortalFromPrincipal, arrayBufferToBase64 } from './utils/index';
 import Header from './components/Header';
 import defaultProfile from '../assets/default_profile.png';
 import Splash from './components/Splash';
@@ -42,7 +42,7 @@ class App extends React.Component {
     getAvatar(portal) {
         portal.getProfile().then(profile => {
             let avatarArray = profile['avatar'];
-            let avatarString = String.fromCharCode.apply(null, avatarArray);
+            let avatarString = arrayBufferToBase64(avatarArray);
             const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
             this.setState({'avatar': imgSrc});
         });

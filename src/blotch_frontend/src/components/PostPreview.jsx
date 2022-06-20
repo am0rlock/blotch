@@ -6,7 +6,7 @@ import Comment from './Comment';
 
 import Modal from "./Modal";
 import ProfilePreview from "./ProfilePreview";
-import { getPortalFromPrincipal } from "../utils/index";
+import { getPortalFromPrincipal, arrayBufferToBase64 } from "../utils/index";
 
 const Wrapper = styled.div`
 	margin-top: 1rem;
@@ -183,7 +183,7 @@ class Post extends React.Component {
 		console.log('getting image');
 		console.log(post);
 		let picArray = post['content'].media;
-		let picString = String.fromCharCode.apply(null, picArray);
+		let picString = arrayBufferToBase64(picArray);
 		const imgSrc = "data:image/png;base64," + picString.toString('base64');
 		return imgSrc;
 	}
@@ -268,7 +268,7 @@ class PostPreview extends React.Component {
 			commenterPortal.getProfile().then(p => {
 				let username = p['username'];
 				let avatarArray = p['avatar'];
-				let avatarString = String.fromCharCode.apply(null, avatarArray);
+				let avatarString = arrayBufferToBase64(avatarArray);
 				const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
 				formattedComments[i] = {text: post.comments[i].content, username: username, avatar: imgSrc};
 				this.setState({showModal: true, activePost: post, comments: formattedComments});
@@ -303,7 +303,7 @@ class PostPreview extends React.Component {
 			myPortal.getProfile().then(p => {
 				let username = p['username'];
 				let avatarArray = p['avatar'];
-				let avatarString = String.fromCharCode.apply(null, avatarArray);
+				let avatarString = arrayBufferToBase64(avatarArray);
 				const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
 				let newComments = this.state.comments;
 				newComments.push({text: commentText, username: username, avatar: imgSrc});
