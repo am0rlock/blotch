@@ -169,11 +169,12 @@ class App extends React.Component {
         return (
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
-            <Header avatar={this.state.avatar}/>
             { !this.state.loggedIn &&
                 <Splash></Splash>
             }
+            
             { this.state.loggedIn &&
+                <><Header avatar={this.state.avatar}/>
                 <div id='container'>
                     {/*Section 0 is home page*/}
                     {   this.state.selectedPage == 0 &&
@@ -232,6 +233,7 @@ class App extends React.Component {
                         </BottomNavigation>
                     </div>
                 </div>
+                </>
             }
             </>
         )
