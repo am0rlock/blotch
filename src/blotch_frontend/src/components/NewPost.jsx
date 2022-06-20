@@ -172,7 +172,7 @@ class NewPost extends React.Component {
                 </div>
               </div>
               <h3 onClick={() => {this.setState({'showModal': false});}}>Cancel</h3>
-              <h3 onClick={this.handleSubmitPost}>Share</h3>
+              <h3 onClick={() => {this.handleSubmitPost(); window.location.reload();}}>Share</h3>
             </div>
           </Modal>
         }

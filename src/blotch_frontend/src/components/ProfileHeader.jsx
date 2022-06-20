@@ -322,9 +322,15 @@ class ProfileHeader extends React.Component {
     if(newBio == '') {
       newBio = this.state.profile['bio']
     }
-    if(newAvatar == []) {
-      newAvatar = this.state.avatar;
+    if(newAvatar == [] || newAvatar == undefined) {
+      let b64Encoding = this.state.avatar.replace('data:image/png;base64,', '');
+      bytesEncoding = []
+      for(let i = 0; i < b64Encoding.length; i++) {
+        bytesEncoding[i] = b64Encoding.charCodeAt(i);
+      }
+      newAvatar = bytesEncoding;
     }
+    console.log(newAvatar);
     let profileUpdate = {
       'avatar': newAvatar,
       'username': newUsername,

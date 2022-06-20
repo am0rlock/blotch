@@ -136,7 +136,7 @@ class App extends React.Component {
         const portal = getPortalFromPrincipal(this.state.portalPrincipal);
         if(newValue == 0) {
             this.setState({postObjects: []}, () => {
-                this.getPosts(portal);
+                this.grabPortalPrincipal();
             });
         } else if(newValue == 1) {
             this.getTopPosts();

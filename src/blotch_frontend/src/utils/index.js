@@ -9,9 +9,10 @@ var agent;
 var gateway;
 export const init = async (logInUser) => {
   let iiUrl;
-  console.log(process.env);
-  if (process.env.DFX_NETWORK === "local") {
-    iiUrl = `http://localhost:8000/?canisterId=qjdve-lqaaa-aaaaa-aaaeq-cai`;
+  console.log(process.env.NODE_ENV);
+  console.log(process.env.DFX_NETWORK);
+  if (true) { // process.env.DFX_NETWORK === "local") {
+    iiUrl = `http://localhost:8000/?canisterId=qoctq-giaaa-aaaaa-aaaea-cai`;
   } else if (process.env.DFX_NETWORK === "ic") {
     iiUrl = `https://${process.env.II_CANISTER_ID}.ic0.app`;
   } else {
@@ -38,11 +39,21 @@ export const init = async (logInUser) => {
         });
       });
     }
-  })
+})
+
+function _arrayBufferToBase64( buffer ) {
+  var binary = '';
+  var bytes = new Uint8Array( buffer );
+  var len = bytes.byteLength;
+  for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode( bytes[ i ] );
+  }
+  return window.btoa( binary );
+}
 
 
-  // Get the identity from the auth client:
-  const identity = authClient.getIdentity();
+// Get the identity from the auth client:
+const identity = authClient.getIdentity();
   // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
   agent = new HttpAgent({ identity });
   agent.fetchRootKey();
