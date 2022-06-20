@@ -84,10 +84,12 @@ const Wrapper = styled.div`
 
   .pencilOutlineContainer {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 5%;
-    margin: 2%;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 7%;
+    margin-left: 2%;
+    margin-top: 2%;
+    padding: 2%;
   }
 
   @media screen and (max-width: 645px) {
