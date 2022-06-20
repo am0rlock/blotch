@@ -3,7 +3,7 @@ import styled from "styled-components";
 import avatar from "../../assets/default_profile.png";
 import Button from "../styles/Button";
 import blotchCoin from '../../assets/blotches_logo.png'
-import { getPortalFromPrincipal } from "../utils/index";
+import { getPortalFromPrincipal, arrayBufferToBase64 } from "../utils/index";
 
 const Wrapper = styled.div`
   display: flex;
@@ -102,7 +102,7 @@ class ProfilePreview extends React.Component {
 
   getAvatar() {
     let avatarArray = this.state.profile['avatar'];
-    let avatarString = String.fromCharCode.apply(null, avatarArray);
+    let avatarString = arrayBufferToBase64(avatarArray);
     const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
     this.setState({'avatar': imgSrc});
   }

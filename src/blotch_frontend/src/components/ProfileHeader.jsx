@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import blotchesCoin from '../../assets/blotches_logo.png';
-import { getPortalFromPrincipal } from "../utils/index";
+import { getPortalFromPrincipal, arrayBufferToBase64 } from "../utils/index";
 import React from 'react';
 import Modal from "./Modal";
 import PencilOutline from '../../assets/pencil-outline.svg';
@@ -248,7 +248,7 @@ class ProfileHeader extends React.Component {
 
   getAvatar() {
     let avatarArray = this.state.profile['avatar'];
-    let avatarString = String.fromCharCode.apply(null, avatarArray);
+    let avatarString = arrayBufferToBase64(avatarArray);
     const imgSrc = "data:image/png;base64," + avatarString.toString('base64');
     this.setState({'avatar': imgSrc});
   }
