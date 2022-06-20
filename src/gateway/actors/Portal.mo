@@ -312,6 +312,8 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
             return #err(#NotEnoughBlotches);
         };
 
+        numBlotches := numBlotches - REPORT_BLOTCHES_COST;
+
         let otherPortal : Portal = actor(Principal.toText(postID.portalPrincipal));
         let response : Result.Result<(), PortalError.PortalError> = await otherPortal.reportMyPost(postID);
 
