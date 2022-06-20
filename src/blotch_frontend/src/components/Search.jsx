@@ -131,7 +131,7 @@ class Search extends React.Component {
       <InputWrapper
         type="text"
         onKeyDown={(e) => {this.handleSearch(e)}}
-        placeholder="Search profiles"
+        placeholder="Find people"
 		id='searchInput'
       />
 			<ModalWrapper>

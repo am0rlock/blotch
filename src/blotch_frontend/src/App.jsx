@@ -22,6 +22,7 @@ import People from '../assets/people.svg';
 import PeopleOutline from '../assets/people-outline.svg';
 import Header from './components/Header';
 import ReportMenu from './components/ReportMenu';
+import ProfileSuggestions from './components/ProfileSuggestions';
 
 var gateway;
 export var ph;
@@ -183,10 +184,21 @@ class App extends React.Component {
                                 <ProfileHeader portalPrincipal={this.state.portalPrincipal}></ProfileHeader>
                                 <Search portalPrincipal={this.state.portalPrincipal}></Search>
                             </div>
-                            <PostPreview
-                                myPortalPrincipal={this.state.portalPrincipal}
-                                postObjects={this.state.postObjects}
-                            />
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'row', width: '100%'}}>
+                                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'right', flexDirection: 'row', width: '25%'}}>
+                                </div>
+                                <div style={{dispaly: 'flex', justifyContent: 'center', width: '50%'}}>
+                                    <PostPreview
+                                        myPortalPrincipal={this.state.portalPrincipal}
+                                        postObjects={this.state.postObjects}
+                                    />
+                                </div>
+                                <div style={{display: 'flex', alignSelf: 'flex-start', alignItems: 'center', justifyContent: 'right', flexDirection: 'row', width: '25%'}}>
+                                    <div style={{}}>
+                                        <ProfileSuggestions portalPrincipal={this.state.portalPrincipal}></ProfileSuggestions>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     }
                     {/*Section 1 is featured page*/}

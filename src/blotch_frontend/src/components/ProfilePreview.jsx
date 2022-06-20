@@ -181,6 +181,7 @@ class ProfilePreview extends React.Component {
   }
 
   componentDidMount() {
+    console.log('mount')
     if(this.props.portalPrincipal != '' && this.props.myPortalPrincipal != '') {
       this.getPortal();
     }

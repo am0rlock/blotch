@@ -12,7 +12,7 @@ export const init = async (logInUser) => {
   console.log(process.env.NODE_ENV);
   console.log(process.env.DFX_NETWORK);
   if (true) { // process.env.DFX_NETWORK === "local") {
-    iiUrl = `http://localhost:8000/?canisterId=qoctq-giaaa-aaaaa-aaaea-cai`;
+    iiUrl = `http://localhost:8000/?canisterId=qjdve-lqaaa-aaaaa-aaaeq-cai`;
   } else if (process.env.DFX_NETWORK === "ic") {
     iiUrl = `https://${process.env.II_CANISTER_ID}.ic0.app`;
   } else {

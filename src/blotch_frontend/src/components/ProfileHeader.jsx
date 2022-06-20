@@ -5,6 +5,7 @@ import React from 'react';
 import Modal from "./Modal";
 import PencilOutline from '../../assets/pencil-outline.svg';
 import defaultAvatar from '../../assets/default_profile.png';
+import ProfilePreview from "./ProfilePreview";
 
 const Wrapper = styled.div`
   display: flex;

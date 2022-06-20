@@ -4,7 +4,7 @@ dfx identity use default
 
 cd ..
 
-for i in {1..16}
+for i in {1..7}
 do
     dfx identity new --disable-encryption test_$i
     dfx identity use test_$i
@@ -26,7 +26,7 @@ do
     #done
 done
 
-for i in {1..16}
+for i in {1..7}
 do
     dfx identity remove test_$i
 done
