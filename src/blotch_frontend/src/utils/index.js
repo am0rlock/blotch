@@ -32,6 +32,7 @@ export async function init(setGateway, openPage) {
           await new Promise((resolve, reject) => {
             authClient.login({
               identityProvider: iiUrl,
+              maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
               onSuccess: () => {
                 gateway = getGatewayFromAuthClient(authClient);
                 setGateway(gateway);
