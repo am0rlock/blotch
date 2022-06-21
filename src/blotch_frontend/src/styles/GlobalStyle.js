@@ -68,6 +68,14 @@ const GlobalStyle = createGlobalStyle`
 		bottom: 0;
 		width: 100%;
 	}
+
+	bottomNavigationDiv {
+		border: 2px solid green;
+	}
+
+	.MuiBottomNavigation-root {
+		background-color: rgba(99, 99, 102, .5);
+	}
 `;
 
 export default GlobalStyle;

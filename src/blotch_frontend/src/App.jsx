@@ -10,6 +10,7 @@ import { init, getPortalFromPrincipal, arrayBufferToBase64 } from './utils/index
 import Header from './components/Header';
 import defaultProfile from '../assets/default_profile.gif';
 import Splash from './components/Splash';
+import { StyledEngineProvider } from '@mui/material/styles';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';
 import Home from '../assets/home.svg';
@@ -21,7 +22,6 @@ import HeartCircleOutline from '../assets/heart-circle-outline.svg';
 import People from '../assets/people.svg';
 import PeopleOutline from '../assets/people-outline.svg';
 import Header from './components/Header';
-import ReportMenu from './components/ReportMenu';
 import ProfileSuggestions from './components/ProfileSuggestions';
 
 var gateway;
@@ -233,20 +233,24 @@ class App extends React.Component {
                         </div>
                     }
                     <div className='bottomNavigationContainer'>
-                        <BottomNavigation
-                            showLabels
-                            value={this.state.selectedPage}
-                            onChange={(event, newValue) => {
-                                this.handlePageChange(newValue);
-                            }}
-                            className='bottomNavigation'
+                        <StyledEngineProvider
+                            injectFirst
                         >
-                            <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
-                            <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
-                            <NewPost portalPrincipal={this.state.portalPrincipal} />
-                            <BottomNavigationAction label="Following" icon={this.state.selectedPage == 3 ? <People /> : <PeopleOutline />} />
-                            <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 4 ? <HeartCircle /> : <HeartCircleOutline />} />
-                        </BottomNavigation>
+                            <BottomNavigation
+                                showLabels
+                                value={this.state.selectedPage}
+                                onChange={(event, newValue) => {
+                                    this.handlePageChange(newValue);
+                                }}
+                                className='bottomNavigation'
+                            >
+                                <BottomNavigationAction label="Home" icon={this.state.selectedPage == 0 ? <Home /> : <HomeOutline />} />
+                                <BottomNavigationAction label="Featured" icon={this.state.selectedPage == 1 ? <Flame /> : <FlameOutline />} />
+                                <NewPost portalPrincipal={this.state.portalPrincipal} />
+                                <BottomNavigationAction label="Following" icon={this.state.selectedPage == 3 ? <People /> : <PeopleOutline />} />
+                                <BottomNavigationAction label="Liked" icon={this.state.selectedPage == 4 ? <HeartCircle /> : <HeartCircleOutline />} />
+                            </BottomNavigation>
+                        </StyledEngineProvider>
                     </div>
                 </div>
                 </>
