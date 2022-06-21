@@ -26,14 +26,13 @@ const Wrapper = styled.div`
   .profile-meta {
     display: flex;
     flex-direction: row;
-    align-items: baseline;
+    align-items: center;
     margin-bottom: 1rem;
   }
 
   .profile-meta h2 {
     display: flex;
     justify-content: center;
-    align-items: center;
     position: relative;
     color: white;
   }
@@ -86,10 +85,10 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    width: 7%;
-    margin-left: 2%;
-    margin-top: 2%;
-    padding: 2%;
+    width: 5%;
+    margin-left: 1%;
+    margin-top: 1px;
+    padding: 1%;
   }
 
   @media screen and (max-width: 645px) {
