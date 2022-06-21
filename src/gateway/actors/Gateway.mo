@@ -29,7 +29,7 @@ actor Gateway
         {
             case null
             {
-                Cycles.add(200000000000);
+                Cycles.add(500000000000);
                 let newPortal : Portal.Portal = await Portal.Portal(msg.caller, isPortalPrincipalValid);
                 let newPortalPrincipal : Principal = Principal.fromActor(newPortal);
 
