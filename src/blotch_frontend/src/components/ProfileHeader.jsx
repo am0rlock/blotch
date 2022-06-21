@@ -4,7 +4,7 @@ import { getPortalFromPrincipal, arrayBufferToBase64 } from "../utils/index";
 import React from 'react';
 import Modal from "./Modal";
 import PencilOutline from '../../assets/pencil-outline.svg';
-import defaultAvatar from '../../assets/default_profile.png';
+import defaultAvatar from '../../assets/default_profile.gif';
 import ProfilePreview from "./ProfilePreview";
 
 const Wrapper = styled.div`
@@ -146,8 +146,11 @@ const ModalWrapper = styled.div`
 
 	textarea {
 		resize: none;
+    padding: 3px;
 		width: 300px;
 		margin-top: 5%;
+    margin-bottom: 3%;
+    border-radius: 7px;
 	}
 
   h3 {
@@ -196,6 +199,7 @@ const AvatarWrapper = styled.div`
     width: 300px;
     height: 300px;
     margin: 5%;
+    border-radius: 70px;
   }
  
   #uploadPhotoEditProfile {

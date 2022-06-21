@@ -25,6 +25,8 @@ const ModalWrapper = styled.div`
     resize: none;
     min-width: 300px;
     height: 75px;
+    border-radius: 7px;
+    padding: 3px;
   }
 
   h3:hover {

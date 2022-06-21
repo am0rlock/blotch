@@ -13,6 +13,9 @@ const CommentWrapper = styled.div`
     width: 30px;
   }
 
+  .bold {
+  }
+
   p {
     word-break: break-all;
   }

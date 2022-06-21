@@ -153,9 +153,11 @@ const ModalWrapper = styled.div`
 	}
 
 	textarea {
+    padding: 3px;
 		resize: none;
 		width: 300px;
 		margin-top: 5%;
+		border-radius: 7px;
 	}
 
 	p {

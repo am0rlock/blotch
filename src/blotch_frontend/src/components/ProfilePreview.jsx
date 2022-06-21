@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import avatar from "../../assets/default_profile.png";
+import avatar from "../../assets/default_profile.gif";
 import Button from "../styles/Button";
 import blotchCoin from '../../assets/blotches_logo.png'
 import { getPortalFromPrincipal, arrayBufferToBase64 } from "../utils/index";

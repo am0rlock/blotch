@@ -106,6 +106,7 @@ export const PostWrapper = styled.div`
   }
 
   textarea {
+    padding: 3px;
     height: 100%;
     width: 100%;
     border: none;
@@ -114,6 +115,7 @@ export const PostWrapper = styled.div`
     padding: 1rem 0 0 1rem;
     font-size: 1rem;
     font-family: "Fira Sans", sans-serif;
+    border-radius: 7px;
   }
 
   @media screen and (max-width: 690px) {

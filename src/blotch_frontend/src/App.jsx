@@ -8,7 +8,7 @@ import NewPost from './components/NewPost';
 import { post_database } from '../../declarations/post_database';
 import { init, getPortalFromPrincipal, arrayBufferToBase64 } from './utils/index';
 import Header from './components/Header';
-import defaultProfile from '../assets/default_profile.png';
+import defaultProfile from '../assets/default_profile.gif';
 import Splash from './components/Splash';
 
 import { BottomNavigation, BottomNavigationAction } from '../../../node_modules/@mui/material/index';

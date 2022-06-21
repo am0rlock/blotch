@@ -7,13 +7,13 @@ export default class ReportMenu extends React.Component {
     }
     render() {
         return (
-            <div style={{display: 'flex', alignItem: 'center', justifyContent: 'center', width: '30vw', backgroundColor: 'rgba(114, 114, 115, .3)', padding: '5%'}}>
+            <div style={{borderRadius: '15px', display: 'flex', alignItem: 'center', justifyContent: 'center', width: '30vw', backgroundColor: 'rgba(142, 142, 150, .9)', padding: '5%'}}>
                 <FormControl fullWidth onSubmit={() => {this.props.submit()}}>
                     <InputLabel id="reportInputLabel">Reason</InputLabel>
                     <Select
                         labelId="reportReason"
                         id="reportReason"
-                        label="Age"
+                        label="Reason"
                         onChange={() => {}}
                     >
                         <MenuItem value="Sexual content">Sexual content</MenuItem>
@@ -27,8 +27,8 @@ export default class ReportMenu extends React.Component {
                         <MenuItem value="Infringes my rights">Infringes my rights</MenuItem>
                         <MenuItem value="Other">Other</MenuItem>
                     </Select>
-                    <br></br>
-                    <TextField multiline={true} rows={3} id="reportInformation" label="More Information" variant="standard" />
+                    <div style={{height: '30px'}}></div>
+                    <TextField style={{}} multiline={true} rows={3} id="reportInformation" label="More Information" variant="standard" />
                     <Button variant="text" onClick={() => {this.props.cancel()}}>Cancel</Button>
                     <Button variant="text" onClick={() => {this.props.submit()}}>Submit</Button>
                 </FormControl>

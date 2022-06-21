@@ -17,9 +17,9 @@ export const BlurryBox = styled.div`
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(rgba(24, 24, 25, 1), rgba(24, 24, 25, 0));
-  blur: 100%;
-  z-index: 10;
+  background: rgba(1, 2, 5, .8);
+  blur: 10%;
+  z-index: 20;
 `;
 
 export const ModalWrapper = styled.div`
@@ -29,7 +29,7 @@ export const ModalWrapper = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(24, 24, 25, .5);
+  background-color: rgba(24, 24, 25, .6);
   z-index: 50;
 
   .modal-content {

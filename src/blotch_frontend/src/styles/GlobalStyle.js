@@ -51,7 +51,7 @@ const GlobalStyle = createGlobalStyle`
 	}
 
 	.bold {
-		font-weight: 500;
+		font-weight: 800;
 	}
 
 	*:focus {
