@@ -7,7 +7,7 @@ import { idlFactory as idlFactoryPortal } from '../../../declarations/portal/por
 
 var agent;
 var gateway;
-export async function init(setGateway) {
+export async function init(setGateway, openPage) {
   let iiUrl;
   if (true) { // process.env.DFX_NETWORK === "local") {
     iiUrl = `http://localhost:8000/?canisterId=qoctq-giaaa-aaaaa-aaaea-cai`;
@@ -28,15 +28,19 @@ export async function init(setGateway) {
         // Call authClient.login(...) to login with Internet Identity. This will open a new tab
         // with the login prompt. The code has to wait for the login process to complete.
         // We can either use the callback functions directly or wrap in a promise.
-        await new Promise((resolve, reject) => {
-          authClient.login({
-            identityProvider: iiUrl,
-            onSuccess: resolve,
-            onError: reject,
+        if(openPage) {
+          await new Promise((resolve, reject) => {
+            authClient.login({
+              identityProvider: iiUrl,
+              onSuccess: () => {
+                gateway = getGatewayFromAuthClient(authClient);
+                setGateway(gateway);
+                window.location.reload();
+              },
+              onError: reject,
+            });
           });
-        });
-        gateway = getGatewayFromAuthClient(authClientToUse);
-        setGateway(gateway);
+        }
       } else {
         authClientToUse = (authClient);
         gateway = getGatewayFromAuthClient(authClientToUse);
