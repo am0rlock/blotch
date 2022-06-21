@@ -9,6 +9,7 @@ type GatewayError =
    PortalNotFound;
  };
 service : {
+  getAllPortalPrincipals: () -> (vec principal) query;
   grabPortal: () -> (Result);
   isPortalPrincipalValid: (principal) -> (bool) query;
   subscribe: () -> ();

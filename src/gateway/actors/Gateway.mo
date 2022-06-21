@@ -16,6 +16,12 @@ actor Gateway
     var userToPortal : HashMap.HashMap<Principal, Portal.Portal> = HashMap.fromIter(userToPortalStable.vals(), 0, Principal.equal, Principal.hash);//HashMap.HashMap(0, Principal.equal, Principal.hash);
     stable var subscribers : [GatewaySubscriber.GatewaySubscriber] = [];
 
+    public shared query func getAllPortalPrincipals() : async [Principal]
+    {
+        func f(p : Portal.Portal) : Principal = Principal.fromActor(p);
+        return Array.map(Iter.toArray(userToPortal.vals()), f);
+    };
+
     public shared(msg) func grabPortal() : async Result.Result<Principal, GatewayError.GatewayError>
     {
         let value : ?Portal.Portal = userToPortal.get(msg.caller);
