@@ -8,7 +8,7 @@ export default class ReportMenu extends React.Component {
     render() {
         return (
             <div style={{display: 'flex', alignItem: 'center', justifyContent: 'center', width: '30vw', backgroundColor: 'rgba(114, 114, 115, .3)', padding: '5%'}}>
-                <FormControl fullWidth>
+                <FormControl fullWidth onSubmit={() => {this.props.submit()}}>
                     <InputLabel id="reportInputLabel">Reason</InputLabel>
                     <Select
                         labelId="reportReason"

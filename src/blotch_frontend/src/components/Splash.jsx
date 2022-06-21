@@ -6,6 +6,7 @@ import Button from "../styles/Button";
 import { CardMedia } from "../../../../node_modules/@mui/material/index";
 import Logo from '../../assets/name_logo.svg';
 import BlotchesLogo from '../../assets/blotches_logo.png';
+import { init } from "../utils/index";
   
 export default class Splash extends React.Component {
     constructor(props) {
@@ -27,7 +28,7 @@ export default class Splash extends React.Component {
                     </Typography>
                     <Box sx={{ m: 10 }} />
                     <Container style={{alignItems: 'center', display: 'flex', justifyContent: 'center'}}>
-                    <Button style={{backgroundColor: '#000000', borderRadius: 12, padding: 10}}>
+                    <Button onClick={() => {init(this.props.setGateway, true)}} style={{backgroundColor: '#000000', borderRadius: 12, padding: 10}}>
                         Join Blotch now!
                     </Button>
                     </Container>

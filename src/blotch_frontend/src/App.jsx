@@ -168,8 +168,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        init((gatewayValue) => {this.setGateway(gatewayValue)}).then((result) => {
-        });
+        init((gatewayValue) => {this.setGateway(gatewayValue)}, false)
     }
 
     render() {
@@ -177,7 +176,7 @@ class App extends React.Component {
             <>
             <GlobalStyle theme={lightTheme}></GlobalStyle>
             { !this.state.loggedIn &&
-                <Splash></Splash>
+                <Splash setGateway={(gatewayValue) => {this.setGateway(gatewayValue)}}></Splash>
             }
             { this.state.loggedIn &&
                 <><Header avatar={this.state.avatar}/>

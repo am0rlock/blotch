@@ -93,7 +93,7 @@ class ProfilePreview extends React.Component {
       blotchesTemp = blotchesTemp + ""
       this.setState(prevState => {
         if(prevState.blotches > blotchesTemp) {
-          window.location.reload();
+          // window.location.reload();
         }
         return {'blotches': blotchesTemp};
       });
