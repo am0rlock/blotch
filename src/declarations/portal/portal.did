@@ -64,6 +64,7 @@ type Portal =
    createComment: (PostID, text) -> (Result);
    createMyComment: (PostID, Comment) -> (Result);
    createPost: (PostContent) -> (Result);
+   deleteAllComments: (PostID) -> (Result);
    deletePost: (PostID) -> (Result);
    deleteReportedPost: (PostID) -> (Result);
    getFollowers: () -> (vec principal) query;

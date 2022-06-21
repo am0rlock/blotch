@@ -53,6 +53,7 @@ export const idlFactory = ({ IDL }) => {
     'createComment' : IDL.Func([PostID, IDL.Text], [Result], []),
     'createMyComment' : IDL.Func([PostID, Comment], [Result], []),
     'createPost' : IDL.Func([PostContent], [Result], []),
+    'deleteAllComments' : IDL.Func([PostID], [Result], []),
     'deletePost' : IDL.Func([PostID], [Result], []),
     'deleteReportedPost' : IDL.Func([PostID], [Result], []),
     'getFollowers' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),

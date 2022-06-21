@@ -11,6 +11,7 @@ export interface Portal {
   'createComment' : ActorMethod<[PostID, string], Result>,
   'createMyComment' : ActorMethod<[PostID, Comment], Result>,
   'createPost' : ActorMethod<[PostContent], Result>,
+  'deleteAllComments' : ActorMethod<[PostID], Result>,
   'deletePost' : ActorMethod<[PostID], Result>,
   'deleteReportedPost' : ActorMethod<[PostID], Result>,
   'getFollowers' : ActorMethod<[], Array<Principal>>,
