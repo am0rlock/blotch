@@ -16,6 +16,13 @@ Interfacing to the backend via a frontend involves completing a handoff procedur
 
 ```
 /*
+ * Returns the Principals of all Portals 
+ */
+func getAllPortalPrincipals() : async [Principal]
+```
+
+```
+/*
  * Returns the Principal of the callers Portal or 
  * creates a new Portal and returns its Principal.
  */

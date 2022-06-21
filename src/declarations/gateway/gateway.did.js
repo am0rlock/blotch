@@ -5,6 +5,11 @@ export const idlFactory = ({ IDL }) => {
   });
   const Result = IDL.Variant({ 'ok' : IDL.Principal, 'err' : GatewayError });
   return IDL.Service({
+    'getAllPortalPrincipals' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Principal)],
+        ['query'],
+      ),
     'grabPortal' : IDL.Func([], [Result], []),
     'isPortalPrincipalValid' : IDL.Func([IDL.Principal], [IDL.Bool], ['query']),
     'subscribe' : IDL.Func([], [], []),

@@ -6,6 +6,7 @@ export type GatewayError = { 'PortalNotFound' : null } |
 export type Result = { 'ok' : Principal } |
   { 'err' : GatewayError };
 export interface _SERVICE {
+  'getAllPortalPrincipals' : ActorMethod<[], Array<Principal>>,
   'grabPortal' : ActorMethod<[], Result>,
   'isPortalPrincipalValid' : ActorMethod<[Principal], boolean>,
   'subscribe' : ActorMethod<[], undefined>,
