@@ -458,6 +458,28 @@ shared actor class Portal(userPrincipal : Principal, isPortalPrincipalValid0 : s
         return postStore.reportPost(postID, msg.caller);
     };
 
+    public shared(msg) func deleteAllComments(postID : PostID.PostID) : async Result.Result<(), PortalError.PortalError>
+    {
+        if (not isAuthorized(msg.caller))
+        {
+            return #err(#NotAuthorized);
+        };
+
+        let response = postStore.deleteAllComments(postID);
+        switch (response)
+        {
+            case (#ok())
+            {
+                return #ok(());
+            };
+            case (#err(x))
+            {
+                return response;
+            };
+        };
+
+    };
+
     /*
      *  Subscriber to Portal functions
      */

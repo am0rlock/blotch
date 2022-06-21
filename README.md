@@ -154,6 +154,14 @@ func createComment(postID : PostID, content : Text) : async Result<(), PortalErr
 func reportPost(postID : PostID) : async Result<(), PortalError>
 ```
 
+```
+/*
+ * Deletes all comments off the specified
+ * post. Post must belong to this Portal
+ */
+func deleteAllComments(postID : PostID) : async Result<(), PortalError>
+```
+
 <h3>PostDatabase Canister</h3>
 
 ```

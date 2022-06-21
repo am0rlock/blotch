@@ -175,5 +175,26 @@ module PostStore
                 };
             };
         };
+
+        public func deleteAllComments(postID : PostID.PostID) : Result.Result<(), PortalError.PortalError>
+        {
+            let value : ?PostData.PostData = idToData.get(postID);
+            switch (value)
+            {
+                case null
+                {
+                    return #err(#PostNotFound);
+                };
+                case (?value)
+                {
+                    let newComments : [Comment.Comment] = [];
+                    let newPostData : PostData.PostData = PostData.constructWithChange(value.content, value.likers, newComments, value.reporters);
+
+                    ignore idToData.replace(postID, newPostData);
+
+                    return #ok(());
+                };
+            };
+        };
     };
 }
