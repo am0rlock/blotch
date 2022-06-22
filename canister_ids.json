@@ -1,0 +1,20 @@
+{
+  "blotch_frontend": {
+    "ic": "bylii-oiaaa-aaaam-qaqpa-cai"
+  },
+  "gateway": {
+    "ic": "b7ko4-dqaaa-aaaam-qaqpq-cai"
+  },
+  "initializer": {
+    "ic": "edruz-iyaaa-aaaam-qaqqa-cai"
+  },
+  "moderator": {
+    "ic": "eeqsn-faaaa-aaaam-qaqqq-cai"
+  },
+  "post_database": {
+    "ic": "entzr-tiaaa-aaaam-qaqra-cai"
+  },
+  "profile_database": {
+    "ic": "eks7f-6qaaa-aaaam-qaqrq-cai"
+  }
+}

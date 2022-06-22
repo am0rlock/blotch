@@ -11,18 +11,13 @@ for i in {0..3}
 do
     dfx identity new --disable-encryption ${USERNAMES[$i]}
     dfx identity use ${USERNAMES[$i]}
-    RESPONSE=$(dfx canister call gateway grabPortal)
+    RESPONSE=$(dfx canister --network ic call b7ko4-dqaaa-aaaam-qaqpq-cai grabPortal)
     PRINCIPAL=$(echo $RESPONSE | cut -c28-54)
 
     AVATAR=$(cat tests/for_demo_resources/${USERNAMES[$i]}.blob)
-    dfx canister call $PRINCIPAL setProfile '(record {avatar=(blob "'${AVATAR}'"); username="'${USERNAMES[$i]}'"; bio="Hey Im new to blotch"})'
+    dfx canister --network ic call $PRINCIPAL setProfile '(record {avatar=(blob "'${AVATAR}'"); username="'${USERNAMES[$i]}'"; bio="Hey Im new to blotch"})'
 done
 
 dfx identity use default
-
-for i in {0..3}
-do
-    dfx identity remove ${USERNAMES[$i]}
-done
 
 cd tests/
