@@ -11,11 +11,26 @@ export default class ProfileSuggestions extends React.Component {
         };
     }
 
+    principalsEqual(left, right) {
+        let leftArr = left._arr;
+        let rightArr = right._arr;
+        for(let i = 0; i < leftArr.length; i++) {
+            if(leftArr[i] != rightArr[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     getFollowingFollowers() {
         portal.getFollowingFollowers().then(peoplePrincipals => {
-        console.log('fofo');
-        console.log(peoplePrincipals);
-        this.setState({followingFollowers: peoplePrincipals.slice(0, 4)});
+            let peoplePrincipalsFinal = []
+            for(let i = 0; i < peoplePrincipals.length; i++) {
+                if(!this.principalsEqual(peoplePrincipals[i], this.props.portalPrincipal)) {
+                    peoplePrincipalsFinal.push(peoplePrincipals[i]);
+                }
+            }
+            this.setState({followingFollowers: peoplePrincipalsFinal.slice(0, 4)});
         })
     }
 
@@ -35,7 +50,7 @@ export default class ProfileSuggestions extends React.Component {
             }
             <div style={{display: 'flex', flexDirection: 'column', overflow: 'auto', paddingRight: '10%', marginRight: '10%'}}>
                 {this.state.followingFollowers?.map(personPrincipal => (
-                    <ProfilePreview myPortalPrincipal={this.props.portalPrincipal} portalPrincipal={personPrincipal}></ProfilePreview>
+                    <ProfilePreview key={personPrincipal} myPortalPrincipal={this.props.portalPrincipal} portalPrincipal={personPrincipal}></ProfilePreview>
                 ))}
             </div>
             </>

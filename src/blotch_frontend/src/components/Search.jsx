@@ -97,6 +97,17 @@ class Search extends React.Component {
     }
   }
 
+  principalsEqual(left, right) {
+	let leftArr = left._arr;
+	let rightArr = right._arr;
+	for(let i = 0; i < leftArr.length; i++) {
+		if(leftArr[i] != rightArr[i]) {
+			return false;
+		}
+	}
+	return true;
+  }
+
   handleSearch = (e) => {
     if (e.keyCode === 13) {
       profile_database.search('').then(r => {
@@ -115,7 +126,9 @@ class Search extends React.Component {
 			distances.sort((a, b) => {return a[0] - b[0]});
 			let sortedProfilesUsernames = [];
 			for(let i = 0; i < distances.length; i++) {
-				sortedProfilesUsernames.push([distances[i][1], distances[i][2]]);
+				if(!this.principalsEqual(this.props.portalPrincipal, r[i])) {
+					sortedProfilesUsernames.push([distances[i][1], distances[i][2]]);
+				}
 			}
 			this.setState({profiles: sortedProfilesUsernames.slice(0, 5), showModal: true});
 		});

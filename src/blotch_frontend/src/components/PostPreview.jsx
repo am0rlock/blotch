@@ -17,6 +17,7 @@ const Wrapper = styled.div`
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	grid-gap: 1.5rem;
+	padding-bottom: 100px;
 
 	img {
 		width: 250px;
