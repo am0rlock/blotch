@@ -11,7 +11,7 @@ for i in {0..3}
 do
     dfx identity new --disable-encryption ${USERNAMES[$i]}
     dfx identity use ${USERNAMES[$i]}
-    RESPONSE=$(dfx canister --network ic call b7ko4-dqaaa-aaaam-qaqpq-cai grabPortal)
+    RESPONSE=$(dfx canister --network ic call gfjgu-biaaa-aaaam-qaq5a-cai grabPortal)
     PRINCIPAL=$(echo $RESPONSE | cut -c28-54)
 
     AVATAR=$(cat tests/for_demo_resources/${USERNAMES[$i]}.blob)
